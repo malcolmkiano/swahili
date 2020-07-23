@@ -4,7 +4,7 @@ A new programming language to be written in Swahili
 ### BNF Used for the Variable declaration
 
 Variable Declaration BNF
-Let {var_name} =  {value}
+Let {var_name} =  {value} ;
 
     - <declaration> := <assignment>
     - <assignment> := <var> <op> <value> <op> img & doc
@@ -15,8 +15,8 @@ Let {var_name} =  {value}
     - <chars> := <chars> | a | b | c | ... | z | _
     - <num> := 0 | 1 | … | 9 | <num>
         
-        - x = 12 valid
-        - 12x not valid
+        - "x = 12;" valid declaration
+        - "12x" not valid declaration
 
 x = 12 should generate the following parse tree
 
