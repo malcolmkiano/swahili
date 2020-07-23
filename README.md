@@ -18,8 +18,8 @@ Let {var_name} =  {value} ;
         - "x = 12;" valid declaration
         - "12x" not valid declaration
 
-x = 12 should generate the following parse tree
+x = 12; should generate the following parse tree
 
-<img src="/img & doc/declarationPareseTree.png" alt="My cool logo"/>
+<img src="/img & doc/declarationPareseTree.png" alt="Declaration Parse Tree"/>
 
 
