@@ -20,5 +20,6 @@ Let {var_name} =  {value}
 
 x = 12 should generate the following parse tree
 
-![Optional Text](../master/img & doc/parseTree.png)
+<img src="/img & doc/parseTree.png" alt="My cool logo"/>
+
 
