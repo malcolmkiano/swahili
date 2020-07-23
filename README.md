@@ -20,4 +20,5 @@ Let {var_name} =  {value}
 
 x = 12 should generate the following parse tree
 
-<img src=("https://github.com/malcolmkiano/swahili/master/img & doc/parseTree.png?raw=true")>
+![Optional Text](../master/img & doc/parseTree.png)
+
