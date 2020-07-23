@@ -7,7 +7,7 @@ Variable Declaration BNF
 Let {var_name} =  {value} ;
 
     - <declaration> := <assignment>
-    - <assignment> := <var> <op> <value> <op> img & doc
+    - <assignment> := <var> <op> <value> <op>
     - <var> := <chars>  
     - <value> := <chars> | <num> | <var> | <expr> 
     - <expr> := <value> <op><value>| <var> >op> <var>
