@@ -1,5 +1,5 @@
 # swahili
-A new programming language to be written in Swahili
+A new programming language to be written in Swahili to help teach programming concepts to swahili speaking students.
 
 ### BNF Used for the Variable declaration
 
