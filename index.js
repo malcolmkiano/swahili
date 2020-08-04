@@ -12,4 +12,10 @@ let lines = [
   'let f5 = null + true;'
 ];
 
-run(lines);
+let arrs= [ 
+  'let x = [1,2,3,4];',
+  'let names = ["John", "Lisa", "kevin"];',
+  'let floats = [12.5,3.14,22.7];'
+];
+
+run(arrs);
