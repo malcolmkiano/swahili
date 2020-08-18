@@ -1,6 +1,7 @@
 // STDIN & STDOUT setup
 const readline = require('readline');
 const colors = require('colors');
+const print = require('./utils/print');
 
 // SWH
 const swh = require('./swh/run');
@@ -10,9 +11,7 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-const print = text => {
-  return console.log(text, "\n");
-};
+
 
 // READ LOOP
 const getInput = () => {
@@ -21,9 +20,9 @@ const getInput = () => {
     // handle input
     const [result, error] = swh('<stdin>', text)
     if (error) {
-      print(colors.red(error.toString()));
+      print(colors.red(error.toString()), true);
     } else {
-      print(result);
+      print(result, true);
     }
 
     // get more input

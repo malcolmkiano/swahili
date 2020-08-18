@@ -1,4 +1,4 @@
-const string_with_arrows = require('./utils/string_with_arrows');
+const string_with_arrows = require('../utils/string_with_arrows');
 
 class Error {
   constructor(pos_start, pos_end, error_name, details) {
@@ -24,13 +24,43 @@ class IllegalCharError extends Error {
 }
 
 class InvalidSyntaxError extends Error {
-  constructor(pos_start, pos_end, details) {
+  constructor(pos_start, pos_end, details = '') {
     super(pos_start, pos_end, 'Invalid Syntax', details);
+  }
+}
+
+/** Runtime error */
+class RTError extends Error {
+  constructor(pos_start, pos_end, details, context) {
+    super(pos_start, pos_end, 'Runtime Error', details);
+    this.context = context;
+  }
+
+  generate_traceback() {
+    let result = '';
+    let pos = this.pos_start;
+    let ctx = this.context;
+
+    while (ctx) {
+      result = `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.display_name}` + "\n" + result;
+      pos = ctx.parent_entry_pos;
+      ctx = ctx.parent;
+    }
+
+    return 'Traceback (most recent call last):\n' + result;
+  }
+
+  toString() {
+    let result = this.generate_traceback();
+    result += `${this.error_name}: ${this.details}`;
+    result += '\n\n' + string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
+    return result;
   }
 }
 
 module.exports = {
   Error,
   IllegalCharError,
-  InvalidSyntaxError
+  InvalidSyntaxError,
+  RTError
 }

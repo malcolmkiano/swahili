@@ -1,4 +1,3 @@
-const C = require('./constants');
 const TT = require('./token_types');
 
 const Token = require('./token');
@@ -25,7 +24,7 @@ class Lexer {
     let pos_start = this.pos.copy();
 
     // keep going while character is a digit or a dot, and we haven't seen a dot yet
-    while (this.current_char !== null && (C.DIGITS + '.').includes(this.current_char)) {
+    while (this.current_char !== null && (TT.DIGITS + '.').includes(this.current_char)) {
       if (this.current_char === '.') {
         if (dot_count === 1) break;
         dot_count++;
@@ -51,7 +50,7 @@ class Lexer {
       if (' \t'.includes(this.current_char)) {
         // ignore spaces and tabs
         this.advance();
-      } else if (C.DIGITS.includes(this.current_char)) {
+      } else if (TT.DIGITS.includes(this.current_char)) {
         tokens.push(this.makeNumber());
       } else if (this.current_char === '+') {
         tokens.push(new Token(TT.PLUS, null, this.pos));

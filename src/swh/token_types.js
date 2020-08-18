@@ -23,6 +23,9 @@ module.exports = {
   /** Right parentheses */
   RPAREN: 'RPAREN',
 
+  /** Digits 0-9 */
+  DIGITS: '0123456789',
+
   /** End of file */
   EOF: 'EOF',
 }
