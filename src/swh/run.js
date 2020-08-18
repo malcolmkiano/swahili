@@ -1,5 +1,7 @@
 const Lexer = require('./lexer');
 const Parser = require('./parser');
+const Interpreter = require('./interpreter');
+const Context = require('./context');
 
 function run(fn, text) {
   // Generate tokens
@@ -10,8 +12,14 @@ function run(fn, text) {
   // Generate abstract syntax tree
   const parser = new Parser(tokens);
   const ast = parser.parse();
+  if (ast.error) return [null, ast.error];
 
-  return [ast.node, ast.error];
+  // Run program
+  const interpreter = new Interpreter();
+  const context = new Context('<program>');
+  const result = interpreter.visit(ast.node, context);
+
+  return [result.value, result.error];
 }
 
 module.exports = run;

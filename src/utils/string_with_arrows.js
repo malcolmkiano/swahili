@@ -1,3 +1,6 @@
+/** Prints out lines of code and indicates the position of errors
+ * using arrows
+ */
 function string_with_arrows(text, pos_start, pos_end) {
   let result = '';
 
