@@ -42,6 +42,8 @@ class Interpreter {
       [result, error] = left.multed_by(right);
     } else if (node.op_tok.type === TT.DIV) {
       [result, error] = left.divved_by(right);
+    } else if (node.op_tok.type === TT.POW) {
+      [result, error] = left.powed_by(right);
     }
 
     if (error) {

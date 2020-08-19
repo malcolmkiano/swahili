@@ -53,6 +53,12 @@ class NUMBER {
     }
   }
 
+  powed_by(other) {
+    if (other instanceof NUMBER) {
+      return [new NUMBER(this.value ** other.value).set_context(this.context), null];
+    }
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }

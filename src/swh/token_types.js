@@ -17,6 +17,9 @@ module.exports = {
   /** Division operator */
   DIV: 'DIV',
 
+  /** Power operator */
+  POW: 'POW',
+
   /** Left parentheses */
   LPAREN: 'LPAREN',
 
@@ -28,4 +31,4 @@ module.exports = {
 
   /** End of file */
   EOF: 'EOF',
-}
+};

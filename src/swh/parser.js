@@ -29,17 +29,11 @@ class Parser {
     return res;
   }
 
-  factor = () => {
+  atom = () => {
     let res = new ParseResult();
     const tok = this.current_tok;
 
-    if ([TT.PLUS, TT.MINUS].includes(tok.type)) {
-      res.register(this.advance());
-      let factor = res.register(this.factor());
-      if (res.error) return res;
-      return res.success(new UnaryOpNode(tok, factor));
-
-    } else if ([TT.INT, TT.FLOAT].includes(tok.type)) {
+    if ([TT.INT, TT.FLOAT].includes(tok.type)) {
       res.register(this.advance());
       return res.success(new NumberNode(tok));
 
@@ -60,8 +54,26 @@ class Parser {
 
     return res.failure(new InvalidSyntaxError(
       tok.pos_start, tok.pos_end,
-      'Expected int or float'
+      'Expected int, float, "+", "-" or "("'
     ));
+  }
+
+  power = () => {
+    return this.bin_op(this.atom, [TT.POW], this.factor);
+  }
+
+  factor = () => {
+    let res = new ParseResult();
+    const tok = this.current_tok;
+
+    if ([TT.PLUS, TT.MINUS].includes(tok.type)) {
+      res.register(this.advance());
+      let factor = res.register(this.factor());
+      if (res.error) return res;
+      return res.success(new UnaryOpNode(tok, factor));
+    }
+
+    return this.power()
   }
 
   term = () => {
@@ -73,15 +85,17 @@ class Parser {
   }
 
   // binary operation
-  bin_op(func, ops) {
+  bin_op(func_a, ops, func_b = null) {
+    if (func_b === null) func_b = func_a;
+
     let res = new ParseResult();
-    let left = res.register(func());
+    let left = res.register(func_a());
     if (res.error) return res;
 
     while (ops.includes(this.current_tok.type)) {
       let op_tok = this.current_tok;
       res.register(this.advance());
-      let right = res.register(func());
+      let right = res.register(func_b());
       if (res.error) return res;
       left = new BinOpNode(left, op_tok, right);
     }

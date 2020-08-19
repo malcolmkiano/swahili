@@ -8,7 +8,7 @@ class Lexer {
   constructor(fn, text) {
     this.fn = fn;
     this.text = text;
-    this.pos = new Position(-1, 0, -1, fn, text)
+    this.pos = new Position(-1, 0, -1, fn, text);
     this.current_char = null;
     this.advance();
   }
@@ -63,6 +63,9 @@ class Lexer {
         this.advance();
       } else if (this.current_char === '/') {
         tokens.push(new Token(TT.DIV, null, this.pos));
+        this.advance();
+      } else if (this.current_char === '^') {
+        tokens.push(new Token(TT.POW, null, this.pos));
         this.advance();
       } else if (this.current_char === '(') {
         tokens.push(new Token(TT.LPAREN, null, this.pos));
