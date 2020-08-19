@@ -8,17 +8,14 @@ const swh = require('./swh/run');
 
 const rl = readline.createInterface({
   input: process.stdin,
-  output: process.stdout
+  output: process.stdout,
 });
-
-
 
 // READ LOOP
 const getInput = () => {
-  rl.question(`${colors.brightGreen('swahili')} > `, text => {
-
+  rl.question(`${colors.brightGreen('swahili')} > `, (text) => {
     // handle input
-    const [result, error] = swh('<stdin>', text)
+    const [result, error] = swh('<stdin>', text);
     if (error) {
       print(colors.red(error.toString()), true);
     } else {
@@ -27,9 +24,8 @@ const getInput = () => {
 
     // get more input
     getInput();
-
   });
-}
+};
 
 console.clear();
 getInput();

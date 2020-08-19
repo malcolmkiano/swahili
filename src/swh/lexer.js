@@ -8,14 +8,15 @@ class Lexer {
   constructor(fn, text) {
     this.fn = fn;
     this.text = text;
-    this.pos = new Position(-1, 0, -1, fn, text)
+    this.pos = new Position(-1, 0, -1, fn, text);
     this.current_char = null;
     this.advance();
   }
 
   advance() {
     this.pos.advance(this.current_char);
-    this.current_char = this.pos.idx < this.text.length ? this.text[this.pos.idx] : null;
+    this.current_char =
+      this.pos.idx < this.text.length ? this.text[this.pos.idx] : null;
   }
 
   makeNumber() {
@@ -24,7 +25,10 @@ class Lexer {
     let pos_start = this.pos.copy();
 
     // keep going while character is a digit or a dot, and we haven't seen a dot yet
-    while (this.current_char !== null && (TT.DIGITS + '.').includes(this.current_char)) {
+    while (
+      this.current_char !== null &&
+      (TT.DIGITS + '.').includes(this.current_char)
+    ) {
       if (this.current_char === '.') {
         if (dot_count === 1) break;
         dot_count++;
@@ -63,6 +67,9 @@ class Lexer {
         this.advance();
       } else if (this.current_char === '/') {
         tokens.push(new Token(TT.DIV, null, this.pos));
+        this.advance();
+      } else if (this.current_char === '^') {
+        tokens.push(new Token(TT.POW, null, this.pos));
         this.advance();
       } else if (this.current_char === '(') {
         tokens.push(new Token(TT.LPAREN, null, this.pos));

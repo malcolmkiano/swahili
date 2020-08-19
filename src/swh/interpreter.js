@@ -12,7 +12,7 @@ class Interpreter {
 
   no_visit_method = (node, context) => {
     throw new Error(`No visit_${node.constructor.name} method defined`);
-  }
+  };
 
   visit_NumberNode = (node, context) => {
     let res = new RTResult();
@@ -21,7 +21,7 @@ class Interpreter {
         .set_context(context)
         .set_pos(node.pos_start, node.pos_end)
     );
-  }
+  };
 
   visit_BinOpNode = (node, context) => {
     let res = new RTResult();
@@ -42,14 +42,16 @@ class Interpreter {
       [result, error] = left.multed_by(right);
     } else if (node.op_tok.type === TT.DIV) {
       [result, error] = left.divved_by(right);
+    } else if (node.op_tok.type === TT.POW) {
+      [result, error] = left.powed_by(right);
     }
 
     if (error) {
-      return res.failure(error)
+      return res.failure(error);
     } else {
       return res.success(result.set_pos(node.pos_start, node.pos_end));
     }
-  }
+  };
 
   visit_UnaryOpNode = (node, context) => {
     let res = new RTResult();
@@ -67,7 +69,7 @@ class Interpreter {
     } else {
       return res.success(number.set_pos(node.pos_start, node.pos_end));
     }
-  }
+  };
 }
 
 module.exports = Interpreter;
