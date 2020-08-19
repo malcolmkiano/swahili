@@ -52,7 +52,7 @@ class Lexer {
     let id_str = '';
     let pos_start = this.pos.copy();
 
-    // keep going while character is a digit or a dot, and we haven't seen a dot yet
+    // keep going while character is a alphanumeric or an underscore
     while (
       this.current_char !== null &&
       (TT.LETTERS + TT.DIGITS + '_').includes(this.current_char)
