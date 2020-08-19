@@ -21,10 +21,13 @@ class Parser {
   parse() {
     let res = this.expr();
     if (!res.error && this.current_tok.type !== TT.EOF) {
-      return res.failure(new InvalidSyntaxError(
-        this.current_tok.pos_start, this.current_tok.pos_end,
-        `Expected "+", "-", "*" or "/"`
-      ));
+      return res.failure(
+        new InvalidSyntaxError(
+          this.current_tok.pos_start,
+          this.current_tok.pos_end,
+          `Expected '+', '-', '*' or '/'`
+        )
+      );
     }
     return res;
   }
@@ -36,7 +39,6 @@ class Parser {
     if ([TT.INT, TT.FLOAT].includes(tok.type)) {
       res.register(this.advance());
       return res.success(new NumberNode(tok));
-
     } else if (tok.type === TT.LPAREN) {
       res.register(this.advance());
       let expr = res.register(this.expr());
@@ -45,22 +47,28 @@ class Parser {
         res.register(this.advance());
         return res.success(expr);
       } else {
-        return res.failure(new InvalidSyntaxError(
-          this.current_tok.pos_start, this.current_tok.pos_end,
-          "Expected ')'"
-        ));
+        return res.failure(
+          new InvalidSyntaxError(
+            this.current_tok.pos_start,
+            this.current_tok.pos_end,
+            `Expected ')'`
+          )
+        );
       }
     }
 
-    return res.failure(new InvalidSyntaxError(
-      tok.pos_start, tok.pos_end,
-      'Expected int, float, "+", "-" or "("'
-    ));
-  }
+    return res.failure(
+      new InvalidSyntaxError(
+        tok.pos_start,
+        tok.pos_end,
+        `Expected int, float, '+', '-' or '('`
+      )
+    );
+  };
 
   power = () => {
     return this.bin_op(this.atom, [TT.POW], this.factor);
-  }
+  };
 
   factor = () => {
     let res = new ParseResult();
@@ -73,16 +81,16 @@ class Parser {
       return res.success(new UnaryOpNode(tok, factor));
     }
 
-    return this.power()
-  }
+    return this.power();
+  };
 
   term = () => {
     return this.bin_op(this.factor, [TT.MUL, TT.DIV]);
-  }
+  };
 
   expr = () => {
     return this.bin_op(this.term, [TT.PLUS, TT.MINUS]);
-  }
+  };
 
   // binary operation
   bin_op(func_a, ops, func_b = null) {

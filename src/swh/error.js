@@ -9,9 +9,11 @@ class Error {
   }
 
   toString() {
-    let result = `${this.error_name}: ${this.details}` + "\n";
+    let result = `${this.error_name}: ${this.details}` + '\n';
     result += `File ${this.pos_start.fn}, line ${this.pos_start.ln + 1}`;
-    result += '\n\n' + string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
+    result +=
+      '\n\n' +
+      string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
     return result;
   }
 }
@@ -42,7 +44,10 @@ class RTError extends Error {
     let ctx = this.context;
 
     while (ctx) {
-      result = `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.display_name}` + "\n" + result;
+      result =
+        `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.display_name}` +
+        '\n' +
+        result;
       pos = ctx.parent_entry_pos;
       ctx = ctx.parent;
     }
@@ -53,7 +58,9 @@ class RTError extends Error {
   toString() {
     let result = this.generate_traceback();
     result += `${this.error_name}: ${this.details}`;
-    result += '\n\n' + string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
+    result +=
+      '\n\n' +
+      string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
     return result;
   }
 }
@@ -62,5 +69,5 @@ module.exports = {
   Error,
   IllegalCharError,
   InvalidSyntaxError,
-  RTError
-}
+  RTError,
+};

@@ -11,7 +11,7 @@ class Position {
     this.idx++;
     this.col++;
 
-    if (current_char === "\n") {
+    if (current_char === '\n') {
       this.ln++;
       this.col = 0;
     }

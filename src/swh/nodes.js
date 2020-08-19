@@ -57,5 +57,5 @@ class UnaryOpNode {
 module.exports = {
   NumberNode,
   BinOpNode,
-  UnaryOpNode
+  UnaryOpNode,
 };

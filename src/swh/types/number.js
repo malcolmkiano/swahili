@@ -23,39 +23,58 @@ class NUMBER {
 
   added_to(other) {
     if (other instanceof NUMBER) {
-      return [new NUMBER(this.value + other.value).set_context(this.context), null];
+      return [
+        new NUMBER(this.value + other.value).set_context(this.context),
+        null,
+      ];
     }
   }
 
   subbed_by(other) {
     if (other instanceof NUMBER) {
-      return [new NUMBER(this.value - other.value).set_context(this.context), null];
+      return [
+        new NUMBER(this.value - other.value).set_context(this.context),
+        null,
+      ];
     }
   }
 
   multed_by(other) {
     if (other instanceof NUMBER) {
-      return [new NUMBER(this.value * other.value).set_context(this.context), null];
+      return [
+        new NUMBER(this.value * other.value).set_context(this.context),
+        null,
+      ];
     }
   }
 
   divved_by(other) {
     if (other instanceof NUMBER) {
       if (other.value === 0) {
-        return [null, new RTError(
-          other.pos_start, other.pos_end,
-          'Division by zero',
-          this.context
-        )];
+        return [
+          null,
+          new RTError(
+            other.pos_start,
+            other.pos_end,
+            'Division by zero',
+            this.context
+          ),
+        ];
       }
 
-      return [new NUMBER(this.value / other.value).set_context(this.context), null];
+      return [
+        new NUMBER(this.value / other.value).set_context(this.context),
+        null,
+      ];
     }
   }
 
   powed_by(other) {
     if (other instanceof NUMBER) {
-      return [new NUMBER(this.value ** other.value).set_context(this.context), null];
+      return [
+        new NUMBER(this.value ** other.value).set_context(this.context),
+        null,
+      ];
     }
   }
 

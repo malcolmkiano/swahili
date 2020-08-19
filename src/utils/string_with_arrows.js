@@ -6,7 +6,9 @@ function string_with_arrows(text, pos_start, pos_end) {
 
   // Calculate indices
   let idx_start = Math.max(text.lastIndexOf('\n', pos_start.idx), 0);
-  let idx_end = text.includes('\n') ? text.indexOf('\n', idx_start + 1) : text.length;
+  let idx_end = text.includes('\n')
+    ? text.indexOf('\n', idx_start + 1)
+    : text.length;
 
   // Generate each line
   const line_count = pos_end.ln - pos_start.ln + 1;
