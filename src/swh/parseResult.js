@@ -1,16 +1,18 @@
 class ParseResult {
-  constructr() {
+  constructor() {
     this.error = null;
     this.node = null;
+    this.advance_count = 0;
+  }
+
+  register_advancement() {
+    this.advance_count++;
   }
 
   register(res) {
-    if (res instanceof ParseResult) {
-      if (res.error) this.error = res.error;
-      return res.node;
-    }
-
-    return res;
+    this.advance_count += res.advance_count;
+    if (res.error) this.error = res.error;
+    return res.node;
   }
 
   success(node) {
@@ -18,10 +20,10 @@ class ParseResult {
     return this;
   }
 
-  failure(error) {
-    this.error = error;
+  failure = (error) => {
+    if (!this.error || this.advance_count === 0) this.error = error;
     return this;
-  }
+  };
 }
 
 module.exports = ParseResult;

@@ -1,4 +1,5 @@
 const TT = require('./token_types');
+const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
 const Position = require('./position');
@@ -47,6 +48,24 @@ class Lexer {
     }
   }
 
+  makeIdentifier() {
+    let id_str = '';
+    let pos_start = this.pos.copy();
+
+    // keep going while character is a digit or a dot, and we haven't seen a dot yet
+    while (
+      this.current_char !== null &&
+      (TT.LETTERS + TT.DIGITS + '_').includes(this.current_char)
+    ) {
+      id_str += this.current_char;
+      this.advance();
+    }
+
+    // check if KEYWORD or IDENTIFIER
+    let tok_type = KEYWORDS.includes(id_str) ? TT.KEYWORD : TT.IDENTIFIER;
+    return new Token(tok_type, id_str, pos_start, this.pos);
+  }
+
   makeTokens() {
     let tokens = [];
 
@@ -56,6 +75,8 @@ class Lexer {
         this.advance();
       } else if (TT.DIGITS.includes(this.current_char)) {
         tokens.push(this.makeNumber());
+      } else if (TT.LETTERS.includes(this.current_char)) {
+        tokens.push(this.makeIdentifier());
       } else if (this.current_char === '+') {
         tokens.push(new Token(TT.PLUS, null, this.pos));
         this.advance();
@@ -70,6 +91,9 @@ class Lexer {
         this.advance();
       } else if (this.current_char === '^') {
         tokens.push(new Token(TT.POW, null, this.pos));
+        this.advance();
+      } else if (this.current_char === '=') {
+        tokens.push(new Token(TT.EQ, null, this.pos));
         this.advance();
       } else if (this.current_char === '(') {
         tokens.push(new Token(TT.LPAREN, null, this.pos));

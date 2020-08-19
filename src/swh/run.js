@@ -2,6 +2,11 @@ const Lexer = require('./lexer');
 const Parser = require('./parser');
 const Interpreter = require('./interpreter');
 const Context = require('./context');
+const NUMBER = require('./types/number');
+const SymbolTable = require('./symbolTable');
+
+const global_symbol_table = new SymbolTable();
+global_symbol_table.set('tupu', new NUMBER(0));
 
 function run(fn, text) {
   // Generate tokens
@@ -17,6 +22,7 @@ function run(fn, text) {
   // Run program
   const interpreter = new Interpreter();
   const context = new Context('<program>');
+  context.symbol_table = global_symbol_table;
   const result = interpreter.visit(ast.node, context);
 
   return [result.value, result.error];

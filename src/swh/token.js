@@ -15,6 +15,10 @@ class Token {
     if (pos_end) this.pos_end = pos_end;
   }
 
+  matches(type, value) {
+    return this.type === type && this.value === value;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }
