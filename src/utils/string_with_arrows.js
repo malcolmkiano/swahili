@@ -1,35 +1,38 @@
 /** Prints out lines of code and indicates the position of errors
  * using arrows
  */
-function string_with_arrows(text, pos_start, pos_end) {
+function stringWithArrows(text, posStart, posEnd) {
   let result = '';
 
   // Calculate indices
-  let idx_start = Math.max(text.lastIndexOf('\n', pos_start.idx), 0);
-  let idx_end = text.indexOf('\n', idx_start + 1);
-  if (idx_end < 0) idx_end = text.length;
+  let idxStart = Math.max(text.lastIndexOf('\n', posStart.idx), 0);
+  let idxEnd = text.indexOf('\n', idxStart + 1);
+  if (idxEnd < 0) idxEnd = text.length;
 
   // Generate each line
-  const line_count = pos_end.ln - pos_start.ln + 1;
-  for (let i = 0; i < line_count; i++) {
+  const lineCount = posEnd.ln - posStart.ln + 1;
+  for (let i = 0; i < lineCount; i++) {
     // Calculate line columns
-    const line = text.substr(idx_start, idx_end);
-    const col_start = i === 0 ? Math.max(pos_start.col, 0) : 0;
-    const col_end = i === line_count - 1 ? line.length : pos_end.col;
+    const line = text.substr(idxStart, idxEnd);
+    let colStart = i === 0 ? Math.max(posStart.col, 0) : 0;
+    let colEnd = i === lineCount - 1 ? line.length : posEnd.col;
+    if (colStart > colEnd) {
+      [colStart, colEnd] = [colEnd, colStart];
+    }
 
     // Append to result
     result += line + '\n';
     result +=
-      ' '.repeat(col_end > col_start ? col_start : 0) +
-      '^'.repeat(Math.max(col_end - col_start, 1));
+      ' '.repeat(colStart) +
+      '^'.repeat(Math.max(colEnd - colStart, 1));
 
     // Re-calculate indices
-    idx_start = idx_end;
-    idx_end = text.indexOf('\n', idx_start + 1);
-    if (idx_end < 0) idx_end = text.length;
+    idxStart = idxEnd;
+    idxEnd = text.indexOf('\n', idxStart + 1);
+    if (idxEnd < 0) idxEnd = text.length;
   }
 
   return result.replace(/\t/g, '');
 }
 
-module.exports = string_with_arrows;
+module.exports = stringWithArrows;

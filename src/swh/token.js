@@ -2,17 +2,17 @@ const util = require('util');
 const colors = require('colors');
 
 class Token {
-  constructor(type, value = null, pos_start = null, pos_end = null) {
+  constructor(type, value = null, posStart = null, posEnd = null) {
     this.type = type;
     this.value = value;
 
-    if (pos_start) {
-      this.pos_start = pos_start;
-      this.pos_end = pos_start.copy();
-      this.pos_end.advance();
+    if (posStart) {
+      this.posStart = posStart;
+      this.posEnd = posStart.copy();
+      this.posEnd.advance();
     }
 
-    if (pos_end) this.pos_end = pos_end;
+    if (posEnd) this.posEnd = posEnd;
   }
 
   matches(type, value) {

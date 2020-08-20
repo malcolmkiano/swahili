@@ -7,11 +7,11 @@ class Position {
     this.ftxt = ftxt;
   }
 
-  advance(current_char = null) {
+  advance(currentChar = null) {
     this.idx++;
     this.col++;
 
-    if (current_char === '\n') {
+    if (currentChar === '\n') {
       this.ln++;
       this.col = 0;
     }
