@@ -78,6 +78,13 @@ class NUMBER {
     }
   }
 
+  copy() {
+    let copy = new NUMBER(this.value);
+    copy.set_pos(this.pos_start, this.pos_end);
+    copy.set_context(this.context);
+    return copy;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }

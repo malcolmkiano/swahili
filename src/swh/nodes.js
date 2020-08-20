@@ -17,6 +17,25 @@ class NumberNode {
   }
 }
 
+class VarAccessNode {
+  constructor(var_name_tok) {
+    this.var_name_tok = var_name_tok;
+
+    this.pos_start = this.var_name_tok.pos_start;
+    this.pos_end = this.var_name_tok.pos_end;
+  }
+}
+
+class VarAssignNode {
+  constructor(var_name_tok, value_node) {
+    this.var_name_tok = var_name_tok;
+    this.value_node = value_node;
+
+    this.pos_start = this.var_name_tok.pos_start;
+    this.pos_end = this.value_node.pos_end;
+  }
+}
+
 class BinOpNode {
   constructor(left_node, op_tok, right_node) {
     this.left_node = left_node;
@@ -56,6 +75,8 @@ class UnaryOpNode {
 
 module.exports = {
   NumberNode,
+  VarAccessNode,
+  VarAssignNode,
   BinOpNode,
   UnaryOpNode,
 };

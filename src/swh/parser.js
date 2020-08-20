@@ -1,5 +1,11 @@
 const TT = require('./token_types');
-const { NumberNode, BinOpNode, UnaryOpNode } = require('./nodes');
+const {
+  NumberNode,
+  VarAccessNode,
+  VarAssignNode,
+  BinOpNode,
+  UnaryOpNode,
+} = require('./nodes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('./error');
 
@@ -37,14 +43,21 @@ class Parser {
     const tok = this.current_tok;
 
     if ([TT.INT, TT.FLOAT].includes(tok.type)) {
-      res.register(this.advance());
+      res.register_advancement();
+      this.advance();
       return res.success(new NumberNode(tok));
+    } else if (tok.type === TT.IDENTIFIER) {
+      res.register_advancement();
+      this.advance();
+      return res.success(new VarAccessNode(tok));
     } else if (tok.type === TT.LPAREN) {
-      res.register(this.advance());
+      res.register_advancement();
+      this.advance();
       let expr = res.register(this.expr());
       if (res.error) return res;
       if (this.current_tok.type === TT.RPAREN) {
-        res.register(this.advance());
+        res.register_advancement();
+        this.advance();
         return res.success(expr);
       } else {
         return res.failure(
@@ -61,7 +74,7 @@ class Parser {
       new InvalidSyntaxError(
         tok.pos_start,
         tok.pos_end,
-        `Expected int, float, '+', '-' or '('`
+        `Expected int, float, identifier, '+', '-' or '('`
       )
     );
   };
@@ -75,7 +88,8 @@ class Parser {
     const tok = this.current_tok;
 
     if ([TT.PLUS, TT.MINUS].includes(tok.type)) {
-      res.register(this.advance());
+      res.register_advancement();
+      this.advance();
       let factor = res.register(this.factor());
       if (res.error) return res;
       return res.success(new UnaryOpNode(tok, factor));
@@ -89,7 +103,51 @@ class Parser {
   };
 
   expr = () => {
-    return this.bin_op(this.term, [TT.PLUS, TT.MINUS]);
+    let res = new ParseResult();
+    if (this.current_tok.matches(TT.KEYWORD, 'wacha')) {
+      res.register_advancement();
+      this.advance();
+
+      if (this.current_tok.type !== TT.IDENTIFIER)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.current_tok.pos_start,
+            this.current_tok.pos_end,
+            `Expected identifier`
+          )
+        );
+
+      let var_name = this.current_tok;
+      res.register_advancement();
+      this.advance();
+
+      if (this.current_tok.type !== TT.EQ)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.current_tok.pos_start,
+            this.current_tok.pos_end,
+            `Expected '='`
+          )
+        );
+
+      res.register_advancement();
+      this.advance();
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+      return res.success(new VarAssignNode(var_name, expr));
+    }
+
+    let node = res.register(this.bin_op(this.term, [TT.PLUS, TT.MINUS]));
+    if (res.error)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.current_tok.pos_start,
+          this.current_tok.pos_end,
+          `Expected 'wacha', int, float, identifier, '+', '-' or '('`
+        )
+      );
+
+    return res.success(node);
   };
 
   // binary operation
@@ -102,7 +160,8 @@ class Parser {
 
     while (ops.includes(this.current_tok.type)) {
       let op_tok = this.current_tok;
-      res.register(this.advance());
+      res.register_advancement();
+      this.advance();
       let right = res.register(func_b());
       if (res.error) return res;
       left = new BinOpNode(left, op_tok, right);

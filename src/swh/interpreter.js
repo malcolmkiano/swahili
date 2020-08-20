@@ -1,5 +1,6 @@
 const TT = require('./token_types');
 const RTResult = require('./runtimeResult');
+const { RTError } = require('./error');
 
 const NUMBER = require('./types/number');
 
@@ -21,6 +22,35 @@ class Interpreter {
         .set_context(context)
         .set_pos(node.pos_start, node.pos_end)
     );
+  };
+
+  visit_VarAccessNode = (node, context) => {
+    let res = new RTResult();
+    let var_name = node.var_name_tok.value;
+    let value = context.symbol_table.get(var_name);
+
+    if (!value)
+      return res.failure(
+        new RTError(
+          node.pos_start,
+          node.pos_end,
+          `'${var_name}' is not defined`,
+          context
+        )
+      );
+
+    value = value.copy().set_pos(node.pos_start, node.pos_end);
+    return res.success(value);
+  };
+
+  visit_VarAssignNode = (node, context) => {
+    let res = new RTResult();
+    let var_name = node.var_name_tok.value;
+    let value = res.register(this.visit(node.value_node, context));
+    if (res.error) return res;
+
+    context.symbol_table.set(var_name, value);
+    return res.success(value);
   };
 
   visit_BinOpNode = (node, context) => {
