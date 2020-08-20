@@ -4,8 +4,8 @@ class NumberNode {
   constructor(tok) {
     this.tok = tok;
 
-    this.pos_start = this.tok.pos_start;
-    this.pos_end = this.tok.pos_end;
+    this.posStart = this.tok.posStart;
+    this.posEnd = this.tok.posEnd;
   }
 
   [util.inspect.custom](depth, options) {
@@ -18,32 +18,32 @@ class NumberNode {
 }
 
 class VarAccessNode {
-  constructor(var_name_tok) {
-    this.var_name_tok = var_name_tok;
+  constructor(varNameTok) {
+    this.varNameTok = varNameTok;
 
-    this.pos_start = this.var_name_tok.pos_start;
-    this.pos_end = this.var_name_tok.pos_end;
+    this.posStart = this.varNameTok.posStart;
+    this.posEnd = this.varNameTok.posEnd;
   }
 }
 
 class VarAssignNode {
-  constructor(var_name_tok, value_node) {
-    this.var_name_tok = var_name_tok;
-    this.value_node = value_node;
+  constructor(varNameTok, valueNode) {
+    this.varNameTok = varNameTok;
+    this.valueNode = valueNode;
 
-    this.pos_start = this.var_name_tok.pos_start;
-    this.pos_end = this.value_node.pos_end;
+    this.posStart = this.varNameTok.posStart;
+    this.posEnd = this.valueNode.posEnd;
   }
 }
 
 class BinOpNode {
-  constructor(left_node, op_tok, right_node) {
-    this.left_node = left_node;
-    this.op_tok = op_tok;
-    this.right_node = right_node;
+  constructor(leftNode, opTok, rightNode) {
+    this.leftNode = leftNode;
+    this.opTok = opTok;
+    this.rightNode = rightNode;
 
-    this.pos_start = this.left_node.pos_start;
-    this.pos_end = this.right_node.pos_end;
+    this.posStart = this.leftNode.posStart;
+    this.posEnd = this.rightNode.posEnd;
   }
 
   [util.inspect.custom](depth, options) {
@@ -51,17 +51,17 @@ class BinOpNode {
   }
 
   toString() {
-    return `(${this.left_node}, ${this.op_tok}, ${this.right_node})`;
+    return `(${this.leftNode}, ${this.opTok}, ${this.rightNode})`;
   }
 }
 
 class UnaryOpNode {
-  constructor(op_tok, node) {
-    this.op_tok = op_tok;
+  constructor(opTok, node) {
+    this.opTok = opTok;
     this.node = node;
 
-    this.pos_start = this.op_tok.pos_start;
-    this.pos_end = this.node.pos_end;
+    this.posStart = this.opTok.posStart;
+    this.posEnd = this.node.posEnd;
   }
 
   [util.inspect.custom](depth, options) {
@@ -69,7 +69,7 @@ class UnaryOpNode {
   }
 
   toString() {
-    return `(${this.op_tok}, ${this.node})`;
+    return `(${this.opTok}, ${this.node})`;
   }
 }
 

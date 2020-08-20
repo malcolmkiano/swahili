@@ -1,54 +1,54 @@
-const string_with_arrows = require('../utils/string_with_arrows');
+const stringWithArrows = require('../utils/string_with_arrows');
 
 class Error {
-  constructor(pos_start, pos_end, error_name, details) {
-    this.pos_start = pos_start;
-    this.pos_end = pos_end;
-    this.error_name = error_name;
+  constructor(posStart, posEnd, errorName, details) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+    this.errorName = errorName;
     this.details = details;
   }
 
   toString() {
-    let result = `${this.error_name}: ${this.details}` + '\n';
-    result += `File ${this.pos_start.fn}, line ${this.pos_start.ln + 1}`;
+    let result = `${this.errorName}: ${this.details}` + '\n';
+    result += `File ${this.posStart.fn}, line ${this.posStart.ln + 1}`;
     result +=
       '\n\n' +
-      string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
+      stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
     return result;
   }
 }
 
 // Error Types
 class IllegalCharError extends Error {
-  constructor(pos_start, pos_end, details) {
-    super(pos_start, pos_end, 'Illegal Character', details);
+  constructor(posStart, posEnd, details) {
+    super(posStart, posEnd, 'Illegal Character', details);
   }
 }
 
 class InvalidSyntaxError extends Error {
-  constructor(pos_start, pos_end, details = '') {
-    super(pos_start, pos_end, 'Invalid Syntax', details);
+  constructor(posStart, posEnd, details = '') {
+    super(posStart, posEnd, 'Invalid Syntax', details);
   }
 }
 
 /** Runtime error */
 class RTError extends Error {
-  constructor(pos_start, pos_end, details, context) {
-    super(pos_start, pos_end, 'Runtime Error', details);
+  constructor(posStart, posEnd, details, context) {
+    super(posStart, posEnd, 'Runtime Error', details);
     this.context = context;
   }
 
-  generate_traceback() {
+  generateTraceback() {
     let result = '';
-    let pos = this.pos_start;
+    let pos = this.posStart;
     let ctx = this.context;
 
     while (ctx) {
       result =
-        `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.display_name}` +
+        `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.displayName}` +
         '\n' +
         result;
-      pos = ctx.parent_entry_pos;
+      pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
 
@@ -56,11 +56,11 @@ class RTError extends Error {
   }
 
   toString() {
-    let result = this.generate_traceback();
-    result += `${this.error_name}: ${this.details}`;
+    let result = this.generateTraceback();
+    result += `${this.errorName}: ${this.details}`;
     result +=
       '\n\n' +
-      string_with_arrows(this.pos_start.ftxt, this.pos_start, this.pos_end);
+      stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
     return result;
   }
 }

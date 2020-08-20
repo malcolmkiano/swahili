@@ -6,56 +6,56 @@ const { RTError } = require('../error');
 class NUMBER {
   constructor(value) {
     this.value = value;
-    this.set_pos();
-    this.set_context();
+    this.setPos();
+    this.setContext();
   }
 
-  set_pos(pos_start = null, pos_end = null) {
-    this.pos_start = pos_start;
-    this.pos_end = pos_end;
+  setPos(posStart = null, posEnd = null) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
     return this;
   }
 
-  set_context(context = null) {
+  setContext(context = null) {
     this.context = context;
     return this;
   }
 
-  added_to(other) {
+  addedTo(other) {
     if (other instanceof NUMBER) {
       return [
-        new NUMBER(this.value + other.value).set_context(this.context),
+        new NUMBER(this.value + other.value).setContext(this.context),
         null,
       ];
     }
   }
 
-  subbed_by(other) {
+  subbedBy(other) {
     if (other instanceof NUMBER) {
       return [
-        new NUMBER(this.value - other.value).set_context(this.context),
+        new NUMBER(this.value - other.value).setContext(this.context),
         null,
       ];
     }
   }
 
-  multed_by(other) {
+  multedBy(other) {
     if (other instanceof NUMBER) {
       return [
-        new NUMBER(this.value * other.value).set_context(this.context),
+        new NUMBER(this.value * other.value).setContext(this.context),
         null,
       ];
     }
   }
 
-  divved_by(other) {
+  divvedBy(other) {
     if (other instanceof NUMBER) {
       if (other.value === 0) {
         return [
           null,
           new RTError(
-            other.pos_start,
-            other.pos_end,
+            other.posStart,
+            other.posEnd,
             'Division by zero',
             this.context
           ),
@@ -63,16 +63,16 @@ class NUMBER {
       }
 
       return [
-        new NUMBER(this.value / other.value).set_context(this.context),
+        new NUMBER(this.value / other.value).setContext(this.context),
         null,
       ];
     }
   }
 
-  powed_by(other) {
+  powedBy(other) {
     if (other instanceof NUMBER) {
       return [
-        new NUMBER(this.value ** other.value).set_context(this.context),
+        new NUMBER(this.value ** other.value).setContext(this.context),
         null,
       ];
     }
@@ -80,8 +80,8 @@ class NUMBER {
 
   copy() {
     let copy = new NUMBER(this.value);
-    copy.set_pos(this.pos_start, this.pos_end);
-    copy.set_context(this.context);
+    copy.setPos(this.posStart, this.posEnd);
+    copy.setContext(this.context);
     return copy;
   }
 

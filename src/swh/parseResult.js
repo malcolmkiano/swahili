@@ -2,15 +2,15 @@ class ParseResult {
   constructor() {
     this.error = null;
     this.node = null;
-    this.advance_count = 0;
+    this.advanceCount = 0;
   }
 
-  register_advancement() {
-    this.advance_count++;
+  registerAdvancement() {
+    this.advanceCount++;
   }
 
   register(res) {
-    this.advance_count += res.advance_count;
+    this.advanceCount += res.advanceCount;
     if (res.error) this.error = res.error;
     return res.node;
   }
@@ -21,7 +21,7 @@ class ParseResult {
   }
 
   failure = (error) => {
-    if (!this.error || this.advance_count === 0) this.error = error;
+    if (!this.error || this.advanceCount === 0) this.error = error;
     return this;
   };
 }

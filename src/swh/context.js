@@ -1,10 +1,10 @@
 /** keeps track of the program call stack (for traceback) */
 class Context {
-  constructor(display_name, parent = null, parent_entry_pos = null) {
-    this.display_name = display_name;
+  constructor(displayName, parent = null, parentEntryPos = null) {
+    this.displayName = displayName;
     this.parent = parent;
-    this.parent_entry_pos = parent_entry_pos;
-    this.symbol_table = null;
+    this.parentEntryPos = parentEntryPos;
+    this.symbolTable = null;
   }
 }
 
