@@ -94,11 +94,11 @@ class Parser {
       this.advance();
     };
 
-    // Get the first case
+    /** Get the first case */
     output = getCase();
     if (output) return output;
 
-    // Grab the cases from any ELSEIF(AU) blocks
+    /** Grab the cases from any ELSEIF(AU) blocks */
     while (this.currentTok.matches(TT.KEYWORD, 'au')) {
       output = getCase();
       if (output) return output;
@@ -289,7 +289,7 @@ class Parser {
     return res.success(node);
   };
 
-  // binary operation
+  /** binary operation */
   binOp(funcA, ops, funcB = null) {
     if (funcB === null) funcB = funcA;
 

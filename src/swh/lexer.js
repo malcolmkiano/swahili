@@ -25,7 +25,7 @@ class Lexer {
     let dotCount = 0;
     let posStart = this.pos.copy();
 
-    // keep going while character is a digit or a dot, and we haven't seen a dot yet
+    /** keep going while character is a digit or a dot, and we haven't seen a dot yet */
     while (
       this.currentChar !== null &&
       (TT.DIGITS + '.').includes(this.currentChar)
@@ -40,7 +40,7 @@ class Lexer {
       this.advance();
     }
 
-    // check if INT or FLOAT
+    /** check if INT or FLOAT */
     if (dotCount === 0) {
       return new Token(TT.INT, parseInt(numStr), posStart, this.pos);
     } else {
@@ -52,7 +52,7 @@ class Lexer {
     let idStr = '';
     let posStart = this.pos.copy();
 
-    // keep going while character is a alphanumeric or an underscore
+    /** keep going while character is a alphanumeric or an underscore */
     while (
       this.currentChar !== null &&
       (TT.LETTERS + TT.DIGITS).includes(this.currentChar)
@@ -61,7 +61,7 @@ class Lexer {
       this.advance();
     }
 
-    // check if KEYWORD or IDENTIFIER
+    /** check if KEYWORD or IDENTIFIER */
     let tokType = KEYWORDS.includes(idStr) ? TT.KEYWORD : TT.IDENTIFIER;
     return new Token(tokType, idStr, posStart, this.pos);
   }
@@ -155,7 +155,7 @@ class Lexer {
 
     while (this.currentChar !== null) {
       if (' \t'.includes(this.currentChar)) {
-        // ignore spaces and tabs
+        /** ignore spaces and tabs */
         this.advance();
       } else if (TT.DIGITS.includes(this.currentChar)) {
         tokens.push(this.makeNumber());

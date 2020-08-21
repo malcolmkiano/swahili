@@ -1,9 +1,10 @@
-// STDIN & STDOUT setup
+/** STDIN & STDOUT setup */
 const readline = require('readline');
 const colors = require('colors');
+const setTitle = require('node-bash-title');
 const print = require('./utils/print');
 
-// SWH
+/** Swahili Interpreter */
 const swh = require('./swh/run');
 
 const rl = readline.createInterface({
@@ -11,10 +12,10 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-// READ LOOP
+/** Prompts user for input in the terminal */
 const getInput = () => {
   rl.question(`${colors.brightGreen('swahili')} > `, (text) => {
-    // handle input
+    /** handle input */
     const [result, error] = swh('<stdin>', text);
     if (error) {
       print(colors.red(error.toString()), true);
@@ -22,10 +23,11 @@ const getInput = () => {
       print(result, true);
     }
 
-    // get more input
+    /** keep prompting until they manually terminate the process */
     getInput();
   });
 };
 
 console.clear();
+setTitle('✨ swahili');
 getInput();
