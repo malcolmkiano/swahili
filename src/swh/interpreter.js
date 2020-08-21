@@ -74,6 +74,22 @@ class Interpreter {
       [result, error] = left.divvedBy(right);
     } else if (node.opTok.type === TT.POW) {
       [result, error] = left.powedBy(right);
+    } else if (node.opTok.type === TT.EE) {
+      [result, error] = left.getComparisonEQ(right);
+    } else if (node.opTok.type == TT.NE) {
+      [result, error] = left.getComparisonNE(right);
+    } else if (node.opTok.type === TT.LT) {
+      [result, error] = left.getComparisonLT(right);
+    } else if (node.opTok.type === TT.GT) {
+      [result, error] = left.getComparisonGT(right);
+    } else if (node.opTok.type === TT.LTE) {
+      [result, error] = left.getComparisonLTE(right);
+    } else if (node.opTok.type === TT.GTE) {
+      [result, error] = left.getComparisonGTE(right);
+    } else if (node.opTok.type === TT.AND) {
+      [result, error] = left.andedBy(right);
+    } else if (node.opTok.type === TT.OR) {
+      [result, error] = left.oredBy(right);
     }
 
     if (error) {
@@ -92,6 +108,8 @@ class Interpreter {
 
     if (node.opTok.type === TT.MINUS) {
       [number, error] = number.multedBy(new NUMBER(-1));
+    } else if (node.opTok.type === TT.NOT) {
+      [number, error] = number.notted();
     }
 
     if (error) {

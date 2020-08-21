@@ -24,6 +24,12 @@ class IllegalCharError extends Error {
   }
 }
 
+class ExpectedCharError extends Error {
+  constructor(posStart, posEnd, details = '') {
+    super(posStart, posEnd, 'Expected Character', details);
+  }
+}
+
 class InvalidSyntaxError extends Error {
   constructor(posStart, posEnd, details = '') {
     super(posStart, posEnd, 'Invalid Syntax', details);
@@ -66,6 +72,7 @@ class RTError extends Error {
 module.exports = {
   Error,
   IllegalCharError,
+  ExpectedCharError,
   InvalidSyntaxError,
   RTError,
 };

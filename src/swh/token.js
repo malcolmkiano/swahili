@@ -24,7 +24,7 @@ class Token {
   }
 
   toString() {
-    if (this.value) {
+    if (this.value !== null) {
       return `${this.type}:${colors.cyan(this.value)}`;
     } else {
       return `${colors.yellow(this.type)}`;

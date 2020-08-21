@@ -35,12 +35,40 @@ module.exports = {
   /** Right parentheses */
   RPAREN: 'RPAREN',
 
+  /** Double equal comparison */
+  EE: 'EE',
+
+  /** Not equal comparison */
+  NE: 'NE',
+
+  /** Less than comparison */
+  LT: 'LT',
+
+  /** Greater than comparison */
+  GT: 'GT',
+
+  /** Less than or equal comparison */
+  LTE: 'LTE',
+
+  /** Greater than or equal comparison */
+  GTE: 'GTE',
+
+  /** End of file */
+  EOF: 'EOF',
+
+  /** AND symbol */
+  AND: 'AND',
+
+  /** OR symbol */
+  OR: 'OR',
+
+  /** NOT symbol */
+  NOT: 'NOT',
+
+  /** Not really token types, but capture groups */
   /** Digits 0-9 */
   DIGITS: '0123456789',
 
   /** Letters A-Z (both cases) */
   LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-
-  /** End of file */
-  EOF: 'EOF',
 };
