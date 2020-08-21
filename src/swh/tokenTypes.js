@@ -70,5 +70,5 @@ module.exports = {
   DIGITS: '0123456789',
 
   /** Letters A-Z (both cases) */
-  LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+  LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_',
 };

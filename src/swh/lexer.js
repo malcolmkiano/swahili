@@ -55,7 +55,7 @@ class Lexer {
     // keep going while character is a alphanumeric or an underscore
     while (
       this.currentChar !== null &&
-      (TT.LETTERS + TT.DIGITS + '_').includes(this.currentChar)
+      (TT.LETTERS + TT.DIGITS).includes(this.currentChar)
     ) {
       idStr += this.currentChar;
       this.advance();
