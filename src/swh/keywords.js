@@ -1,1 +1,1 @@
-module.exports = ['wacha'];
+module.exports = ['wacha' /** LET (for variable declaration) */];

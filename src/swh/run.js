@@ -7,6 +7,8 @@ const SymbolTable = require('./symbolTable');
 
 const globalSymbolTable = new SymbolTable();
 globalSymbolTable.set('tupu', new NUMBER(0));
+globalSymbolTable.set('kweli', new NUMBER(1));
+globalSymbolTable.set('uwongo', new NUMBER(0));
 
 function run(fn, text) {
   // Generate tokens

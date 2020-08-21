@@ -1,9 +1,9 @@
-const TT = require('./token_types');
+const TT = require('./tokenTypes');
 const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
 const Position = require('./position');
-const { IllegalCharError } = require('./error');
+const { IllegalCharError, ExpectedCharError } = require('./error');
 
 class Lexer {
   constructor(fn, text) {
@@ -55,7 +55,7 @@ class Lexer {
     // keep going while character is a alphanumeric or an underscore
     while (
       this.currentChar !== null &&
-      (TT.LETTERS + TT.DIGITS + '_').includes(this.currentChar)
+      (TT.LETTERS + TT.DIGITS).includes(this.currentChar)
     ) {
       idStr += this.currentChar;
       this.advance();
@@ -64,6 +64,90 @@ class Lexer {
     // check if KEYWORD or IDENTIFIER
     let tokType = KEYWORDS.includes(idStr) ? TT.KEYWORD : TT.IDENTIFIER;
     return new Token(tokType, idStr, posStart, this.pos);
+  }
+
+  makeAnd() {
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '&') {
+      this.advance();
+      return [new Token(TT.AND, null, posStart, this.pos), null];
+    }
+
+    this.advance();
+    return [
+      null,
+      new ExpectedCharError(posStart, this.pos, `'&' (to make '&&')`),
+    ];
+  }
+
+  makeOr() {
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '|') {
+      this.advance();
+      return [new Token(TT.OR, null, posStart, this.pos), null];
+    }
+
+    this.advance();
+    return [
+      null,
+      new ExpectedCharError(posStart, this.pos, `'|' (to make '||')`),
+    ];
+  }
+
+  makeNotEquals() {
+    let tokType = TT.NOT;
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '=') {
+      this.advance();
+      tokType = TT.NE;
+    }
+
+    return new Token(tokType, null, posStart, this.pos);
+  }
+
+  makeEquals() {
+    let tokType = TT.EQ;
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '=') {
+      this.advance();
+      tokType = TT.EE;
+    }
+
+    return new Token(tokType, null, posStart, this.pos);
+  }
+
+  makeLessThan() {
+    let tokType = TT.LT;
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '=') {
+      this.advance();
+      tokType = TT.LTE;
+    }
+
+    return new Token(tokType, null, posStart, this.pos);
+  }
+
+  makeGreaterThan() {
+    let tokType = TT.GT;
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (this.currentChar === '=') {
+      this.advance();
+      tokType = TT.GTE;
+    }
+
+    return new Token(tokType, null, posStart, this.pos);
   }
 
   makeTokens() {
@@ -92,15 +176,28 @@ class Lexer {
       } else if (this.currentChar === '^') {
         tokens.push(new Token(TT.POW, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '=') {
-        tokens.push(new Token(TT.EQ, null, this.pos));
-        this.advance();
       } else if (this.currentChar === '(') {
         tokens.push(new Token(TT.LPAREN, null, this.pos));
         this.advance();
       } else if (this.currentChar === ')') {
         tokens.push(new Token(TT.RPAREN, null, this.pos));
         this.advance();
+      } else if (this.currentChar === '&') {
+        let [tok, error] = this.makeAnd();
+        if (error) return [[], error];
+        tokens.push(tok);
+      } else if (this.currentChar === '|') {
+        let [tok, error] = this.makeOr();
+        if (error) return [[], error];
+        tokens.push(tok);
+      } else if (this.currentChar === '!') {
+        tokens.push(this.makeNotEquals());
+      } else if (this.currentChar === '=') {
+        tokens.push(this.makeEquals());
+      } else if (this.currentChar === '<') {
+        tokens.push(this.makeLessThan());
+      } else if (this.currentChar === '>') {
+        tokens.push(this.makeGreaterThan());
       } else {
         let posStart = this.pos.copy();
         let char = this.currentChar;

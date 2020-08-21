@@ -1,4 +1,4 @@
-const TT = require('./token_types');
+const TT = require('./tokenTypes');
 const {
   NumberNode,
   VarAccessNode,
@@ -102,6 +102,38 @@ class Parser {
     return this.binOp(this.factor, [TT.MUL, TT.DIV]);
   };
 
+  arithExpr = () => {
+    return this.binOp(this.term, [TT.PLUS, TT.MINUS]);
+  };
+
+  compExpr = () => {
+    let res = new ParseResult();
+
+    if (this.currentTok.type === TT.NOT) {
+      let opToken = this.currentTok;
+      res.registerAdvancement();
+      this.advance();
+
+      let node = res.register(this.compExpr());
+      if (res.error) return res;
+      return res.success(new UnaryOpNode(opToken, node));
+    }
+
+    let node = res.register(
+      this.binOp(this.arithExpr, [TT.EE, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE])
+    );
+    if (res.error)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected int, float, identifier, '+', '-', '(' or 'si'`
+        )
+      );
+
+    return res.success(node);
+  };
+
   expr = () => {
     let res = new ParseResult();
     if (this.currentTok.matches(TT.KEYWORD, 'wacha')) {
@@ -137,7 +169,7 @@ class Parser {
       return res.success(new VarAssignNode(varName, expr));
     }
 
-    let node = res.register(this.binOp(this.term, [TT.PLUS, TT.MINUS]));
+    let node = res.register(this.binOp(this.compExpr, [TT.AND, TT.OR]));
     if (res.error)
       return res.failure(
         new InvalidSyntaxError(

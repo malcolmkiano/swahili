@@ -78,6 +78,82 @@ class NUMBER {
     }
   }
 
+  getComparisonEQ(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value === other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  getComparisonNE(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value !== other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  getComparisonLT(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value < other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  getComparisonGT(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value > other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  getComparisonLTE(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value <= other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  getComparisonGTE(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value >= other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  andedBy(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value && other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  oredBy(other) {
+    if (other instanceof NUMBER) {
+      return [
+        new NUMBER(this.value || other.value ? 1 : 0).setContext(this.context),
+        null,
+      ];
+    }
+  }
+
+  notted() {
+    return [new NUMBER(this.value == 0 ? 1 : 0).setContext(this.context), null];
+  }
+
   copy() {
     let copy = new NUMBER(this.value);
     copy.setPos(this.posStart, this.posEnd);
