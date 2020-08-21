@@ -1,4 +1,4 @@
-const stringWithArrows = require('../utils/string_with_arrows');
+const stringWithArrows = require('../utils/stringWithArrows');
 
 class Error {
   constructor(posStart, posEnd, errorName, details) {
@@ -12,8 +12,7 @@ class Error {
     let result = `${this.errorName}: ${this.details}` + '\n';
     result += `File ${this.posStart.fn}, line ${this.posStart.ln + 1}`;
     result +=
-      '\n\n' +
-      stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
+      '\n\n' + stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
     return result;
   }
 }
@@ -59,8 +58,7 @@ class RTError extends Error {
     let result = this.generateTraceback();
     result += `${this.errorName}: ${this.details}`;
     result +=
-      '\n\n' +
-      stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
+      '\n\n' + stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
     return result;
   }
 }

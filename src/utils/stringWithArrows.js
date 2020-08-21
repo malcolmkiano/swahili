@@ -22,9 +22,7 @@ function stringWithArrows(text, posStart, posEnd) {
 
     // Append to result
     result += line + '\n';
-    result +=
-      ' '.repeat(colStart) +
-      '^'.repeat(Math.max(colEnd - colStart, 1));
+    result += ' '.repeat(colStart) + '^'.repeat(Math.max(colEnd - colStart, 1));
 
     // Re-calculate indices
     idxStart = idxEnd;

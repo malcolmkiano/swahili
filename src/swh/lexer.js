@@ -1,4 +1,4 @@
-const TT = require('./token_types');
+const TT = require('./tokenTypes');
 const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
