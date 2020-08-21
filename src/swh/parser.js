@@ -5,6 +5,7 @@ const {
   VarAssignNode,
   BinOpNode,
   UnaryOpNode,
+  IfNode,
 } = require('./nodes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('./error');
@@ -38,6 +39,108 @@ class Parser {
     return res;
   }
 
+  ifExpr = () => {
+    let res = new ParseResult();
+    let cases = [];
+    let elseCase = null;
+    let output = null;
+
+    if (!this.currentTok.matches(TT.KEYWORD, 'kama')) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected 'kama'`
+        )
+      );
+    }
+
+    const getCase = () => {
+      res.registerAdvancement();
+      this.advance();
+
+      let condition = res.register(this.expr());
+      if (res.error) return res;
+
+      if (this.currentTok.type !== TT.LCURL) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '{'`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+
+      if (this.currentTok.type !== TT.RCURL) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '}'`
+          )
+        );
+      }
+
+      cases.push([condition, expr]);
+
+      res.registerAdvancement();
+      this.advance();
+    };
+
+    // Get the first case
+    output = getCase();
+    if (output) return output;
+
+    // Grab the cases from any ELSEIF(AU) blocks
+    while (this.currentTok.matches(TT.KEYWORD, 'au')) {
+      output = getCase();
+      if (output) return output;
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, 'sivyo')) {
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type !== TT.LCURL) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '{'`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+
+      elseCase = res.register(this.expr());
+      if (res.error) return res;
+
+      if (this.currentTok.type !== TT.RCURL) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '}'`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    return res.success(new IfNode(cases, elseCase));
+  };
+
   atom = () => {
     let res = new ParseResult();
     const tok = this.currentTok;
@@ -68,6 +171,10 @@ class Parser {
           )
         );
       }
+    } else if (tok.matches(TT.KEYWORD, 'kama')) {
+      let ifExpr = res.register(this.ifExpr());
+      if (res.error) return res;
+      return res.success(ifExpr);
     }
 
     return res.failure(

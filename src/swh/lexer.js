@@ -182,6 +182,12 @@ class Lexer {
       } else if (this.currentChar === ')') {
         tokens.push(new Token(TT.RPAREN, null, this.pos));
         this.advance();
+      } else if (this.currentChar === '{') {
+        tokens.push(new Token(TT.LCURL, null, this.pos));
+        this.advance();
+      } else if (this.currentChar === '}') {
+        tokens.push(new Token(TT.RCURL, null, this.pos));
+        this.advance();
       } else if (this.currentChar === '&') {
         let [tok, error] = this.makeAnd();
         if (error) return [[], error];

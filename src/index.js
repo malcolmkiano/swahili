@@ -18,7 +18,7 @@ const getInput = () => {
     const [result, error] = swh('<stdin>', text);
     if (error) {
       print(colors.red(error.toString()), true);
-    } else {
+    } else if (result) {
       print(result, true);
     }
 

@@ -118,6 +118,29 @@ class Interpreter {
       return res.success(number.setPos(node.posStart, node.posEnd));
     }
   };
+
+  visitIfNode = (node, context) => {
+    let res = new RTResult();
+
+    for (let [condition, expr] of node.cases) {
+      let conditionValue = res.register(this.visit(condition, context));
+      if (res.error) return res;
+
+      if (conditionValue.isTrue()) {
+        let exprValue = res.register(this.visit(expr, context));
+        if (res.error) return res;
+        return res.success(exprValue);
+      }
+    }
+
+    if (node.elseCase) {
+      let elseValue = res.register(this.visit(node.elseCase, context));
+      if (res.error) return res;
+      return res.success(elseValue);
+    }
+
+    return res.success(null);
+  };
 }
 
 module.exports = Interpreter;
