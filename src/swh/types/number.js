@@ -161,6 +161,10 @@ class NUMBER {
     return copy;
   }
 
+  isTrue() {
+    return this.value !== 0;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }

@@ -11,17 +11,17 @@ globalSymbolTable.set('kweli', new NUMBER(1));
 globalSymbolTable.set('uwongo', new NUMBER(0));
 
 function run(fn, text) {
-  // Generate tokens
+  /** Generate tokens */
   const lexer = new Lexer(fn, text);
   const [tokens, error] = lexer.makeTokens();
   if (error) return [null, error];
 
-  // Generate abstract syntax tree
+  /** Generate abstract syntax tree */
   const parser = new Parser(tokens);
   const ast = parser.parse();
   if (ast.error) return [null, ast.error];
 
-  // Run program
+  /** Run program */
   const interpreter = new Interpreter();
   const context = new Context('<program>');
   context.symbolTable = globalSymbolTable;

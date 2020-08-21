@@ -11,7 +11,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "colors": "^1.4.0"
+    "colors": "^1.4.0",
+    "node-bash-title": "0.0.2"
   },
   "devDependencies": {
     "eslint": "^7.7.0"

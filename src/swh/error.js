@@ -17,19 +17,21 @@ class Error {
   }
 }
 
-// Error Types
+/** Occurs when an unrecognized character is encountered by the lexer */
 class IllegalCharError extends Error {
   constructor(posStart, posEnd, details) {
     super(posStart, posEnd, 'Illegal Character', details);
   }
 }
 
+/** Occurs when an expected character was not found by the lexer */
 class ExpectedCharError extends Error {
   constructor(posStart, posEnd, details = '') {
     super(posStart, posEnd, 'Expected Character', details);
   }
 }
 
+/** Occurs when an unrecognized combination of nodes is encountered by the parser */
 class InvalidSyntaxError extends Error {
   constructor(posStart, posEnd, details = '') {
     super(posStart, posEnd, 'Invalid Syntax', details);

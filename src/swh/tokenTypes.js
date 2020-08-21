@@ -35,6 +35,12 @@ module.exports = {
   /** Right parentheses */
   RPAREN: 'RPAREN',
 
+  /** Left curly bracket */
+  LCURL: 'LCURL',
+
+  /** Right curly bracket */
+  RCURL: 'RCURL',
+
   /** Double equal comparison */
   EE: 'EE',
 
