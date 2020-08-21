@@ -6,7 +6,7 @@ const Position = require('./position');
 const { IllegalCharError, ExpectedCharError } = require('./error');
 
 class Lexer {
-  constructor(fn, text) {
+  constructor(fn, text) { //fn = file name
     this.fn = fn;
     this.text = text;
     this.pos = new Position(-1, 0, -1, fn, text);
