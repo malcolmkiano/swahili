@@ -2,16 +2,16 @@ const Lexer = require('./lexer');
 const Parser = require('./parser');
 const Interpreter = require('./interpreter');
 const Context = require('./context');
-const NUMBER = require('./types/number');
+const SWNumber = require('./types/number');
 const SymbolTable = require('./symbolTable');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', new NUMBER(0)); // NULL
-globalSymbolTable.set('kweli', new NUMBER(1)); // TRUE
-globalSymbolTable.set('uwongo', new NUMBER(0)); // FALSE
+globalSymbolTable.set('tupu', new SWNumber(0)); // NULL
+globalSymbolTable.set('kweli', new SWNumber(1)); // TRUE
+globalSymbolTable.set('uwongo', new SWNumber(0)); // FALSE
 
 /**
  * Processes a file through the lexer, parser and interpreter
@@ -24,17 +24,19 @@ function run(fileName, text) {
   const lexer = new Lexer(fileName, text);
   const [tokens, error] = lexer.makeTokens();
   if (error) return [null, error];
+  // console.log(tokens);
 
   // Generate abstract syntax tree
   const parser = new Parser(tokens);
   const ast = parser.parse();
   if (ast.error) return [null, ast.error];
+  // console.log(ast.node);
 
   // Run program
-  const interpreter = new Interpreter();
+  const intr = new Interpreter();
   const context = new Context('<program>');
   context.symbolTable = globalSymbolTable;
-  const result = interpreter.visit(ast.node, context);
+  const result = intr.visit(ast.node, context);
 
   return [result.value, result.error];
 }

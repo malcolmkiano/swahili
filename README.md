@@ -16,13 +16,20 @@ This will be updated as the language develops
 | **term**       | `factor` (MUL/DIV) `factor`)\*                        |
 | **factor**     | (PLUS/MINUS) `factor`                                 |
 |                | `power`                                               |
-| **power**      | `atom` (POW `factor`)\*                               |
+| **power**      | `call` (POW `factor`)\*                               |
+| **call**       | `atom` (LPAREN (`expr` (COMMA `expr`)\*)? RPAREN)?    |
 | **atom**       | INT/FLOAT/IDENTIFIER                                  |
 |                | LPAREN `expr` RPAREN                                  |
 |                | `if-expr`                                             |
+|                | `for-expr`                                            |
+|                | `while-expr`                                          |
+|                | `func-def`                                            |
 | **if-expr**    | KEYWORD:KAMA `expr` LCURL `expr` RCURL                |
 |                | (KEYWORD:AU `expr` LCURL `expr` RCURL)\*              |
 |                | (KEYWORD:SIVYO LCURL `expr` RCURL)?                   |
 | **for-expr**   | KEYWORD:KWA IDENTIFIER EQ `expr` KEYWORD:MPAKA `expr` |
 |                | (KEYWORD:HATUA `expr`)? LCURL `expr` RCURL            |
 | **while-expr** | KEYWORD:AMBAPO `expr` LCURL `expr` RCURL              |
+| **func-def**   | KEYWORD:SHUGHULI IDENTIFIER?                          |
+|                | LPAREN (IDENTIFIER (COMMA IDENTIFIER)\*)? RPAREN      |
+|                | LCURL expr RCURL                                      |

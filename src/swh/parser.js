@@ -8,6 +8,8 @@ const {
   IfNode,
   ForNode,
   WhileNode,
+  FuncDefNode,
+  CallNode,
 } = require('./nodes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('./error');
@@ -52,6 +54,228 @@ class Parser {
     }
     return res;
   }
+
+  /** creates nodes based on the expr rule in the grammar document */
+  expr = () => {
+    let res = new ParseResult();
+    if (this.currentTok.matches(TT.KEYWORD, 'wacha')) {
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type !== TT.IDENTIFIER)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected identifier`
+          )
+        );
+
+      let varName = this.currentTok;
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type !== TT.EQ)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '='`
+          )
+        );
+
+      res.registerAdvancement();
+      this.advance();
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+      return res.success(new VarAssignNode(varName, expr));
+    }
+
+    let node = res.register(this.binOp(this.compExpr, [TT.AND, TT.OR]));
+    if (res.error)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(' or 'si'`
+        )
+      );
+
+    return res.success(node);
+  };
+
+  /** creates nodes based on the comp-expr rule in the grammar document */
+  compExpr = () => {
+    let res = new ParseResult();
+    let node = null;
+
+    if (this.currentTok.type === TT.NOT) {
+      let opToken = this.currentTok;
+      res.registerAdvancement();
+      this.advance();
+
+      node = res.register(this.compExpr());
+      if (res.error) return res;
+      return res.success(new UnaryOpNode(opToken, node));
+    }
+
+    node = res.register(
+      this.binOp(this.arithExpr, [TT.EE, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE])
+    );
+    if (res.error)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected int, float, identifier, '+', '-', '(' or 'si'`
+        )
+      );
+
+    return res.success(node);
+  };
+
+  /** creates nodes based on the arith-expr rule in the grammar document */
+  arithExpr = () => {
+    return this.binOp(this.term, [TT.PLUS, TT.MINUS]);
+  };
+
+  /** creates nodes based on the term rule in the grammar document */
+  term = () => {
+    return this.binOp(this.factor, [TT.MUL, TT.DIV]);
+  };
+
+  /** creates nodes based on the power rule in the grammar document */
+  factor = () => {
+    let res = new ParseResult();
+    const tok = this.currentTok;
+
+    if ([TT.PLUS, TT.MINUS].includes(tok.type)) {
+      res.registerAdvancement();
+      this.advance();
+      let factor = res.register(this.factor());
+      if (res.error) return res;
+      return res.success(new UnaryOpNode(tok, factor));
+    }
+
+    return this.power();
+  };
+
+  /** creates nodes based on the power rule in the grammar document */
+  power = () => {
+    return this.binOp(this.call, [TT.POW], this.factor);
+  };
+
+  /** creates a function call node */
+  call = () => {
+    let res = new ParseResult();
+    let atom = res.register(this.atom());
+    if (res.error) return res;
+
+    let argNodes = [];
+
+    if (this.currentTok.type === TT.LPAREN) {
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type === TT.RPAREN) {
+        res.registerAdvancement();
+        this.advance();
+      } else {
+        argNodes.push(res.register(this.expr()));
+        if (res.error)
+          return res.failure(
+            new InvalidSyntaxError(
+              this.currentTok.posStart,
+              this.currentTok.posEnd,
+              `Expected ')', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-' '(' or 'si'`
+            )
+          );
+
+        while (this.currentTok.type === TT.COMMA) {
+          res.registerAdvancement();
+          this.advance();
+
+          argNodes.push(res.register(this.expr()));
+          if (res.error) return res;
+        }
+
+        if (this.currentTok.type !== TT.RPAREN) {
+          return res.failure(
+            new InvalidSyntaxError(
+              this.currentTok.posStart,
+              this.currentTok.posEnd,
+              `Expected ')'`
+            )
+          );
+        }
+
+        res.registerAdvancement();
+        this.advance();
+      }
+
+      return res.success(new CallNode(atom, argNodes));
+    }
+
+    return res.success(atom);
+  };
+
+  /** creates nodes based on the atom rule in the grammar document */
+  atom = () => {
+    let res = new ParseResult();
+    const tok = this.currentTok;
+
+    if ([TT.INT, TT.FLOAT].includes(tok.type)) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(new NumberNode(tok));
+    } else if (tok.type === TT.IDENTIFIER) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(new VarAccessNode(tok));
+    } else if (tok.type === TT.LPAREN) {
+      res.registerAdvancement();
+      this.advance();
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+      if (this.currentTok.type === TT.RPAREN) {
+        res.registerAdvancement();
+        this.advance();
+        return res.success(expr);
+      } else {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected ')'`
+          )
+        );
+      }
+    } else if (tok.matches(TT.KEYWORD, 'kama')) {
+      let ifExpr = res.register(this.ifExpr());
+      if (res.error) return res;
+      return res.success(ifExpr);
+    } else if (tok.matches(TT.KEYWORD, 'kwa')) {
+      let forExpr = res.register(this.forExpr());
+      if (res.error) return res;
+      return res.success(forExpr);
+    } else if (tok.matches(TT.KEYWORD, 'ambapo')) {
+      let whileExpr = res.register(this.whileExpr());
+      if (res.error) return res;
+      return res.success(whileExpr);
+    } else if (tok.matches(TT.KEYWORD, 'shughuli')) {
+      let funcDef = res.register(this.funcDef());
+      if (res.error) return res;
+      return res.success(funcDef);
+    }
+
+    return res.failure(
+      new InvalidSyntaxError(
+        tok.posStart,
+        tok.posEnd,
+        `Expected int, float, identifier, '+', '-', '(', 'kama', 'kwa', 'ambapo' or 'shughuli'`
+      )
+    );
+  };
 
   /** parse tokens to make an If Node with cases and an optional else case */
   ifExpr = () => {
@@ -318,171 +542,126 @@ class Parser {
     return res.success(new WhileNode(condition, body));
   };
 
-  /** creates nodes based on the atom rule in the grammar document */
-  atom = () => {
+  /** creates a function definition node */
+  funcDef = () => {
     let res = new ParseResult();
-    const tok = this.currentTok;
+    let varNameTok = null;
 
-    if ([TT.INT, TT.FLOAT].includes(tok.type)) {
+    if (!this.currentTok.matches(TT.KEYWORD, 'shughuli')) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected 'shughuli'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type === TT.IDENTIFIER) {
+      varNameTok = this.currentTok;
       res.registerAdvancement();
       this.advance();
-      return res.success(new NumberNode(tok));
-    } else if (tok.type === TT.IDENTIFIER) {
+    }
+
+    if (this.currentTok.type !== TT.LPAREN)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          varNameTok ? `Expected '('` : `Expected identifier or '('`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+    let argNameToks = [];
+
+    if (this.currentTok.type === TT.IDENTIFIER) {
+      argNameToks.push(this.currentTok);
       res.registerAdvancement();
       this.advance();
-      return res.success(new VarAccessNode(tok));
-    } else if (tok.type === TT.LPAREN) {
-      res.registerAdvancement();
-      this.advance();
-      let expr = res.register(this.expr());
-      if (res.error) return res;
-      if (this.currentTok.type === TT.RPAREN) {
+
+      while (this.currentTok.type === TT.COMMA) {
         res.registerAdvancement();
         this.advance();
-        return res.success(expr);
-      } else {
-        return res.failure(
-          new InvalidSyntaxError(
-            this.currentTok.posStart,
-            this.currentTok.posEnd,
-            `Expected ')'`
-          )
-        );
+
+        if (this.currentTok.type !== TT.IDENTIFIER)
+          return res.failure(
+            new InvalidSyntaxError(
+              this.currentTok.posStart,
+              this.currentTok.posEnd,
+              varNameTok ? `Expected '('` : `Expected identifier or '('`
+            )
+          );
+
+        argNameToks.push(this.currentTok);
+        res.registerAdvancement();
+        this.advance();
       }
-    } else if (tok.matches(TT.KEYWORD, 'kama')) {
-      let ifExpr = res.register(this.ifExpr());
-      if (res.error) return res;
-      return res.success(ifExpr);
-    } else if (tok.matches(TT.KEYWORD, 'kwa')) {
-      let forExpr = res.register(this.forExpr());
-      if (res.error) return res;
-      return res.success(forExpr);
-    } else if (tok.matches(TT.KEYWORD, 'ambapo')) {
-      let whileExpr = res.register(this.whileExpr());
-      if (res.error) return res;
-      return res.success(whileExpr);
-    }
 
-    return res.failure(
-      new InvalidSyntaxError(
-        tok.posStart,
-        tok.posEnd,
-        `Expected int, float, identifier, '+', '-' or '('`
-      )
-    );
-  };
-
-  /** creates nodes based on the power rule in the grammar document */
-  power = () => {
-    return this.binOp(this.atom, [TT.POW], this.factor);
-  };
-
-  /** creates nodes based on the power rule in the grammar document */
-  factor = () => {
-    let res = new ParseResult();
-    const tok = this.currentTok;
-
-    if ([TT.PLUS, TT.MINUS].includes(tok.type)) {
-      res.registerAdvancement();
-      this.advance();
-      let factor = res.register(this.factor());
-      if (res.error) return res;
-      return res.success(new UnaryOpNode(tok, factor));
-    }
-
-    return this.power();
-  };
-
-  /** creates nodes based on the term rule in the grammar document */
-  term = () => {
-    return this.binOp(this.factor, [TT.MUL, TT.DIV]);
-  };
-
-  /** creates nodes based on the arith-expr rule in the grammar document */
-  arithExpr = () => {
-    return this.binOp(this.term, [TT.PLUS, TT.MINUS]);
-  };
-
-  /** creates nodes based on the comp-expr rule in the grammar document */
-  compExpr = () => {
-    let res = new ParseResult();
-    let node = null;
-
-    if (this.currentTok.type === TT.NOT) {
-      let opToken = this.currentTok;
-      res.registerAdvancement();
-      this.advance();
-
-      node = res.register(this.compExpr());
-      if (res.error) return res;
-      return res.success(new UnaryOpNode(opToken, node));
-    }
-
-    node = res.register(
-      this.binOp(this.arithExpr, [TT.EE, TT.NE, TT.LT, TT.GT, TT.LTE, TT.GTE])
-    );
-    if (res.error)
-      return res.failure(
-        new InvalidSyntaxError(
-          this.currentTok.posStart,
-          this.currentTok.posEnd,
-          `Expected int, float, identifier, '+', '-', '(' or 'si'`
-        )
-      );
-
-    return res.success(node);
-  };
-
-  /** creates nodes based on the expr rule in the grammar document */
-  expr = () => {
-    let res = new ParseResult();
-    if (this.currentTok.matches(TT.KEYWORD, 'wacha')) {
-      res.registerAdvancement();
-      this.advance();
-
-      if (this.currentTok.type !== TT.IDENTIFIER)
+      if (this.currentTok.type !== TT.RPAREN)
         return res.failure(
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected identifier`
+            `Expected ',' or ')'`
           )
         );
-
-      let varName = this.currentTok;
-      res.registerAdvancement();
-      this.advance();
-
-      if (this.currentTok.type !== TT.EQ)
+    } else {
+      if (this.currentTok.type !== TT.RPAREN)
         return res.failure(
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '='`
+            `Expected identifier or ')'`
           )
         );
-
-      res.registerAdvancement();
-      this.advance();
-      let expr = res.register(this.expr());
-      if (res.error) return res;
-      return res.success(new VarAssignNode(varName, expr));
     }
 
-    let node = res.register(this.binOp(this.compExpr, [TT.AND, TT.OR]));
-    if (res.error)
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type !== TT.LCURL) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'wacha', int, float, identifier, '+', '-' or '('`
+          `Expected '{'`
         )
       );
+    }
 
-    return res.success(node);
+    res.registerAdvancement();
+    this.advance();
+
+    let nodeToReturn = res.register(this.expr());
+    if (res.error) return res;
+
+    if (this.currentTok.type !== TT.RCURL) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '}'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    return res.success(new FuncDefNode(varNameTok, argNameToks, nodeToReturn));
   };
 
-  /** creates binary operation nodes */
+  /**
+   * creates a binary operation node
+   * @param {Function} funcA method used to parse the left side of the binary operation node
+   * @param {String[]} ops list of accepted operators for this operation
+   * @param {Function} funcB method used to parse the right side of the binary operation node
+   */
   binOp(funcA, ops, funcB = null) {
     if (funcB === null) funcB = funcA;
 

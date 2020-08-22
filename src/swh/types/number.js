@@ -1,86 +1,76 @@
 const util = require('util');
 const colors = require('colors');
+const SWValue = require('./value');
 const { RTError } = require('../error');
 
 /**  Number data type */
-class NUMBER {
+class SWNumber extends SWValue {
+  /**
+   * instantiates a number
+   * @param {Number} value value to set
+   */
   constructor(value) {
+    super();
     this.value = value;
-    this.setPos();
+    this.setPosition();
     this.setContext();
   }
 
   /**
-   * Sets the position at which the number node occurs in the file/line
-   * @param {Position} posStart the starting position of the number node
-   * @param {Position} posEnd the ending position of the number node
-   * @returns {NUMBER}
-   */
-  setPos(posStart = null, posEnd = null) {
-    this.posStart = posStart;
-    this.posEnd = posEnd;
-    return this;
-  }
-
-  /**
-   * Sets the conext in which the number node occurs
-   * @param {Context} context the calling context
-   * @returns {NUMBER}
-   */
-  setContext(context = null) {
-    this.context = context;
-    return this;
-  }
-
-  /**
    * mathematically adds two numbers and returns a new number with their sum
-   * @param {NUMBER} other number to be added to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be added to the current
+   * @returns {SWNumber}
    */
   addedTo(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value + other.value).setContext(this.context),
+        new SWNumber(this.value + other.value).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically subtracts two numbers and returns a new number with their difference
-   * @param {NUMBER} other number to be subtracted from the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be subtracted from the current
+   * @returns {SWNumber}
    */
   subbedBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value - other.value).setContext(this.context),
+        new SWNumber(this.value - other.value).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically multiplies two numbers and returns a new number with their product
-   * @param {NUMBER} other number to be multiplied by the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be multiplied by the current
+   * @returns {SWNumber}
    */
   multedBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value * other.value).setContext(this.context),
+        new SWNumber(this.value * other.value).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically divides two numbers and returns a new number with their quotient
-   * @param {NUMBER} other number to divide the current by
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to divide the current by
+   * @returns {SWNumber}
    */
   divvedBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       if (other.value === 0) {
         return [
           null,
@@ -94,153 +84,188 @@ class NUMBER {
       }
 
       return [
-        new NUMBER(this.value / other.value).setContext(this.context),
+        new SWNumber(this.value / other.value).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically raises one number to the power of the other and returns a new number with the result
-   * @param {NUMBER} other number to raise the current to
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to raise the current to
+   * @returns {SWNumber}
    */
   powedBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value ** other.value).setContext(this.context),
+        new SWNumber(this.value ** other.value).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the numbers are equal
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonEQ(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value === other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value === other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the numbers are not equal
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonNE(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value !== other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value !== other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the current is less than the other
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonLT(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value < other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value < other.value ? 1 : 0).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the current is greater than the other
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonGT(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value > other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value > other.value ? 1 : 0).setContext(this.context),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the current is less than or equal to the other
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonLTE(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value <= other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value <= other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * mathematically compares two numbers and returns 1 if the current is greater than or equal to the other
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   getComparisonGTE(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value >= other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value >= other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * logically compares two numbers and returns 1 if the numbers are truthy
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   andedBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value && other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value && other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * logically compares two numbers and returns 1 if one of the numbers is truthy
-   * @param {NUMBER} other number to be compared to the current
-   * @returns {NUMBER}
+   * @param {SWNumber} other number to be compared to the current
+   * @returns {SWNumber}
    */
   oredBy(other) {
-    if (other instanceof NUMBER) {
+    if (other instanceof SWNumber) {
       return [
-        new NUMBER(this.value || other.value ? 1 : 0).setContext(this.context),
+        new SWNumber(this.value || other.value ? 1 : 0).setContext(
+          this.context
+        ),
         null,
       ];
+    } else {
+      return [null, super.illegalOperation(this.posStart, other.posEnd)];
     }
   }
 
   /**
    * returns 1 if a value is falsy, and 0 if a value is truthy
-   * @returns {NUMBER}
+   * @returns {SWNumber}
    */
   notted() {
-    return [new NUMBER(this.value == 0 ? 1 : 0).setContext(this.context), null];
+    return [
+      new SWNumber(this.value == 0 ? 1 : 0).setContext(this.context),
+      null,
+    ];
   }
 
   /**
    * creates a new instance of the number
-   * @returns {NUMBER}
+   * @returns {SWNumber}
    */
   copy() {
-    let copy = new NUMBER(this.value);
-    copy.setPos(this.posStart, this.posEnd);
+    let copy = new SWNumber(this.value);
+    copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;
   }
@@ -266,4 +291,4 @@ class NUMBER {
   }
 }
 
-module.exports = NUMBER;
+module.exports = SWNumber;
