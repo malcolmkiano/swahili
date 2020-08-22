@@ -18,7 +18,7 @@ const rl = readline.createInterface({
 
 /** Prompt user for input in the terminal */
 const getInput = () => {
-  rl.question(`${colors.brightGreen('swahili')} > `, (text) => {
+  rl.question(`${colors.brightMagenta('swahili')} > `, (text) => {
     // handle input
     const [result, error] = swh('<stdin>', text);
     if (error) {

@@ -12,12 +12,10 @@ class SWBoolean extends SWValue {
   constructor(value) {
     super();
     this.value = value;
-    this.setPosition();
-    this.setContext();
   }
 
   /**
-   * mathematically compares two booleans and returns true if the booleans are equal
+   * logically compares two booleans and returns true if the booleans are equal
    * @param {SWBoolean} other boolean to be compared to the current
    * @returns {SWBoolean}
    */
@@ -33,7 +31,7 @@ class SWBoolean extends SWValue {
   }
 
   /**
-   * mathematically compares two booleans and returns true if the booleans are not equal
+   * logically compares two booleans and returns true if the booleans are not equal
    * @param {SWBoolean} other boolean to be compared to the current
    * @returns {SWBoolean}
    */

@@ -1,6 +1,7 @@
 const TT = require('./tokenTypes');
 const {
   NumberNode,
+  StringNode,
   VarAccessNode,
   VarAssignNode,
   BinOpNode,
@@ -228,6 +229,10 @@ class Parser {
       res.registerAdvancement();
       this.advance();
       return res.success(new NumberNode(tok));
+    } else if (tok.type === TT.STRING) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(new StringNode(tok));
     } else if (tok.type === TT.IDENTIFIER) {
       res.registerAdvancement();
       this.advance();
