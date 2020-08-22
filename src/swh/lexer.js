@@ -64,6 +64,43 @@ class Lexer {
   }
 
   /**
+   * generates a string after encountering double quotes in the text
+   * @returns {Token}
+   */
+  makeString() {
+    let string = '';
+    let posStart = this.pos.copy();
+    let escapeCharacter = false;
+    this.advance();
+
+    const ESCAPECHARACTERS = {
+      n: '\n',
+      t: '\t',
+    };
+
+    while (
+      this.currentChar !== null &&
+      (this.currentChar !== '"' || escapeCharacter)
+    ) {
+      if (escapeCharacter) {
+        string += ESCAPECHARACTERS[this.currentChar] || this.currentChar;
+        escapeCharacter = false;
+      } else {
+        if (this.currentChar === '\\') {
+          escapeCharacter = true;
+        } else {
+          string += this.currentChar;
+        }
+      }
+
+      this.advance();
+    }
+
+    this.advance();
+    return new Token(TT.STRING, string, posStart, this.pos);
+  }
+
+  /**
    * generates an identifier token after encountering an alphabetic character in the text
    * @returns {Token}
    */
@@ -207,6 +244,8 @@ class Lexer {
         tokens.push(this.makeNumber());
       } else if (TT.LETTERS.includes(this.currentChar)) {
         tokens.push(this.makeIdentifier());
+      } else if (this.currentChar == '"') {
+        tokens.push(this.makeString());
       } else if (this.currentChar === '+') {
         tokens.push(new Token(TT.PLUS, null, this.pos));
         this.advance();

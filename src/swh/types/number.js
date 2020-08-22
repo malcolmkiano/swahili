@@ -13,8 +13,6 @@ class SWNumber extends SWValue {
   constructor(value) {
     super();
     this.value = value;
-    this.setPosition();
-    this.setContext();
   }
 
   /**

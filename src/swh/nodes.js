@@ -26,6 +26,32 @@ class NumberNode {
   }
 }
 
+/** node representing a string */
+class StringNode {
+  /**
+   * instantiates a string node
+   * @param {Token} tok token to use as the nodes value
+   */
+  constructor(tok) {
+    this.tok = tok;
+
+    this.posStart = this.tok.posStart;
+    this.posEnd = this.tok.posEnd;
+  }
+
+  [util.inspect.custom](depth, options) {
+    return this.toString();
+  }
+
+  /**
+   * custom representation of the class
+   * @returns {String}
+   */
+  toString() {
+    return this.tok.toString();
+  }
+}
+
 /** node representing a variable access result */
 class VarAccessNode {
   /**
@@ -224,6 +250,7 @@ class CallNode {
 
 module.exports = {
   NumberNode,
+  StringNode,
   VarAccessNode,
   VarAssignNode,
   BinOpNode,

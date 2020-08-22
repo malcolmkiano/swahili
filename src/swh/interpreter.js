@@ -3,6 +3,7 @@ const colors = require('colors');
 
 const SWValue = require('./types/value');
 const SWNumber = require('./types/number');
+const SWString = require('./types/string');
 const TT = require('./tokenTypes');
 
 const Context = require('./context');
@@ -50,6 +51,21 @@ class Interpreter {
     let res = new RTResult();
     return res.success(
       new SWNumber(node.tok.value)
+        .setContext(context)
+        .setPosition(node.posStart, node.posEnd)
+    );
+  };
+
+  /**
+   * Evaluates a string node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitStringNode = (node, context) => {
+    let res = new RTResult();
+    return res.success(
+      new SWString(node.tok.value)
         .setContext(context)
         .setPosition(node.posStart, node.posEnd)
     );

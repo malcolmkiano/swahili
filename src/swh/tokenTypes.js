@@ -6,6 +6,9 @@ module.exports = {
   /** Float */
   FLOAT: 'FLOAT',
 
+  /** String */
+  STRING: 'STRING',
+
   /** Identifier */
   IDENTIFIER: 'IDENTIFIER',
 

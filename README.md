@@ -18,7 +18,7 @@ This will be updated as the language develops
 |                | `power`                                               |
 | **power**      | `call` (POW `factor`)\*                               |
 | **call**       | `atom` (LPAREN (`expr` (COMMA `expr`)\*)? RPAREN)?    |
-| **atom**       | INT/FLOAT/IDENTIFIER                                  |
+| **atom**       | INT/FLOAT/STRING/IDENTIFIER                           |
 |                | LPAREN `expr` RPAREN                                  |
 |                | `if-expr`                                             |
 |                | `for-expr`                                            |
