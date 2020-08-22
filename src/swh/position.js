@@ -1,19 +1,19 @@
 /**
- * represents the exact line/col/file position for the lexer, parser and interpreter
+ * represents the exact line/colNumber/file position for the lexer, parser and interpreter
  */
 class Position {
   /**
    * instantiates a position
    * @param {Number} idx index (position) in the text content
-   * @param {Number} ln line number
-   * @param {Number} col column number
+   * @param {Number} lineNumber line number
+   * @param {Number} colNumber column number
    * @param {String} fileName current file name
    * @param {String} fileText current file text content
    */
-  constructor(idx, ln, col, fileName, fileText) {
+  constructor(idx, lineNumber, colNumber, fileName, fileText) {
     this.idx = idx || -1;
-    this.ln = ln || 0;
-    this.col = col || -1;
+    this.lineNumber = lineNumber || 0;
+    this.colNumber = colNumber || -1;
     this.fileName = fileName;
     this.fileText = fileText;
   }
@@ -25,11 +25,11 @@ class Position {
    */
   advance(currentChar = null) {
     this.idx++;
-    this.col++;
+    this.colNumber++;
 
     if (currentChar === '\n') {
-      this.ln++;
-      this.col = 0;
+      this.lineNumber++;
+      this.colNumber = 0;
     }
 
     return this;
@@ -42,8 +42,8 @@ class Position {
   copy() {
     return new Position(
       this.idx,
-      this.ln,
-      this.col,
+      this.lineNumber,
+      this.colNumber,
       this.fileName,
       this.fileText
     );

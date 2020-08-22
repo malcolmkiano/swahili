@@ -21,7 +21,9 @@ class Error {
    */
   toString() {
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `File ${this.posStart.fileName}, line ${this.posStart.ln + 1}`;
+    result += `File ${this.posStart.fileName}, line ${
+      this.posStart.lineNumber + 1
+    }`;
     result +=
       '\n\n' +
       stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
@@ -89,7 +91,9 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `File ${pos.fileName}, line ${pos.ln + 1}, in ${ctx.displayName}` +
+        `File ${pos.fileName}, line ${pos.lineNumber + 1}, in ${
+          ctx.displayName
+        }` +
         '\n' +
         result;
       pos = ctx.parentEntryPos;
