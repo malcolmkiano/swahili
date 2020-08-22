@@ -3,15 +3,15 @@ const Parser = require('./parser');
 const Interpreter = require('./interpreter');
 const Context = require('./context');
 const SWNumber = require('./types/number');
+const SWBoolean = require('./types/boolean');
 const SymbolTable = require('./symbolTable');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', new SWNumber(0)); // NULL
-globalSymbolTable.set('kweli', new SWNumber(1)); // TRUE
-globalSymbolTable.set('uwongo', new SWNumber(0)); // FALSE
+globalSymbolTable.set('kweli', new SWBoolean(true)); // TRUE
+globalSymbolTable.set('uwongo', new SWBoolean(false)); // FALSE
 
 /**
  * Processes a file through the lexer, parser and interpreter

@@ -1,6 +1,7 @@
 const util = require('util');
 const colors = require('colors');
 const SWValue = require('./value');
+const SWBoolean = require('./boolean');
 const { RTError } = require('../error');
 
 /**  Number data type */
@@ -28,7 +29,7 @@ class SWNumber extends SWValue {
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
@@ -44,7 +45,7 @@ class SWNumber extends SWValue {
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
@@ -60,7 +61,7 @@ class SWNumber extends SWValue {
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
@@ -88,7 +89,7 @@ class SWNumber extends SWValue {
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
@@ -104,159 +105,144 @@ class SWNumber extends SWValue {
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the numbers are equal
+   * mathematically compares two numbers and returns true if the numbers are equal
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonEQ(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value === other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWBoolean(this.value === other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the numbers are not equal
+   * mathematically compares two numbers and returns true if the numbers are not equal
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonNE(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value !== other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWBoolean(this.value !== other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the current is less than the other
+   * mathematically compares two numbers and returns true if the current is less than the other
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonLT(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value < other.value ? 1 : 0).setContext(this.context),
+        new SWBoolean(this.value < other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the current is greater than the other
+   * mathematically compares two numbers and returns true if the current is greater than the other
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonGT(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value > other.value ? 1 : 0).setContext(this.context),
+        new SWBoolean(this.value > other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the current is less than or equal to the other
+   * mathematically compares two numbers and returns true if the current is less than or equal to the other
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonLTE(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value <= other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWBoolean(this.value <= other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * mathematically compares two numbers and returns 1 if the current is greater than or equal to the other
+   * mathematically compares two numbers and returns true if the current is greater than or equal to the other
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   getComparisonGTE(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value >= other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWBoolean(this.value >= other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * logically compares two numbers and returns 1 if the numbers are truthy
+   * logically compares two numbers and returns true if the numbers are truthy
    * @param {SWNumber} other number to be compared to the current
-   * @returns {SWNumber}
+   * @returns {SWBoolean}
    */
   andedBy(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value && other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWBoolean(this.value && other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * logically compares two numbers and returns 1 if one of the numbers is truthy
+   * logically compares two numbers and returns which one of the numbers is truthy
    * @param {SWNumber} other number to be compared to the current
    * @returns {SWNumber}
    */
   oredBy(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(this.value || other.value ? 1 : 0).setContext(
-          this.context
-        ),
+        new SWNumber(this.value || other.value).setContext(this.context),
         null,
       ];
     } else {
-      return [null, super.illegalOperation(this.posStart, other.posEnd)];
+      return [null, super.illegalOperation(other)];
     }
   }
 
   /**
-   * returns 1 if a value is falsy, and 0 if a value is truthy
-   * @returns {SWNumber}
+   * returns true if a value is falsy, and false if a value is truthy
+   * @returns {SWBoolean}
    */
   notted() {
-    return [
-      new SWNumber(this.value == 0 ? 1 : 0).setContext(this.context),
-      null,
-    ];
+    return [new SWBoolean(!(this.value === 0)).setContext(this.context), null];
   }
 
   /**
