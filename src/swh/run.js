@@ -10,9 +10,9 @@ globalSymbolTable.set('tupu', new NUMBER(0));
 globalSymbolTable.set('kweli', new NUMBER(1));
 globalSymbolTable.set('uwongo', new NUMBER(0));
 
-function run(fn, text) {
+function run(fileName, text) {
   /** Generate tokens */
-  const lexer = new Lexer(fn, text);
+  const lexer = new Lexer(fileName, text);
   const [tokens, error] = lexer.makeTokens();
   if (error) return [null, error];
 

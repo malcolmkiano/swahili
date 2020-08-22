@@ -1,10 +1,10 @@
 class Position {
-  constructor(idx, ln, col, fn, ftxt) {
+  constructor(idx, ln, col, fileName, fileText) {
     this.idx = idx || -1;
     this.ln = ln || 0;
     this.col = col || -1;
-    this.fn = fn;
-    this.ftxt = ftxt;
+    this.fileName = fileName;
+    this.fileText = fileText;
   }
 
   advance(currentChar = null) {
@@ -20,7 +20,13 @@ class Position {
   }
 
   copy() {
-    return new Position(this.idx, this.ln, this.col, this.fn, this.ftxt);
+    return new Position(
+      this.idx,
+      this.ln,
+      this.col,
+      this.fileName,
+      this.fileText
+    );
   }
 }
 

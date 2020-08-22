@@ -10,9 +10,10 @@ class Error {
 
   toString() {
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `File ${this.posStart.fn}, line ${this.posStart.ln + 1}`;
+    result += `File ${this.posStart.fileName}, line ${this.posStart.ln + 1}`;
     result +=
-      '\n\n' + stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
+      '\n\n' +
+      stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
     return result;
   }
 }
@@ -52,7 +53,7 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `File ${pos.fn}, line ${pos.ln + 1}, in ${ctx.displayName}` +
+        `File ${pos.fileName}, line ${pos.ln + 1}, in ${ctx.displayName}` +
         '\n' +
         result;
       pos = ctx.parentEntryPos;
@@ -66,7 +67,8 @@ class RTError extends Error {
     let result = this.generateTraceback();
     result += `${this.errorName}: ${this.details}`;
     result +=
-      '\n\n' + stringWithArrows(this.posStart.ftxt, this.posStart, this.posEnd);
+      '\n\n' +
+      stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
     return result;
   }
 }
