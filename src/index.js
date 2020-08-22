@@ -19,12 +19,14 @@ const rl = readline.createInterface({
 /** Prompt user for input in the terminal */
 const getInput = () => {
   rl.question(`${colors.brightMagenta('swahili')} > `, (text) => {
-    // handle input
-    const [result, error] = swh('<stdin>', text);
-    if (error) {
-      print(colors.red(error.toString()), true);
-    } else {
-      print(result || colors.gray('bure kabisa'), true);
+    if (text) {
+      // handle input
+      const [result, error] = swh('<stdin>', text);
+      if (error) {
+        print(colors.red(error.toString()), true);
+      } else {
+        print(result || colors.gray('bure kabisa'), true);
+      }
     }
 
     // keep prompting until they manually terminate the process
