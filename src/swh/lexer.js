@@ -234,6 +234,9 @@ class Lexer {
       } else if (this.currentChar === '}') {
         tokens.push(new Token(TT.RCURL, null, this.pos));
         this.advance();
+      } else if (this.currentChar === ',') {
+        tokens.push(new Token(TT.COMMA, null, this.pos));
+        this.advance();
       } else if (this.currentChar === '&') {
         let [tok, error] = this.makeAnd();
         if (error) return [[], error];

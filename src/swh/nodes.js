@@ -165,7 +165,7 @@ class WhileNode {
   /**
    * instantiates a while node
    * @param {Node} conditionNode node containing the condition to be met
-   * @param {Node} bodyNode node containing the epressions to run each iteration
+   * @param {Node} bodyNode node containing the expressions to run each iteration
    */
   constructor(conditionNode, bodyNode) {
     this.conditionNode = conditionNode;
@@ -173,6 +173,52 @@ class WhileNode {
 
     this.posStart = this.conditionNode.posStart;
     this.posEnd = this.bodyNode.posEnd;
+  }
+}
+
+/** node representing a function definition */
+class FuncDefNode {
+  /**
+   * instantiates a function definition node
+   * @param {Token} varNameTok token containing the name of the function
+   * @param {Token[]} argNameToks list of tokens containing names for the arguments
+   * @param {Node} bodyNode node containing the expressions to run
+   */
+  constructor(varNameTok, argNameToks, bodyNode) {
+    this.varNameTok = varNameTok;
+    this.argNameToks = argNameToks;
+    this.bodyNode = bodyNode;
+
+    if (this.varNameTok) {
+      this.posStart = this.varNameTok.posStart;
+    } else if (this.argNameToks.length > 0) {
+      this.posStart = this.argNameToks[0].posStart;
+    } else {
+      this.posStart = this.bodyNode.posStart;
+    }
+
+    this.posEnd = this.bodyNode.posEnd;
+  }
+}
+
+/** node representing a function call */
+class CallNode {
+  /**
+   * instantiate a function call node
+   * @param {Node} nodeToCall node representing the function to be called
+   * @param {Node[]} argNodes list of nodes containing argument values
+   */
+  constructor(nodeToCall, argNodes) {
+    this.nodeToCall = nodeToCall;
+    this.argNodes = argNodes;
+
+    this.posStart = this.nodeToCall.posStart;
+
+    if (this.argNodes.length > 0) {
+      this.posEnd = this.argNodes[this.argNodes.length - 1].posEnd;
+    } else {
+      this.posEnd = this.nodeToCall.posEnd;
+    }
   }
 }
 
@@ -185,4 +231,6 @@ module.exports = {
   IfNode,
   ForNode,
   WhileNode,
+  FuncDefNode,
+  CallNode,
 };

@@ -1,8 +1,14 @@
+const util = require('util');
+const colors = require('colors');
+
+const SWValue = require('./types/value');
+const SWNumber = require('./types/number');
 const TT = require('./tokenTypes');
+
+const Context = require('./context');
+const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
 const { RTError } = require('./error');
-
-const NUMBER = require('./types/number');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
@@ -43,9 +49,9 @@ class Interpreter {
   visitNumberNode = (node, context) => {
     let res = new RTResult();
     return res.success(
-      new NUMBER(node.tok.value)
+      new SWNumber(node.tok.value)
         .setContext(context)
-        .setPos(node.posStart, node.posEnd)
+        .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -70,7 +76,7 @@ class Interpreter {
         )
       );
 
-    value = value.copy().setPos(node.posStart, node.posEnd);
+    value = value.copy().setPosition(node.posStart, node.posEnd);
     return res.success(value);
   };
 
@@ -104,7 +110,7 @@ class Interpreter {
     let right = res.register(this.visit(node.rightNode, context));
     if (res.error) return res;
 
-    let result = new NUMBER(0);
+    let result = new SWNumber(0);
     let error = null;
 
     if (node.opTok.type === TT.PLUS) {
@@ -138,7 +144,7 @@ class Interpreter {
     if (error) {
       return res.failure(error);
     } else {
-      return res.success(result.setPos(node.posStart, node.posEnd));
+      return res.success(result.setPosition(node.posStart, node.posEnd));
     }
   };
 
@@ -156,7 +162,7 @@ class Interpreter {
     let error = null;
 
     if (node.opTok.type === TT.MINUS) {
-      [number, error] = number.multedBy(new NUMBER(-1));
+      [number, error] = number.multedBy(new SWNumber(-1));
     } else if (node.opTok.type === TT.NOT) {
       [number, error] = number.notted();
     }
@@ -164,7 +170,7 @@ class Interpreter {
     if (error) {
       return res.failure(error);
     } else {
-      return res.success(number.setPos(node.posStart, node.posEnd));
+      return res.success(number.setPosition(node.posStart, node.posEnd));
     }
   };
 
@@ -205,7 +211,7 @@ class Interpreter {
    */
   visitForNode = (node, context) => {
     let res = new RTResult();
-    let stepValue = new NUMBER(1);
+    let stepValue = new SWNumber(1);
     let condition = null;
 
     let startValue = res.register(this.visit(node.startValueNode, context));
@@ -229,7 +235,7 @@ class Interpreter {
     let calls = 0;
 
     while (condition()) {
-      context.symbolTable.set(node.varNameTok.value, new NUMBER(i));
+      context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
       i += stepValue.value;
 
       res.register(this.visit(node.bodyNode, context));
@@ -285,6 +291,140 @@ class Interpreter {
 
     return res.success(null);
   };
+
+  /**
+   * Evaluates a function definition node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitFuncDefNode = (node, context) => {
+    let res = new RTResult();
+    let funcName = node.varNameTok ? node.varNameTok.value : null;
+    let bodyNode = node.bodyNode;
+    let argNames = node.argNameToks.map((argName) => argName.value);
+    let funcValue = new SWFunction(funcName, bodyNode, argNames)
+      .setContext(context)
+      .setPosition(node.posStart, node.posEnd);
+
+    if (node.varNameTok) context.symbolTable.set(funcName, funcValue);
+
+    return res.success(funcValue);
+  };
+
+  /**
+   * Evaluates a function call node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitCallNode = (node, context) => {
+    let res = new RTResult();
+    let args = [];
+
+    let valueToCall = res.register(this.visit(node.nodeToCall, context));
+    if (res.error) return res;
+    valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
+
+    for (let argNode of node.argNodes) {
+      args.push(res.register(this.visit(argNode, context)));
+      if (res.error) return res;
+    }
+
+    let returnValue = res.register(valueToCall.execute(args));
+    if (res.error) return res;
+    return res.success(returnValue);
+  };
 }
 
 module.exports = Interpreter;
+
+// ================================================================================================
+// the code below exists here because of its co-dependent relation with the interpreter class
+// ================================================================================================
+
+/** Function data type */
+class SWFunction extends SWValue {
+  /**
+   * instantiates a function
+   * @param {String} name name of the function
+   * @param {Node} bodyNode node containing the expressions to be run
+   * @param {String[]} argNames tokens containing the argument names
+   */
+  constructor(name, bodyNode, argNames) {
+    super();
+    this.name = name || '<isiyotambuliwa>';
+    this.bodyNode = bodyNode;
+    this.argNames = argNames;
+  }
+
+  /**
+   * Executes the function
+   * @param {Token[]} args list of token value nodes to be used as function arguments
+   */
+  execute(args) {
+    let res = new RTResult();
+    const INT = new Interpreter();
+    let newContext = new Context(this.name, this.context, this.posStart);
+    newContext.symbolTable = new SymbolTable(newContext.parent.symbolTable);
+
+    if (args.length > this.argNames.length)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `${args.length - this.argNames.length} too many args passed into ${
+            this.name
+          }`,
+          this.context
+        )
+      );
+
+    if (args.length < this.argNames.length)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `${this.argNames.length - args.length} too few args passed into ${
+            this.name
+          }`,
+          this.context
+        )
+      );
+
+    for (let i = 0; i < args.length; i++) {
+      let argName = this.argNames[i];
+      let argValue = args[i];
+      argValue.setContext(newContext);
+      newContext.symbolTable.set(argName, argValue);
+    }
+
+    let value = res.register(INT.visit(this.bodyNode, newContext));
+    if (res.error) return res;
+
+    return res.success(value);
+  }
+
+  /**
+   * creates a new instance of the function
+   * @returns {SWFunction}
+   */
+  copy() {
+    let copy = new SWFunction(this.name, this.bodyNode, this.argNames);
+    copy.setPosition(this.posStart, this.posEnd);
+    copy.setContext(this.context);
+    return copy;
+  }
+
+  [util.inspect.custom](depth, options) {
+    return this.toString();
+  }
+
+  /**
+   * string representation of the function class
+   * @returns {String}
+   */
+  toString() {
+    return colors.cyan(`<shughuli ${this.name}>`);
+  }
+}

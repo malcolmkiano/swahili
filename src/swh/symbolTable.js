@@ -3,9 +3,9 @@
  * and a pointer to its parent (if any)
  */
 class SymbolTable {
-  constructor() {
+  constructor(parent) {
     this.symbols = {};
-    this.parent = null;
+    this.parent = parent;
   }
 
   /**

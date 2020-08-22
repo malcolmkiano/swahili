@@ -23,4 +23,7 @@ module.exports = [
 
   // WHILE (loop statements)
   'ambapo',
+
+  // SWFunction (function declarations)
+  'shughuli',
 ];

@@ -60,8 +60,8 @@ module.exports = {
   /** Greater than or equal comparison */
   GTE: 'GTE',
 
-  /** End of file */
-  EOF: 'EOF',
+  /** Comma */
+  COMMA: 'COMMA',
 
   /** AND symbol */
   AND: 'AND',
@@ -71,6 +71,9 @@ module.exports = {
 
   /** NOT symbol */
   NOT: 'NOT',
+
+  /** End of file */
+  EOF: 'EOF',
 
   /** Not really token types, but capture groups */
   /** Digits 0-9 */
