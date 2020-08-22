@@ -1,5 +1,10 @@
-/** Prints out lines of code and indicates the position of errors
+/**
+ * Prints out lines of code and indicates the position of errors
  * using arrows
+ * @param {String} text text to be printed to the terminal
+ * @param {Postion} posStart position at which the error occurred
+ * @param {Position} posEnd position where the token ends
+ * @returns {String}
  */
 function stringWithArrows(text, posStart, posEnd) {
   let result = '';
@@ -10,12 +15,12 @@ function stringWithArrows(text, posStart, posEnd) {
   if (idxEnd < 0) idxEnd = text.length;
 
   /** Generate each line */
-  const lineCount = posEnd.ln - posStart.ln + 1;
+  const lineCount = posEnd.lineNumber - posStart.lineNumber + 1;
   for (let i = 0; i < lineCount; i++) {
     /** Calculate line columns */
     const line = text.substr(idxStart, idxEnd);
-    let colStart = i === 0 ? Math.max(posStart.col, 0) : 0;
-    let colEnd = i === lineCount - 1 ? line.length : posEnd.col;
+    let colStart = i === 0 ? Math.max(posStart.colNumber, 0) : 0;
+    let colEnd = i === lineCount - 1 ? line.length : posEnd.colNumber;
     if (colStart > colEnd) {
       [colStart, colEnd] = [colEnd, colStart];
     }

@@ -5,27 +5,42 @@ const Token = require('./token');
 const Position = require('./position');
 const { IllegalCharError, ExpectedCharError } = require('./error');
 
+/**
+ * Performs a lexical analysis to ensure correct syntax of the programming language
+ */
 class Lexer {
-  constructor(fn, text) { //fn = file name
-    this.fn = fn;
+  /**
+   * Instantiates a lexer
+   * @param {String} fileName The name of the file the lexer is running in
+   * @param {String} text The content/text to be tokenized
+   */
+  constructor(fileName, text) {
+    this.fileName = fileName;
     this.text = text;
-    this.pos = new Position(-1, 0, -1, fn, text);
+    this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
     this.advance();
   }
 
+  /**
+   * advances to the next character in the text
+   */
   advance() {
     this.pos.advance(this.currentChar);
     this.currentChar =
       this.pos.idx < this.text.length ? this.text[this.pos.idx] : null;
   }
 
+  /**
+   * generates a number token after encountering a digit in the text
+   * @returns {Token}
+   */
   makeNumber() {
     let numStr = '';
     let dotCount = 0;
     let posStart = this.pos.copy();
 
-    /** keep going while character is a digit or a dot, and we haven't seen a dot yet */
+    // keep going while character is a digit or a dot, and we haven't seen a dot yet
     while (
       this.currentChar !== null &&
       (TT.DIGITS + '.').includes(this.currentChar)
@@ -40,7 +55,7 @@ class Lexer {
       this.advance();
     }
 
-    /** check if INT or FLOAT */
+    // check if INT or FLOAT
     if (dotCount === 0) {
       return new Token(TT.INT, parseInt(numStr), posStart, this.pos);
     } else {
@@ -48,11 +63,15 @@ class Lexer {
     }
   }
 
+  /**
+   * generates an identifier token after encountering an alphabetic character in the text
+   * @returns {Token}
+   */
   makeIdentifier() {
     let idStr = '';
     let posStart = this.pos.copy();
 
-    /** keep going while character is a alphanumeric or an underscore */
+    // keep going while character is a alphanumeric or an underscore
     while (
       this.currentChar !== null &&
       (TT.LETTERS + TT.DIGITS).includes(this.currentChar)
@@ -61,11 +80,15 @@ class Lexer {
       this.advance();
     }
 
-    /** check if KEYWORD or IDENTIFIER */
+    // check if KEYWORD or IDENTIFIER
     let tokType = KEYWORDS.includes(idStr) ? TT.KEYWORD : TT.IDENTIFIER;
     return new Token(tokType, idStr, posStart, this.pos);
   }
 
+  /**
+   * generates an AND token after encountering a '&' in the text
+   * @returns {Token}
+   */
   makeAnd() {
     let posStart = this.pos.copy();
     this.advance();
@@ -82,6 +105,10 @@ class Lexer {
     ];
   }
 
+  /**
+   * generates an OR token after encountering a '|' in the text
+   * @returns {Token}
+   */
   makeOr() {
     let posStart = this.pos.copy();
     this.advance();
@@ -98,6 +125,10 @@ class Lexer {
     ];
   }
 
+  /**
+   * generates a NOT/NE token after encountering a '!' in the text
+   * @returns {Token}
+   */
   makeNotEquals() {
     let tokType = TT.NOT;
     let posStart = this.pos.copy();
@@ -111,6 +142,10 @@ class Lexer {
     return new Token(tokType, null, posStart, this.pos);
   }
 
+  /**
+   * generates an EQ/EE token after encountering a '=' in the text
+   * @returns {Token}
+   */
   makeEquals() {
     let tokType = TT.EQ;
     let posStart = this.pos.copy();
@@ -124,6 +159,10 @@ class Lexer {
     return new Token(tokType, null, posStart, this.pos);
   }
 
+  /**
+   * generates a LT/LTE token after encountering a '<' in the text
+   * @returns {Token}
+   */
   makeLessThan() {
     let tokType = TT.LT;
     let posStart = this.pos.copy();
@@ -137,6 +176,10 @@ class Lexer {
     return new Token(tokType, null, posStart, this.pos);
   }
 
+  /**
+   * generates a GT/GTE token after encountering a '>' in the text
+   * @returns {Token}
+   */
   makeGreaterThan() {
     let tokType = TT.GT;
     let posStart = this.pos.copy();
@@ -150,13 +193,16 @@ class Lexer {
     return new Token(tokType, null, posStart, this.pos);
   }
 
+  /**
+   * generates a list of tokens by going through each char in the text
+   * @returns {[Token[], Error]}
+   */
   makeTokens() {
     let tokens = [];
 
     while (this.currentChar !== null) {
       if (' \t'.includes(this.currentChar)) {
-        /** ignore spaces and tabs */
-        this.advance();
+        this.advance(); // ignore spaces and tabs
       } else if (TT.DIGITS.includes(this.currentChar)) {
         tokens.push(this.makeNumber());
       } else if (TT.LETTERS.includes(this.currentChar)) {
