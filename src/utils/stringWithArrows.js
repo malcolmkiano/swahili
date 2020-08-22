@@ -1,5 +1,10 @@
-/** Prints out lines of code and indicates the position of errors
+/**
+ * Prints out lines of code and indicates the position of errors
  * using arrows
+ * @param {String} text text to be printed to the terminal
+ * @param {Postion} posStart position at which the error occurred
+ * @param {Position} posEnd position where the token ends
+ * @returns {String}
  */
 function stringWithArrows(text, posStart, posEnd) {
   let result = '';

@@ -1,6 +1,26 @@
+/** reserved keywords in Swahili */
 module.exports = [
-  'wacha' /** LET (for variable declaration) */,
-  'kama' /** IF (for conditional statements) */,
-  'au' /** ELSEIF (alt specified conditions) */,
-  'sivyo' /** ELSE (no conditions met) */,
+  // LET (for variable declaration)
+  'wacha',
+
+  // IF (for conditional statements)
+  'kama',
+
+  // ELSEIF (alt specified conditions)
+  'au',
+
+  // ELSE (no conditions met)
+  'sivyo',
+
+  // FOR (loop statements)
+  'kwa',
+
+  // TO (defining loop end)
+  'mpaka',
+
+  // STEP (indicating the increment for each loop)
+  'hatua',
+
+  // WHILE (loop statements)
+  'ambapo',
 ];

@@ -1,3 +1,4 @@
+/** map of all recognized token types */
 module.exports = {
   /** Integer */
   INT: 'INT',

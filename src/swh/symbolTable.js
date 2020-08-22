@@ -1,9 +1,17 @@
+/**
+ * map to hold all variable names and values in the current scope
+ * and a pointer to its parent (if any)
+ */
 class SymbolTable {
   constructor() {
     this.symbols = {};
     this.parent = null;
   }
 
+  /**
+   * accesses and returns the value of a variable
+   * @param {String} name variable name to be accessed
+   */
   get(name) {
     const value = this.symbols[name] || null;
     if (value === null && this.parent) return this.parent.get(name);
@@ -11,10 +19,19 @@ class SymbolTable {
     return value;
   }
 
+  /**
+   * assigns a value to a variable (or overrides existing value)
+   * @param {String} name variable name to be assigned
+   * @param {*} value value to be assigned to the variable
+   */
   set(name, value) {
     this.symbols[name] = value;
   }
 
+  /**
+   * deletes reference to variable name and value
+   * @param {String} name variable name to be deleted
+   */
   remove(name) {
     delete this.symbols[name];
   }
