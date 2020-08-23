@@ -1,7 +1,6 @@
-const readline = require('readline');
 const colors = require('colors');
 const print = require('./utils/print');
-const input = require('./utils/input');
+const prompt = require('prompt-sync')();
 
 /**
  * update the terminal title
@@ -14,7 +13,7 @@ const swh = require('./swh/run');
 
 /** Prompt user for input in the terminal */
 const getInput = async () => {
-  const text = await input(`${colors.brightMagenta('swahili')} > `);
+  const text = prompt(`${colors.brightMagenta('swahili')} > `);
   if (text) {
     // handle input
     const [result, error] = swh('<stdin>', text);
