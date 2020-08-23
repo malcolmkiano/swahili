@@ -4,6 +4,7 @@ const print = require('../utils/print');
 const prompt = require('prompt-sync')();
 
 const SWValue = require('./types/value');
+const SWNull = require('./types/null');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
@@ -459,7 +460,7 @@ class SWBaseFunction extends SWValue {
         )
       );
 
-    return res.success(null);
+    return res.success(new SWNull());
   }
 
   /**
@@ -627,7 +628,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_andika(executionContext) {
     print(executionContext.symbolTable.get('value').toString(false), true); // 2 -> the arguments are then accessed from the execution context's symbol table
-    return new RTResult().success(null);
+    return new RTResult().success(new SWNull());
   }
   andika = ['value']; // 1 -> this contains all the args the built in function requires
 
@@ -669,7 +670,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_futa(executionContext) {
     console.clear();
-    return new RTResult().success(null);
+    return new RTResult().success(new SWNull());
   }
   futa = []; // built in functions that don't need args still need this empty array
 

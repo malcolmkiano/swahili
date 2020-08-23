@@ -13,15 +13,19 @@ const swh = require('./swh/run');
 
 /** Prompt user for input in the terminal */
 const getInput = async () => {
-  const text = prompt(`${colors.brightMagenta('swahili')} > `);
+  const text = prompt(`${colors.brightMagenta('swahili')} > `, '');
   if (text) {
     // handle input
     const [result, error] = swh('<stdin>', text);
     if (error) {
       print(colors.red(error.toString()), true);
     } else if (result) {
+      console.log(result);
       print(result, true);
     }
+  } else if (text === null) {
+    print('Kwa heri!', true);
+    process.exit(0);
   }
 
   // keep prompting until they manually terminate the process
