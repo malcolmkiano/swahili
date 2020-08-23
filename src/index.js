@@ -23,7 +23,7 @@ function getInput() {
       print(result, true);
     }
   } else if (text === null) {
-    print('Kwa heri!', true);
+    print('Kwaheri Mwanaprogramu!', true);
     process.exit(0);
   }
 
