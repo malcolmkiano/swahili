@@ -1,8 +1,8 @@
 const Lexer = require('./lexer');
 const Parser = require('./parser');
-const Interpreter = require('./interpreter');
+const { Interpreter, SWBuiltInFunction } = require('./interpreter');
 const Context = require('./context');
-const SWNumber = require('./types/number');
+const SWNull = require('./types/null');
 const SWBoolean = require('./types/boolean');
 const SymbolTable = require('./symbolTable');
 
@@ -10,8 +10,22 @@ const SymbolTable = require('./symbolTable');
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
+globalSymbolTable.set('tupu', new SWNull()); // NULL
 globalSymbolTable.set('kweli', new SWBoolean(true)); // TRUE
 globalSymbolTable.set('uwongo', new SWBoolean(false)); // FALSE
+
+/** built in functions */
+globalSymbolTable.set('andika', SWBuiltInFunction.print);
+globalSymbolTable.set('soma', SWBuiltInFunction.input);
+globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.set('futa', SWBuiltInFunction.clear);
+
+globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
+
+globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
 
 /**
  * Processes a file through the lexer, parser and interpreter

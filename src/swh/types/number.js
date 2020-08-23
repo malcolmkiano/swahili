@@ -108,35 +108,27 @@ class SWNumber extends SWValue {
   }
 
   /**
-   * mathematically compares two numbers and returns true if the numbers are equal
-   * @param {SWNumber} other number to be compared to the current
+   * compares two values for equality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonEQ(other) {
-    if (other instanceof SWNumber) {
-      return [
-        new SWBoolean(this.value === other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value === other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**
-   * mathematically compares two numbers and returns true if the numbers are not equal
-   * @param {SWNumber} other number to be compared to the current
+   * compares two values for inequality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonNE(other) {
-    if (other instanceof SWNumber) {
-      return [
-        new SWBoolean(this.value !== other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value !== other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**

@@ -1,7 +1,6 @@
 const util = require('util');
 const colors = require('colors');
 const SWValue = require('./value');
-const { RTError } = require('../error');
 
 /**  Boolean data type */
 class SWBoolean extends SWValue {
@@ -14,36 +13,34 @@ class SWBoolean extends SWValue {
     this.value = value;
   }
 
+  /** generator function for true values */
+  static TRUE = new SWBoolean(true);
+
+  /** generator function for false values */
+  static FALSE = new SWBoolean(false);
+
   /**
-   * logically compares two booleans and returns true if the booleans are equal
-   * @param {SWBoolean} other boolean to be compared to the current
+   * compares two values for equality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonEQ(other) {
-    if (other instanceof SWBoolean) {
-      return [
-        new SWBoolean(this.value === other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value === other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**
-   * logically compares two booleans and returns true if the booleans are not equal
-   * @param {SWBoolean} other boolean to be compared to the current
+   * compares two values for inequality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonNE(other) {
-    if (other instanceof SWBoolean) {
-      return [
-        new SWBoolean(this.value !== other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value !== other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**

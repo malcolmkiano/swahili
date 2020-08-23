@@ -60,35 +60,27 @@ class SWString extends SWValue {
   }
 
   /**
-   * logically compares two strings and returns true if the strings are equal
-   * @param {SWString} other string to be compared to the current
+   * compares two values for equality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonEQ(other) {
-    if (other instanceof SWString) {
-      return [
-        new SWBoolean(this.value === other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value === other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**
-   * logically compares two strings and returns true if the strings are not equal
-   * @param {SWString} other string to be compared to the current
+   * compares two values for inequality
+   * @param {*} other node to be compared to the current
    * @returns {SWBoolean}
    */
   getComparisonNE(other) {
-    if (other instanceof SWString) {
-      return [
-        new SWBoolean(this.value !== other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      new SWBoolean(this.value !== other.value).setContext(this.context),
+      null,
+    ];
   }
 
   /**
@@ -148,10 +140,13 @@ class SWString extends SWValue {
 
   /**
    * string representation of the string class
+   * @param {Boolean} showQuotes whether to show quotes and color or not
    * @returns {String}
    */
-  toString() {
-    return colors.green(`"${this.value}"`);
+  toString(showQuotes = true) {
+    return showQuotes
+      ? colors.green(`"${this.value}"`)
+      : colors.brightWhite(this.value);
   }
 }
 
