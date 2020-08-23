@@ -12,7 +12,7 @@ const setTitle = require('node-bash-title');
 const swh = require('./swh/run');
 
 /** Prompt user for input in the terminal */
-const getInput = async () => {
+function getInput() {
   const text = prompt(`${colors.brightMagenta('swahili')} > `, '');
   if (text) {
     // handle input
@@ -20,7 +20,6 @@ const getInput = async () => {
     if (error) {
       print(colors.red(error.toString()), true);
     } else if (result) {
-      console.log(result);
       print(result, true);
     }
   } else if (text === null) {
@@ -30,7 +29,7 @@ const getInput = async () => {
 
   // keep prompting until they manually terminate the process
   getInput();
-};
+}
 
 // begin the process
 console.clear();

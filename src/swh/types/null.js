@@ -13,6 +13,9 @@ class SWNull extends SWValue {
     this.value = null;
   }
 
+  /** generator function for null values */
+  static NULL = new SWNull();
+
   /**
    * logically compares two values and returns true if the values are equal
    * @param {*} other boolean to be compared to the current

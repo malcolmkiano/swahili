@@ -10,9 +10,9 @@ const SymbolTable = require('./symbolTable');
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', new SWNull()); // NULL
-globalSymbolTable.set('kweli', new SWBoolean(true)); // TRUE
-globalSymbolTable.set('uwongo', new SWBoolean(false)); // FALSE
+globalSymbolTable.set('tupu', SWNull.NULL); // NULL
+globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
 
 /** built in functions */
 globalSymbolTable.set('andika', SWBuiltInFunction.print);
