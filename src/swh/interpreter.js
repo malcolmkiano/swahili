@@ -680,45 +680,46 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_niNambari(executionContext) {
-    let isNumber =
-      executionContext.symbolTable.get('value') instanceof SWNumber;
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isNumber = kitu instanceof SWNumber;
     return new RTResult().success(isNumber ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
-  niNambari = ['value'];
+  niNambari = ['kitu'];
 
   /**
    * Checks if a value is a string
    * @param {Context} executionContext the calling context
    */
   execute_niJina(executionContext) {
-    let isString =
-      executionContext.symbolTable.get('value') instanceof SWString;
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isString = kitu instanceof SWString;
     return new RTResult().success(isString ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
-  niJina = ['value'];
+  niJina = ['kitu'];
 
   /**
    * Checks if a value is a list
    * @param {Context} executionContext the calling context
    */
   execute_niOrodha(executionContext) {
-    let isList = executionContext.symbolTable.get('value') instanceof SWList;
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isList = kitu instanceof SWList;
     return new RTResult().success(isList ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
-  niOrodha = ['value'];
+  niOrodha = ['kitu'];
 
   /**
    * Checks if a value is a function
    * @param {Context} executionContext the calling context
    */
   execute_niShughuli(executionContext) {
-    let isFunction =
-      executionContext.symbolTable.get('value') instanceof SWBaseFunction;
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isFunction = kitu instanceof SWBaseFunction;
     return new RTResult().success(
       isFunction ? SWBoolean.TRUE : SWBoolean.FALSE
     );
   }
-  niShughuli = ['value'];
+  niShughuli = ['kitu'];
 
   /**
    * Returns the length of a list/string
@@ -727,25 +728,23 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_idadi(executionContext) {
     let res = new RTResult();
 
-    let value = executionContext.symbolTable.get('value');
-    if (value instanceof SWString || value instanceof SWList) {
+    let kitu = executionContext.symbolTable.get('kitu');
+    if (kitu instanceof SWString || kitu instanceof SWList) {
       return res.success(
-        new SWNumber(
-          value.elements ? value.elements.length : value.value.length
-        )
+        new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
       );
     } else {
       return res.failure(
         new RTError(
-          value.posStart,
-          value.posEnd,
+          kitu.posStart,
+          kitu.posEnd,
           `Cannot find length of non-iterable value`,
           executionContext
         )
       );
     }
   }
-  idadi = ['value'];
+  idadi = ['kitu'];
 
   // I/O
   static print = new SWBuiltInFunction('andika');
