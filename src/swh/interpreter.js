@@ -627,32 +627,33 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_andika(executionContext) {
-    print(executionContext.symbolTable.get('value').toString(false), true); // 2 -> the arguments are then accessed from the execution context's symbol table
+    let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
+    print(ujumbe, true); // 2 -> the arguments are then accessed from the execution context's symbol table
     return new RTResult().success(new SWNull());
   }
-  andika = ['value']; // 1 -> this contains all the args the built in function requires
+  andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
 
   /**
    * Gets input from STDIN
    * @param {Context} executionContext the calling context
    */
   execute_soma(executionContext) {
-    let message = executionContext.symbolTable.get('message').toString(false);
-    let textInput = prompt(message);
+    let swali = executionContext.symbolTable.get('swali').toString(false);
+    let textInput = prompt(swali);
 
     return new RTResult().success(new SWString(textInput || ''));
   }
-  soma = ['message'];
+  soma = ['swali'];
 
   /**
    * Gets numeric input from STDIN
    * @param {Context} executionContext the calling context
    */
   execute_somaNambari(executionContext) {
-    let message = executionContext.symbolTable.get('message').toString(false);
+    let swali = executionContext.symbolTable.get('swali').toString(false);
     let numInput = 0;
     while (true) {
-      numInput = prompt(message);
+      numInput = prompt(swali);
       if (isNaN(numInput)) {
         print('Jibu yako si nambari. Jaribu tena.');
       } else {
@@ -662,7 +663,7 @@ class SWBuiltInFunction extends SWBaseFunction {
 
     return new RTResult().success(new SWNumber(numInput || 0));
   }
-  somaNambari = ['message'];
+  somaNambari = ['swali'];
 
   /**
    * Clears the terminal
