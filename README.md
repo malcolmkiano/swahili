@@ -20,10 +20,12 @@ This will be updated as the language develops
 | **call**       | `atom` (LPAREN (`expr` (COMMA `expr`)\*)? RPAREN)?    |
 | **atom**       | INT/FLOAT/STRING/IDENTIFIER                           |
 |                | LPAREN `expr` RPAREN                                  |
+|                | `list-expr`                                           |
 |                | `if-expr`                                             |
 |                | `for-expr`                                            |
 |                | `while-expr`                                          |
 |                | `func-def`                                            |
+| **list-expr**  | LSQUARE (`expr` (COMMA `expr`)\*)? RSQUARE            |
 | **if-expr**    | KEYWORD:KAMA `expr` LCURL `expr` RCURL                |
 |                | (KEYWORD:AU `expr` LCURL `expr` RCURL)\*              |
 |                | (KEYWORD:SIVYO LCURL `expr` RCURL)?                   |

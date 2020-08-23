@@ -2,6 +2,7 @@ const TT = require('./tokenTypes');
 const {
   NumberNode,
   StringNode,
+  ListNode,
   VarAccessNode,
   VarAssignNode,
   BinOpNode,
@@ -98,7 +99,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(' or 'si'`
+          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
         )
       );
 
@@ -128,7 +129,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected int, float, identifier, '+', '-', '(' or 'si'`
+          `Expected int, float, identifier, '+', '-', '(', '[' or 'si'`
         )
       );
 
@@ -188,7 +189,7 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected ')', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-' '(' or 'si'`
+              `Expected ')', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
             )
           );
 
@@ -205,7 +206,7 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected ')'`
+              `Expected ',' or ')'`
             )
           );
         }
@@ -233,10 +234,6 @@ class Parser {
       res.registerAdvancement();
       this.advance();
       return res.success(new StringNode(tok));
-    } else if (tok.type === TT.IDENTIFIER) {
-      res.registerAdvancement();
-      this.advance();
-      return res.success(new VarAccessNode(tok));
     } else if (tok.type === TT.LPAREN) {
       res.registerAdvancement();
       this.advance();
@@ -255,6 +252,14 @@ class Parser {
           )
         );
       }
+    } else if (tok.type === TT.IDENTIFIER) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(new VarAccessNode(tok));
+    } else if (tok.type === TT.LSQUARE) {
+      let listExpr = res.register(this.listExpr());
+      if (res.error) return res;
+      return res.success(listExpr);
     } else if (tok.matches(TT.KEYWORD, 'kama')) {
       let ifExpr = res.register(this.ifExpr());
       if (res.error) return res;
@@ -277,8 +282,67 @@ class Parser {
       new InvalidSyntaxError(
         tok.posStart,
         tok.posEnd,
-        `Expected int, float, identifier, '+', '-', '(', 'kama', 'kwa', 'ambapo' or 'shughuli'`
+        `Expected int, float, identifier, '+', '-', '(', '[', 'kama', 'kwa', 'ambapo' or 'shughuli'`
       )
+    );
+  };
+
+  /** parse tokens to make a list node */
+  listExpr = () => {
+    let res = new ParseResult();
+    let elementNodes = [];
+    let posStart = this.currentTok.posStart.copy();
+
+    if (this.currentTok.type !== TT.LSQUARE)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '['`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type === TT.RSQUARE) {
+      res.registerAdvancement();
+      this.advance();
+    } else {
+      elementNodes.push(res.register(this.expr()));
+      if (res.error)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected ']', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+          )
+        );
+
+      while (this.currentTok.type === TT.COMMA) {
+        res.registerAdvancement();
+        this.advance();
+
+        elementNodes.push(res.register(this.expr()));
+        if (res.error) return res;
+      }
+
+      if (this.currentTok.type !== TT.RSQUARE) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected ',' or ']'`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    return res.success(
+      new ListNode(elementNodes, posStart, this.currentTok.posEnd.copy())
     );
   };
 

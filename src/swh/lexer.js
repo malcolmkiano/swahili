@@ -267,6 +267,12 @@ class Lexer {
       } else if (this.currentChar === ')') {
         tokens.push(new Token(TT.RPAREN, null, this.pos));
         this.advance();
+      } else if (this.currentChar === '[') {
+        tokens.push(new Token(TT.LSQUARE, null, this.pos));
+        this.advance();
+      } else if (this.currentChar === ']') {
+        tokens.push(new Token(TT.RSQUARE, null, this.pos));
+        this.advance();
       } else if (this.currentChar === '{') {
         tokens.push(new Token(TT.LCURL, null, this.pos));
         this.advance();

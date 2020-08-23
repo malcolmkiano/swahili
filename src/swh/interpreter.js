@@ -4,6 +4,7 @@ const colors = require('colors');
 const SWValue = require('./types/value');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
+const SWList = require('./types/list');
 const TT = require('./tokenTypes');
 
 const Context = require('./context');
@@ -72,6 +73,28 @@ class Interpreter {
   };
 
   /**
+   * Evaluates a list node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitListNode = (node, context) => {
+    let res = new RTResult();
+    let elements = [];
+
+    for (let elementNode of node.elementNodes) {
+      elements.push(res.register(this.visit(elementNode, context)));
+      if (res.error) return res;
+    }
+
+    return res.success(
+      new SWList(elements)
+        .setContext(context)
+        .setPosition(node.posStart, node.posEnd)
+    );
+  };
+
+  /**
    * Returns a variable value from the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
@@ -126,7 +149,7 @@ class Interpreter {
     let right = res.register(this.visit(node.rightNode, context));
     if (res.error) return res;
 
-    let result = new SWNumber(0);
+    let result = new SWValue();
     let error = null;
 
     if (node.opTok.type === TT.PLUS) {
@@ -227,6 +250,7 @@ class Interpreter {
    */
   visitForNode = (node, context) => {
     let res = new RTResult();
+    let elements = [];
     let stepValue = new SWNumber(1);
     let condition = null;
 
@@ -254,7 +278,7 @@ class Interpreter {
       context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
       i += stepValue.value;
 
-      res.register(this.visit(node.bodyNode, context));
+      elements.push(res.register(this.visit(node.bodyNode, context)));
       if (res.error) return res;
 
       // prevent infinite loops
@@ -270,7 +294,11 @@ class Interpreter {
         );
     }
 
-    return res.success(null);
+    return res.success(
+      new SWList(elements)
+        .setContext(context)
+        .setPosition(node.posStart, node.posEnd)
+    );
   };
 
   /**
@@ -281,6 +309,8 @@ class Interpreter {
    */
   visitWhileNode = (node, context) => {
     let res = new RTResult();
+    let elements = [];
+
     let calls = 0;
 
     while (true) {
@@ -289,7 +319,7 @@ class Interpreter {
 
       if (!condition.isTrue()) break;
 
-      res.register(this.visit(node.bodyNode, context));
+      elements.push(res.register(this.visit(node.bodyNode, context)));
       if (res.error) return res;
 
       // prevent infinite loops
@@ -305,7 +335,11 @@ class Interpreter {
         );
     }
 
-    return res.success(null);
+    return res.success(
+      new SWList(elements)
+        .setContext(context)
+        .setPosition(node.posStart, node.posEnd)
+    );
   };
 
   /**

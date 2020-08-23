@@ -52,6 +52,16 @@ class StringNode {
   }
 }
 
+/** node representing a list */
+class ListNode {
+  constructor(elementNodes, posStart, posEnd) {
+    this.elementNodes = elementNodes;
+
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 /** node representing a variable access result */
 class VarAccessNode {
   /**
@@ -251,6 +261,7 @@ class CallNode {
 module.exports = {
   NumberNode,
   StringNode,
+  ListNode,
   VarAccessNode,
   VarAssignNode,
   BinOpNode,

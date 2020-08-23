@@ -24,13 +24,11 @@ function run(fileName, text) {
   const lexer = new Lexer(fileName, text);
   const [tokens, error] = lexer.makeTokens();
   if (error) return [null, error];
-  // console.log(tokens);
 
   // Generate abstract syntax tree
   const parser = new Parser(tokens);
   const ast = parser.parse();
   if (ast.error) return [null, ast.error];
-  // console.log(ast.node);
 
   // Run program
   const intr = new Interpreter();
