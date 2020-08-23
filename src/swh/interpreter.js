@@ -4,7 +4,6 @@ const print = require('../utils/print');
 const prompt = require('prompt-sync')();
 
 const SWValue = require('./types/value');
-const SWNull = require('./types/null');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
@@ -127,7 +126,7 @@ class Interpreter {
   };
 
   /**
-   * Sets a variable into the associated context's symbol table
+   * Updates a variable into the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
    * @returns {RTResult}
@@ -137,6 +136,42 @@ class Interpreter {
     let varName = node.varNameTok.value;
     let value = res.register(this.visit(node.valueNode, context));
     if (res.error) return res;
+
+    if (!context.symbolTable.get(varName, true))
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `'${varName}' is not defined`,
+          context
+        )
+      );
+
+    context.symbolTable.set(varName, value);
+    return res.success(value);
+  };
+
+  /**
+   * Creates a variable into the associated context's symbol table
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitVarDefNode = (node, context) => {
+    let res = new RTResult();
+    let varName = node.varNameTok.value;
+    let value = res.register(this.visit(node.valueNode, context));
+    if (res.error) return res;
+
+    if (context.symbolTable.get(varName, true))
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `Cannot re-declare '${varName}'`,
+          context
+        )
+      );
 
     context.symbolTable.set(varName, value);
     return res.success(value);
@@ -442,7 +477,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${args.length - argNames.length} too many args passed into ${
-            this.name
+          this.name
           }`,
           this.context
         )
@@ -454,13 +489,13 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${argNames.length - args.length} too few args passed into ${
-            this.name
+          this.name
           }`,
           this.context
         )
       );
 
-    return res.success(new SWNull());
+    return res.success(null);
   }
 
   /**
@@ -629,7 +664,7 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_andika(executionContext) {
     let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
     print(ujumbe, true); // 2 -> the arguments are then accessed from the execution context's symbol table
-    return new RTResult().success(new SWNull());
+    return new RTResult().success(null);
   }
   andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
 
@@ -671,7 +706,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_futa(executionContext) {
     console.clear();
-    return new RTResult().success(new SWNull());
+    return new RTResult().success(null);
   }
   futa = []; // built in functions that don't need args still need this empty array
 
