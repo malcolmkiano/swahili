@@ -23,7 +23,9 @@ class SWNumber extends SWValue {
   addedTo(other) {
     if (other instanceof SWNumber) {
       return [
-        new SWNumber(Number(this.value) + Number(other.value)).setContext(this.context),
+        new SWNumber(Number(this.value) + Number(other.value)).setContext(
+          this.context
+        ),
         null,
       ];
     } else {

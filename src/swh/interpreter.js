@@ -477,7 +477,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${args.length - argNames.length} too many args passed into ${
-          this.name
+            this.name
           }`,
           this.context
         )
@@ -489,7 +489,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${argNames.length - args.length} too few args passed into ${
-          this.name
+            this.name
           }`,
           this.context
         )
@@ -663,7 +663,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_andika(executionContext) {
     let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
-    print(ujumbe, true); // 2 -> the arguments are then accessed from the execution context's symbol table
+    print(ujumbe); // 2 -> the arguments are then accessed from the execution context's symbol table
     return new RTResult().success(null);
   }
   andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires

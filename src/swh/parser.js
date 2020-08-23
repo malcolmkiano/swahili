@@ -101,7 +101,7 @@ class Parser {
       );
 
     return res.success(node);
-  }
+  };
 
   /** creates nodes based on the expr rule in the grammar document */
   expr = () => {
