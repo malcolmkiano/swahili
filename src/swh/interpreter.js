@@ -4,6 +4,7 @@ const print = require('../utils/print');
 const prompt = require('prompt-sync')();
 
 const SWValue = require('./types/value');
+const SWNull = require('./types/null');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
@@ -281,7 +282,7 @@ class Interpreter {
       return res.success(elseValue);
     }
 
-    return res.success(null);
+    return res.success(SWNull.NULL);
   };
 
   /**
@@ -431,7 +432,7 @@ class Interpreter {
         .copy()
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
-    return res.success(returnValue || null);
+    return res.success(returnValue || SWNull.NULL);
   };
 }
 
@@ -495,7 +496,7 @@ class SWBaseFunction extends SWValue {
         )
       );
 
-    return res.success(null);
+    return res.success(SWNull.NULL);
   }
 
   /**
@@ -526,7 +527,7 @@ class SWBaseFunction extends SWValue {
     if (res.error) return res;
 
     this.populateArgs(argNames, args, executionContext);
-    return res.success(null);
+    return res.success(SWNull.NULL);
   }
 
   [util.inspect.custom](depth, options) {
