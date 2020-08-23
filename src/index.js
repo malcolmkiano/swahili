@@ -1,6 +1,6 @@
-const readline = require('readline');
 const colors = require('colors');
 const print = require('./utils/print');
+const prompt = require('prompt-sync')();
 
 /**
  * update the terminal title
@@ -11,28 +11,25 @@ const setTitle = require('node-bash-title');
 /** Swahili Interpreter */
 const swh = require('./swh/run');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
-
 /** Prompt user for input in the terminal */
-const getInput = () => {
-  rl.question(`${colors.brightMagenta('swahili')} > `, (text) => {
-    if (text) {
-      // handle input
-      const [result, error] = swh('<stdin>', text);
-      if (error) {
-        print(colors.red(error.toString()), true);
-      } else {
-        print(result || colors.gray('bure kabisa'), true);
-      }
+function getInput() {
+  const text = prompt(`${colors.brightMagenta('swahili')} > `, '');
+  if (text) {
+    // handle input
+    const [result, error] = swh('<stdin>', text);
+    if (error) {
+      print(colors.red(error.toString()), true);
+    } else if (result) {
+      print(result, true);
     }
+  } else if (text === null) {
+    print('Kwa heri!', true);
+    process.exit(0);
+  }
 
-    // keep prompting until they manually terminate the process
-    getInput();
-  });
-};
+  // keep prompting until they manually terminate the process
+  getInput();
+}
 
 // begin the process
 console.clear();

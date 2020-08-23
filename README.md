@@ -1,37 +1,28 @@
-# swahili
+# Swahili
 
 A new programming language to be written in Swahili to help teach programming concepts to swahili speaking students.
 
-### Grammar
+![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-blue)
 
-This will be updated as the language develops
+## Documentation
 
-| Node           | Constituents                                          |
-| :------------- | :---------------------------------------------------- |
-| **expr**       | KEYWORD:WACHA IDENTIFIER EQ `expr`                    |
-|                | `comp-expr` ((AND/OR) `comp-expr`)\*                  |
-| **comp-expr**  | NOT `comp-expr`                                       |
-|                | `arith-expr` ((EE/LT/GT/LTE/GTE) `arith-expr`)\*      |
-| **arith-expr** | `term` ((PLUS/MINUS) `term`)\*                        |
-| **term**       | `factor` (MUL/DIV) `factor`)\*                        |
-| **factor**     | (PLUS/MINUS) `factor`                                 |
-|                | `power`                                               |
-| **power**      | `call` (POW `factor`)\*                               |
-| **call**       | `atom` (LPAREN (`expr` (COMMA `expr`)\*)? RPAREN)?    |
-| **atom**       | INT/FLOAT/STRING/IDENTIFIER                           |
-|                | LPAREN `expr` RPAREN                                  |
-|                | `list-expr`                                           |
-|                | `if-expr`                                             |
-|                | `for-expr`                                            |
-|                | `while-expr`                                          |
-|                | `func-def`                                            |
-| **list-expr**  | LSQUARE (`expr` (COMMA `expr`)\*)? RSQUARE            |
-| **if-expr**    | KEYWORD:KAMA `expr` LCURL `expr` RCURL                |
-|                | (KEYWORD:AU `expr` LCURL `expr` RCURL)\*              |
-|                | (KEYWORD:SIVYO LCURL `expr` RCURL)?                   |
-| **for-expr**   | KEYWORD:KWA IDENTIFIER EQ `expr` KEYWORD:MPAKA `expr` |
-|                | (KEYWORD:HATUA `expr`)? LCURL `expr` RCURL            |
-| **while-expr** | KEYWORD:AMBAPO `expr` LCURL `expr` RCURL              |
-| **func-def**   | KEYWORD:SHUGHULI IDENTIFIER?                          |
-|                | LPAREN (IDENTIFIER (COMMA IDENTIFIER)\*)? RPAREN      |
-|                | LCURL expr RCURL                                      |
+### Language Guide
+
+1. [Introduction](./docs/guide/01-introduction.md)
+2. [Grammar and types](./docs/guide/02-grammar-and-types.md)
+3. [Control flow and error handling](./docs/guide/03-control-flow.md)
+4. [Loops and iterations](./docs/guide/04-loops.md)
+5. [Functions](./docs/guide/05-functions.md)
+6. [Expressions and operators](./docs/guide/06-expressions.md)
+7. [Numbers and dates](<(./docs/guide/07-numbers.md)>)
+
+### References
+
+1. [Grammar](./docs/ref/grammar.md)
+2. [Built-in functions](./docs/ref/built-in-functions.md)
+
+### Examples
+
+1. (Beginner) Hello, World!
+2. (Intermediate) To Do List
+3. (Advanced) Decision-based Game

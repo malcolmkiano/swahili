@@ -1,9 +1,13 @@
 const util = require('util');
 const colors = require('colors');
+const print = require('../utils/print');
+const prompt = require('prompt-sync')();
 
 const SWValue = require('./types/value');
+const SWNull = require('./types/null');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
+const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
 const TT = require('./tokenTypes');
 
@@ -115,7 +119,10 @@ class Interpreter {
         )
       );
 
-    value = value.copy().setPosition(node.posStart, node.posEnd);
+    value = value
+      .copy()
+      .setPosition(node.posStart, node.posEnd)
+      .setContext(context);
     return res.success(value);
   };
 
@@ -383,18 +390,127 @@ class Interpreter {
 
     let returnValue = res.register(valueToCall.execute(args));
     if (res.error) return res;
-    return res.success(returnValue);
+
+    if (returnValue)
+      returnValue = returnValue
+        .copy()
+        .setPosition(node.posStart, node.posEnd)
+        .setContext(context);
+    return res.success(returnValue || null);
   };
 }
 
-module.exports = Interpreter;
+module.exports.Interpreter = Interpreter;
 
 // ================================================================================================
 // the code below exists here because of its co-dependent relation with the interpreter class
 // ================================================================================================
 
+/** Base function type */
+class SWBaseFunction extends SWValue {
+  /**
+   * instantiates a function
+   * @param {String} name name of the function
+   * @param {Node} bodyNode node containing the expressions to be run
+   * @param {String[]} argNames tokens containing the argument names
+   */
+  constructor(name) {
+    super();
+    this.name = name || '<isiyotambuliwa>';
+  }
+
+  /**
+   * creates a new running context for the function
+   */
+  generateNewContext() {
+    let newContext = new Context(this.name, this.context, this.posStart);
+    newContext.symbolTable = new SymbolTable(newContext.parent.symbolTable);
+    return newContext;
+  }
+
+  /**
+   * Ensures required number of args are provided to run function
+   * @param {String[]} argNames list of argument names from function definition
+   * @param {Node[]} args list of argument nodes
+   */
+  checkArgs(argNames, args) {
+    let res = new RTResult();
+
+    if (args.length > argNames.length)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `${args.length - argNames.length} too many args passed into ${
+            this.name
+          }`,
+          this.context
+        )
+      );
+
+    if (args.length < argNames.length)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `${argNames.length - args.length} too few args passed into ${
+            this.name
+          }`,
+          this.context
+        )
+      );
+
+    return res.success(new SWNull());
+  }
+
+  /**
+   * adds all the arguments into the symbol table
+   * @param {String[]} argNames list of argument names from function definition
+   * @param {Node[]} args list of argument nodes
+   * @param {Context} executionContext executing context
+   */
+  populateArgs(argNames, args, executionContext) {
+    for (let i = 0; i < args.length; i++) {
+      let argName = argNames[i];
+      let argValue = args[i];
+      argValue.setContext(executionContext);
+      executionContext.symbolTable.set(argName, argValue);
+    }
+  }
+
+  /**
+   * verifies correct number of arguments are provided and
+   * adds the arguments into the symbol table
+   * @param {String[]} argNames list of argument names from function definition
+   * @param {Node[]} args list of argument nodes
+   * @param {Context} executionContext executing context
+   */
+  checkAndPopulateArgs(argNames, args, executionContext) {
+    let res = new RTResult();
+    res.register(this.checkArgs(argNames, args));
+    if (res.error) return res;
+
+    this.populateArgs(argNames, args, executionContext);
+    return res.success(null);
+  }
+
+  [util.inspect.custom](depth, options) {
+    return this.toString();
+  }
+
+  /**
+   * string representation of the function class
+   * @returns {String}
+   */
+  toString() {
+    return colors.cyan(`<shughuli ${this.name}>`);
+  }
+}
+
+// ============================================
+
 /** Function data type */
-class SWFunction extends SWValue {
+class SWFunction extends SWBaseFunction {
   /**
    * instantiates a function
    * @param {String} name name of the function
@@ -402,8 +518,7 @@ class SWFunction extends SWValue {
    * @param {String[]} argNames tokens containing the argument names
    */
   constructor(name, bodyNode, argNames) {
-    super();
-    this.name = name || '<isiyotambuliwa>';
+    super(name);
     this.bodyNode = bodyNode;
     this.argNames = argNames;
   }
@@ -415,41 +530,14 @@ class SWFunction extends SWValue {
   execute(args) {
     let res = new RTResult();
     const INT = new Interpreter();
-    let newContext = new Context(this.name, this.context, this.posStart);
-    newContext.symbolTable = new SymbolTable(newContext.parent.symbolTable);
+    let executionContext = this.generateNewContext();
 
-    if (args.length > this.argNames.length)
-      return res.failure(
-        new RTError(
-          this.posStart,
-          this.posEnd,
-          `${args.length - this.argNames.length} too many args passed into ${
-            this.name
-          }`,
-          this.context
-        )
-      );
+    res.register(
+      this.checkAndPopulateArgs(this.argNames, args, executionContext)
+    );
+    if (res.error) return res;
 
-    if (args.length < this.argNames.length)
-      return res.failure(
-        new RTError(
-          this.posStart,
-          this.posEnd,
-          `${this.argNames.length - args.length} too few args passed into ${
-            this.name
-          }`,
-          this.context
-        )
-      );
-
-    for (let i = 0; i < args.length; i++) {
-      let argName = this.argNames[i];
-      let argValue = args[i];
-      argValue.setContext(newContext);
-      newContext.symbolTable.set(argName, argValue);
-    }
-
-    let value = res.register(INT.visit(this.bodyNode, newContext));
+    let value = res.register(INT.visit(this.bodyNode, executionContext));
     if (res.error) return res;
 
     return res.success(value);
@@ -465,6 +553,58 @@ class SWFunction extends SWValue {
     copy.setContext(this.context);
     return copy;
   }
+}
+
+// ============================================
+
+/** Built in function data type */
+class SWBuiltInFunction extends SWBaseFunction {
+  /**
+   * instantiates a built in function
+   * @param {String} name the name of the built in function
+   */
+  constructor(name) {
+    super(name);
+  }
+
+  /**
+   * Executes the function
+   * @param {Token[]} args list of token value nodes to be used as function arguments
+   */
+  execute(args) {
+    let res = new RTResult();
+    let executionContext = this.generateNewContext();
+
+    let methodName = `execute_${this.name}`;
+    let method = this[methodName] || this.noExecuteMethod;
+    let argNames = this[this.name];
+
+    res.register(this.checkAndPopulateArgs(argNames, args, executionContext));
+    if (res.error) return res;
+
+    let returnValue = res.register(method(executionContext));
+    if (res.error) return res;
+    return res.success(returnValue);
+  }
+
+  /**
+   * Occurs when no execution method is defined for the built in function
+   * @param {Context} context the calling context
+   */
+  noExecuteMethod = (context) => {
+    throw new Error(`No execute_${node.constructor.name} method defined`);
+  };
+
+  /**
+   * creates a new instance of the function
+   * @returns {SWBuiltInFunction}
+   */
+  copy() {
+    let copy = new SWBuiltInFunction(this.name);
+    copy.setPosition(this.posStart, this.posEnd);
+    copy.setContext(this.context);
+    return copy;
+  }
 
   [util.inspect.custom](depth, options) {
     return this.toString();
@@ -475,6 +615,151 @@ class SWFunction extends SWValue {
    * @returns {String}
    */
   toString() {
-    return colors.cyan(`<shughuli ${this.name}>`);
+    return colors.brightCyan(`<shughuli asili ${this.name}>`);
   }
+
+  // =========================================================
+  // BUILT IN FUNCTION EXECUTION
+  // =========================================================
+
+  /**
+   * Print a value to the screen
+   * @param {Context} executionContext the calling context
+   */
+  execute_andika(executionContext) {
+    let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
+    print(ujumbe, true); // 2 -> the arguments are then accessed from the execution context's symbol table
+    return new RTResult().success(new SWNull());
+  }
+  andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
+
+  /**
+   * Gets input from STDIN
+   * @param {Context} executionContext the calling context
+   */
+  execute_soma(executionContext) {
+    let swali = executionContext.symbolTable.get('swali').toString(false);
+    let textInput = prompt(swali);
+
+    return new RTResult().success(new SWString(textInput || ''));
+  }
+  soma = ['swali'];
+
+  /**
+   * Gets numeric input from STDIN
+   * @param {Context} executionContext the calling context
+   */
+  execute_somaNambari(executionContext) {
+    let swali = executionContext.symbolTable.get('swali').toString(false);
+    let numInput = 0;
+    while (true) {
+      numInput = prompt(swali);
+      if (isNaN(numInput)) {
+        print('Jibu yako si nambari. Jaribu tena.');
+      } else {
+        break;
+      }
+    }
+
+    return new RTResult().success(new SWNumber(numInput || 0));
+  }
+  somaNambari = ['swali'];
+
+  /**
+   * Clears the terminal
+   * @param {Context} executionContext the calling context
+   */
+  execute_futa(executionContext) {
+    console.clear();
+    return new RTResult().success(new SWNull());
+  }
+  futa = []; // built in functions that don't need args still need this empty array
+
+  /**
+   * Checks if a value is a number
+   * @param {Context} executionContext the calling context
+   */
+  execute_niNambari(executionContext) {
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isNumber = kitu instanceof SWNumber;
+    return new RTResult().success(isNumber ? SWBoolean.TRUE : SWBoolean.FALSE);
+  }
+  niNambari = ['kitu'];
+
+  /**
+   * Checks if a value is a string
+   * @param {Context} executionContext the calling context
+   */
+  execute_niJina(executionContext) {
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isString = kitu instanceof SWString;
+    return new RTResult().success(isString ? SWBoolean.TRUE : SWBoolean.FALSE);
+  }
+  niJina = ['kitu'];
+
+  /**
+   * Checks if a value is a list
+   * @param {Context} executionContext the calling context
+   */
+  execute_niOrodha(executionContext) {
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isList = kitu instanceof SWList;
+    return new RTResult().success(isList ? SWBoolean.TRUE : SWBoolean.FALSE);
+  }
+  niOrodha = ['kitu'];
+
+  /**
+   * Checks if a value is a function
+   * @param {Context} executionContext the calling context
+   */
+  execute_niShughuli(executionContext) {
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isFunction = kitu instanceof SWBaseFunction;
+    return new RTResult().success(
+      isFunction ? SWBoolean.TRUE : SWBoolean.FALSE
+    );
+  }
+  niShughuli = ['kitu'];
+
+  /**
+   * Returns the length of a list/string
+   * @param {Context} executionContext the calling context
+   */
+  execute_idadi(executionContext) {
+    let res = new RTResult();
+
+    let kitu = executionContext.symbolTable.get('kitu');
+    if (kitu instanceof SWString || kitu instanceof SWList) {
+      return res.success(
+        new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
+      );
+    } else {
+      return res.failure(
+        new RTError(
+          kitu.posStart,
+          kitu.posEnd,
+          `Cannot find length of non-iterable value`,
+          executionContext
+        )
+      );
+    }
+  }
+  idadi = ['kitu'];
+
+  // I/O
+  static print = new SWBuiltInFunction('andika');
+  static input = new SWBuiltInFunction('soma');
+  static inputNumber = new SWBuiltInFunction('somaNambari');
+  static clear = new SWBuiltInFunction('futa');
+
+  // Type checks
+  static isNumber = new SWBuiltInFunction('niNambari');
+  static isString = new SWBuiltInFunction('niJina');
+  static isList = new SWBuiltInFunction('niOrodha');
+  static isFunction = new SWBuiltInFunction('niShughuli');
+
+  // Lists
+  static sizeof = new SWBuiltInFunction('idadi');
 }
+
+module.exports.SWBuiltInFunction = SWBuiltInFunction;

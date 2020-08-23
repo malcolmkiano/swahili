@@ -98,7 +98,7 @@ class SWList extends SWValue {
    * @returns {SWList}
    */
   copy() {
-    let copy = new SWList([...this.elements]);
+    let copy = new SWList(this.elements);
     copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;
