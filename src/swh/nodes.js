@@ -79,7 +79,23 @@ class VarAccessNode {
 /** node representing a variable assignment */
 class VarAssignNode {
   /**
-   * instantiates a variable declaration node
+   * instantiates a variable assignment node
+   * @param {Token} varNameTok token containing the variable's name
+   * @param {Node} valueNode node containing the value to be assigned to the variable
+   */
+  constructor(varNameTok, valueNode) {
+    this.varNameTok = varNameTok;
+    this.valueNode = valueNode;
+
+    this.posStart = this.varNameTok.posStart;
+    this.posEnd = this.valueNode.posEnd;
+  }
+}
+
+/** node representing a variable definition */
+class VarDefNode {
+  /**
+   * instantiates a variable definition node
    * @param {Token} varNameTok token containing the variable's name
    * @param {Node} valueNode node containing the value to be assigned to the variable
    */
@@ -264,6 +280,7 @@ module.exports = {
   ListNode,
   VarAccessNode,
   VarAssignNode,
+  VarDefNode,
   BinOpNode,
   UnaryOpNode,
   IfNode,

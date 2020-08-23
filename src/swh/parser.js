@@ -5,6 +5,7 @@ const {
   ListNode,
   VarAccessNode,
   VarAssignNode,
+  VarDefNode,
   BinOpNode,
   UnaryOpNode,
   IfNode,
@@ -40,11 +41,23 @@ class Parser {
   }
 
   /**
+   * moves to the previous token from the lexer
+   * @returns {Token}
+   */
+  backStep() {
+    if (this.tokIdx > 0) {
+      this.tokIdx--;
+      this.currentTok = this.tokens[this.tokIdx];
+    }
+    return this.currentTok;
+  }
+
+  /**
    * combines a set of tokens into node(s)
    * @returns {ParseResult}
    */
   parse() {
-    let res = this.expr();
+    let res = this.setExpr();
     if (!res.error && this.currentTok.type !== TT.EOF) {
       return res.failure(
         new InvalidSyntaxError(
@@ -55,6 +68,39 @@ class Parser {
       );
     }
     return res;
+  }
+
+  /** creates nodes based on the set-expr rule in the grammar document */
+  setExpr = () => {
+    let res = new ParseResult();
+    if (this.currentTok.type === TT.IDENTIFIER) {
+      let varName = this.currentTok;
+      this.advance();
+
+      if (this.currentTok.type === TT.EQ) {
+        res.registerAdvancement();
+        this.advance();
+
+        let expr = res.register(this.expr());
+        if (res.error) return res;
+
+        res.registerAdvancement();
+        return res.success(new VarAssignNode(varName, expr));
+      }
+    }
+
+    this.backStep();
+    let node = res.register(this.expr());
+    if (res.error)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+        )
+      );
+
+    return res.success(node);
   }
 
   /** creates nodes based on the expr rule in the grammar document */
@@ -90,7 +136,7 @@ class Parser {
       this.advance();
       let expr = res.register(this.expr());
       if (res.error) return res;
-      return res.success(new VarAssignNode(varName, expr));
+      return res.success(new VarDefNode(varName, expr));
     }
 
     let node = res.register(this.binOp(this.compExpr, [TT.AND, TT.OR]));

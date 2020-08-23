@@ -4,6 +4,8 @@ This will be updated as the language develops
 
 | Node           | Constituents                                          |
 | :------------- | :---------------------------------------------------- |
+| **set-expr**   | IDENTIFIER EQ `expr`                                  |
+|                | `expr`                                                |
 | **expr**       | KEYWORD:WACHA IDENTIFIER EQ `expr`                    |
 |                | `comp-expr` ((AND/OR) `comp-expr`)\*                  |
 | **comp-expr**  | NOT `comp-expr`                                       |
