@@ -2,6 +2,7 @@ const colors = require('colors');
 const print = require('./utils/print');
 const readline = require('readline');
 
+/** set up terminal interface */
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -27,15 +28,18 @@ function getInput() {
       } else if (result) {
         print(result, true);
       }
-    } else if (text === null) {
-      print('Kwaheri!', true);
-      process.exit(0);
     }
 
     // keep prompting until they manually terminate the process
     getInput();
   });
 }
+
+// exit event handler
+rl.on('SIGINT', () => {
+  print('Kwaheri Mwanaprogramu!', true);
+  process.exit(0);
+});
 
 // begin the process
 console.clear();
