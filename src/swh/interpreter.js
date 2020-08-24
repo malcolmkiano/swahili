@@ -386,9 +386,12 @@ class Interpreter {
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
-      if (res.loopShouldContinue) continue;
-
-      if (res.loopShouldBreak) break;
+      if (res.loopShouldContinue) {
+        continue;
+      }
+      if (res.loopShouldBreak) {
+        break;
+      }
 
       elements.push(value);
 

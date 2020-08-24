@@ -135,7 +135,7 @@ class SWList extends SWValue {
         : colors.brightWhite(
             elements.map((node) => node.toString(showBrackets)).join(', ')
           )
-      : SWNull.NULL;
+      : `[]`;
   }
 }
 
