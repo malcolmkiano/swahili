@@ -11,27 +11,27 @@
 ## Comments
  
 ## Declarations
-- To declare a variable, we use the keyword ```wacha```
+- To declare a variable, we use the keyword `wacha`
 ``` wacha x = 5
     wacha X = 3
  ```
 
 ## Variables
-- Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore (```_``` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
+- Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore (`_` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
 ```
 wacha _jina = "Kiano" //valid
 wacha Jina = "Kiano" //valid
 wacha jina = "Kiano" //valid
 wacha 0_jina = "Kiano" //invalid
 ```
-- Swahili is case sensitive, hence, ```Jina``` and ```jina ``` are different variable. 
+- Swahili is case sensitive, hence, `Jina` and `jina` are different variables. 
 - You can not use Swahli keywords as identifiers. 
 ```
   wacha kweli = uwongo //will raise an error because kweli is a swahili keyword
 ```
 
 ## Declaring Variables
-- To declare a variable, we use the keyword ```wacha```, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
+- To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
 ```
 wacha jina //will raise an error
 wacha jina = "" // is valid
@@ -52,7 +52,7 @@ x = 5 // this will not raise an error
 x = "Outside block"
 shughuli salamu_tatu(jina){
   wacha x = 3 //value of x here is 3
-  andika("Habari, "+ jina)*x
+  andika(("Habari, "+ jina )*x)
  }
  salamu_tatu("Wendo")
  andika(x) //will print "Outside block"
@@ -63,15 +63,15 @@ shughuli salamu_tatu(jina){
 
 ## Data Structures and types
 - There are 5
-  - Boolean: ```kweli``` that represents true and ```uwongo``` that represents false
-  - null: ```tupu``` denotes a null value
-  - Number: Could be both Integers and floats. For example ```42``` or ```3.14159```
-  - Strings: A sequence of characters that represents a text value. For example ```Habari```
-  - Lists: ```Orodha```  an ordered collection of items. Can hold multiple data types: for example ```[1,2,3] ``` or ```[1, "orodha", kweli]```
+  - Boolean: `kweli` that represents true and `uwongo` that represents false
+  - null: `tupu` denotes a null value
+  - Number: Could be both Integers and floats. For example `42` or `3.14159`
+  - Strings: A sequence of characters that represents a text value. For example `Habari`
+  - Lists: `Orodha`  an ordered collection of items. Can hold multiple data types: for example `[1,2,3] ` or `[1, "orodha", kweli]`
 
 ## List literals
 - A list literal is a collection of zero or more expressions, each of which represents a list element enclosed in square brackets. The length of a list is set to the number of arguments specified. 
-- The following creates a list of ```vinywaji```
+- The following creates a list of `vinywaji`
 ```
 wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ] 
 ```
@@ -96,7 +96,7 @@ andika(vinywaji)
 ```
 
 ### Deleting elements in a list
-- To delete an element in a list we use the ```-``` followed by the index of the element. For Example: 
+- To delete an element in a list we use the `-` followed by the index of the element. For Example: 
 ```
 vinywaji -3
 andika(vinywaji)
@@ -104,7 +104,7 @@ andika(vinywaji)
 ```
 
 ### Concatenation of 2 lists
-- We can combine 2 lists into one using an asterisk (```*```)
+- We can combine 2 lists into one using an asterisk (`*`)
 - For Example:
 ```
   wacha vyakula = ["maandazi", "wali", "mahamri"]
@@ -122,16 +122,16 @@ idadi(vinywaji)
 ```
 
 ## Boolean literals
-- The boolean type has 2 literal values: ```kweli``` and ```uwongo```
+- The boolean type has 2 literal values: `kweli` and `uwongo`
 
 ## Numeric literals
 - The Number type contains both floats and integers. 
-- Swahili deals only with numbers in base ten, ie, ```decimal number system```
+- Swahili deals only with numbers in base ten, ie, `decimal number system`
 - Examples of numeric literals are:
-```1,100, 3.14159, 2.71828```
+`1,100, 3.14159, 2.71828`
 
 ## String literals
-- A string literal is zero or more characters enclosed in double(```" "```) quotation marks. Swahili does not support use of single quotation marks to denote strings, hence ```andika('Habari Dunia')``` is invalid but ```andika("Habari Dunia")``` is valid. 
+- A string literal is zero or more characters enclosed in double(`" "`) quotation marks. Swahili does not support use of single quotation marks to denote strings, hence `andika('Habari Dunia')` is invalid but `andika("Habari Dunia")` is valid. 
 
 ## Special Characters
 - In addition to ordinary characters you can also include special characters in strings. 
@@ -141,7 +141,7 @@ andika(" habari \n yako")
 >> habari
    yako
 ```
-- The charaters ```\n``` add a new line. The list of special characters is shown below
+- The charaters `\n` add a new line. The list of special characters is shown below
 
 Character   |  Meaning            |
 ------------|---------------------|
