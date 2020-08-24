@@ -60,9 +60,6 @@ shughuli salamu_tatu(jina){
  andika(x) //will print "Outside block"
  ```
 
-## Constants
-
-
 ## Data Structures and types
 - There are 5
   - Boolean: `kweli` that represents true and `uwongo` that represents false
