@@ -13,6 +13,9 @@ const {
   WhileNode,
   FuncDefNode,
   CallNode,
+  ReturnNode,
+  ContinueNode,
+  BreakNode,
 } = require('./nodes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('./error');
@@ -89,7 +92,7 @@ class Parser {
       this.advance();
     }
 
-    let statement = res.register(this.setExpr());
+    let statement = res.register(this.statement());
     if (res.error) return res;
     statements.push(statement);
 
@@ -107,7 +110,7 @@ class Parser {
       if (!moreStatements) break;
 
       // look for any statements
-      let statement = res.tryRegister(this.setExpr());
+      let statement = res.tryRegister(this.statement());
       if (!statement) {
         this.reverse(res.toReverseCount);
         moreStatements = false;
@@ -123,9 +126,40 @@ class Parser {
     );
   };
 
-  /** creates nodes based on the set-expr rule in the grammar document */
-  setExpr = () => {
+  /** creates nodes based on the statement rule in the grammar document */
+  statement = () => {
     let res = new ParseResult();
+    let posStart = this.currentTok.posStart.copy();
+
+    if (this.currentTok.matches(TT.KEYWORD, 'rudisha')) {
+      res.registerAdvancement();
+      this.advance();
+
+      let expr = res.tryRegister(this.expr());
+      if (!expr) {
+        this.reverse(res.toReverseCount);
+      }
+      return res.success(
+        new ReturnNode(expr, posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, 'endelea')) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(
+        new ContinueNode(posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, 'ondoka')) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(
+        new BreakNode(posStart, this.currentTok.posStart.copy())
+      );
+    }
+
     let advanced = false;
     if (this.currentTok.type === TT.IDENTIFIER) {
       let varName = this.currentTok;
@@ -149,17 +183,17 @@ class Parser {
     }
 
     if (advanced) this.reverse();
-    let node = res.register(this.expr());
+    let expr = res.register(this.expr());
     if (res.error)
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+          `Expected 'rudisha', 'endelea', 'ondoka', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
         )
       );
 
-    return res.success(node);
+    return res.success(expr);
   };
 
   /** creates nodes based on the expr rule in the grammar document */
@@ -489,7 +523,7 @@ class Parser {
 
       let statements = res.register(this.statements());
       if (res.error) return res;
-      elseCase = [statements, true];
+      elseCase = [statements, statements.length > 1];
 
       if (this.currentTok.type === TT.RCURL) {
         res.registerAdvancement();
@@ -564,7 +598,7 @@ class Parser {
 
     let statements = res.register(this.statements());
     if (res.error) return res;
-    cases.push([condition, statements, true]);
+    cases.push([condition, statements, statements.length > 1]);
 
     if (this.currentTok.type === TT.RCURL) {
       res.registerAdvancement();
@@ -859,7 +893,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    return res.success(new FuncDefNode(varNameTok, argNameToks, body, true));
+    return res.success(new FuncDefNode(varNameTok, argNameToks, body));
   };
 
   /**

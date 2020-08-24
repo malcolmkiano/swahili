@@ -128,7 +128,7 @@ class SWValue {
    * @returns {value}
    */
   notted() {
-    return [null, this.illegalOperation(other)];
+    return [null, this.illegalOperation(this)];
   }
 
   /**

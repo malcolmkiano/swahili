@@ -1,6 +1,7 @@
 const util = require('util');
 const colors = require('colors');
 const SWValue = require('./value');
+const SWBoolean = require('./boolean');
 const SWNull = require('./null');
 const SWNumber = require('./number');
 
@@ -93,6 +94,17 @@ class SWList extends SWValue {
     } else {
       return [null, super.illegalOperation(other)];
     }
+  }
+
+  /**
+   * returns true if a value is falsy, and false if a value is truthy
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [
+      new SWBoolean(this.elements.length === 0).setContext(this.context),
+      null,
+    ];
   }
 
   /**

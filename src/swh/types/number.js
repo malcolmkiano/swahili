@@ -234,7 +234,7 @@ class SWNumber extends SWValue {
    * @returns {SWBoolean}
    */
   notted() {
-    return [new SWBoolean(!(this.value === 0)).setContext(this.context), null];
+    return [new SWBoolean(this.value === 0).setContext(this.context), null];
   }
 
   /**
