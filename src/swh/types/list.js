@@ -1,4 +1,5 @@
 const util = require('util');
+const colors = require('colors');
 const SWValue = require('./value');
 const SWNull = require('./null');
 const SWNumber = require('./number');
@@ -111,12 +112,17 @@ class SWList extends SWValue {
 
   /**
    * string representation of the number class
+   * @param {Boolean} showBrackets whether to show brackets and color or not
    * @returns {String}
    */
-  toString() {
+  toString(showBrackets = true) {
     let elements = this.elements.filter(Boolean);
     return elements.length
-      ? `[${elements.map((node) => node.toString()).join(', ')}]`
+      ? showBrackets
+        ? `[${elements.map((node) => node.toString(showBrackets)).join(', ')}]`
+        : colors.brightWhite(
+            elements.map((node) => node.toString(showBrackets)).join(', ')
+          )
       : SWNull.NULL;
   }
 }

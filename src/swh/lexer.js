@@ -240,6 +240,9 @@ class Lexer {
     while (this.currentChar !== null) {
       if (' \t'.includes(this.currentChar)) {
         this.advance(); // ignore spaces and tabs
+      } else if (TT.ENDINGS.includes(this.currentChar)) {
+        tokens.push(new Token(TT.NEWLINE, null, this.pos));
+        this.advance();
       } else if (TT.DIGITS.includes(this.currentChar)) {
         tokens.push(this.makeNumber());
       } else if (TT.LETTERS.includes(this.currentChar)) {

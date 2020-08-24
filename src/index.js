@@ -26,7 +26,11 @@ function getInput() {
       if (error) {
         print(colors.red(error.toString()), true);
       } else if (result) {
-        print(result, true);
+        if (result.elements.length === 1) {
+          print(result.elements[0], true);
+        } else {
+          print(result, true);
+        }
       }
     }
 
