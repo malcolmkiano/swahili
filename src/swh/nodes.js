@@ -239,13 +239,11 @@ class FuncDefNode {
    * @param {Token} varNameTok token containing the name of the function
    * @param {Token[]} argNameToks list of tokens containing names for the arguments
    * @param {Node} bodyNode node containing the expressions to run
-   * @param {Boolean} shouldReturnNull whether the node should return null
    */
-  constructor(varNameTok, argNameToks, bodyNode, shouldReturnNull) {
+  constructor(varNameTok, argNameToks, bodyNode) {
     this.varNameTok = varNameTok;
     this.argNameToks = argNameToks;
     this.bodyNode = bodyNode;
-    this.shouldReturnNull = shouldReturnNull;
 
     if (this.varNameTok) {
       this.posStart = this.varNameTok.posStart;
@@ -280,6 +278,47 @@ class CallNode {
   }
 }
 
+/** node representing a return value */
+class ReturnNode {
+  /**
+   * instantiate a return value node
+   * @param {Node} nodeToReturn node representing the function to be called
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(nodeToReturn, posStart, posEnd) {
+    this.nodeToReturn = nodeToReturn;
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
+/** node representing a continue statement */
+class ContinueNode {
+  /**
+   * instantiate a continue statement node
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(posStart, posEnd) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
+/** node representing a break statement */
+class BreakNode {
+  /**
+   * instantiate a break statement node
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(posStart, posEnd) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 module.exports = {
   NumberNode,
   StringNode,
@@ -294,4 +333,7 @@ module.exports = {
   WhileNode,
   FuncDefNode,
   CallNode,
+  ReturnNode,
+  ContinueNode,
+  BreakNode,
 };
