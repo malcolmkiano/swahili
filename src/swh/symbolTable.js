@@ -11,7 +11,7 @@ class SymbolTable {
   /**
    * accesses and returns the value of a variable
    * @param {String} name variable name to be accessed
-   * @param {Boolean} shallow check parent scope for variable
+   * @param {Boolean} shallow checks parent scope for variable if false
    */
   get(name, shallow = false) {
     const value = this.symbols[name] || null;
