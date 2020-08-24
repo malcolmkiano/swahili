@@ -88,7 +88,7 @@ class Interpreter {
 
     for (let elementNode of node.elementNodes) {
       elements.push(res.register(this.visit(elementNode, context)));
-      if (res.error) return res;
+      if (res.shouldReturn()) return res;
     }
 
     return res.success(
@@ -136,9 +136,9 @@ class Interpreter {
     let res = new RTResult();
     let varName = node.varNameTok.value;
     let value = res.register(this.visit(node.valueNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
-    if (!context.symbolTable.get(varName, true))
+    if (!context.symbolTable.get(varName))
       return res.failure(
         new RTError(
           node.posStart,
@@ -162,7 +162,7 @@ class Interpreter {
     let res = new RTResult();
     let varName = node.varNameTok.value;
     let value = res.register(this.visit(node.valueNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     if (context.symbolTable.get(varName, true))
       return res.failure(
@@ -187,10 +187,10 @@ class Interpreter {
   visitBinOpNode = (node, context) => {
     let res = new RTResult();
     let left = res.register(this.visit(node.leftNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     let right = res.register(this.visit(node.rightNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     let result = new SWValue();
     let error = null;
@@ -239,7 +239,7 @@ class Interpreter {
   visitUnaryOpNode = (node, context) => {
     let res = new RTResult();
     let number = res.register(this.visit(node.node, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     let error = null;
 
@@ -265,21 +265,26 @@ class Interpreter {
   visitIfNode = (node, context) => {
     let res = new RTResult();
 
-    for (let [condition, expr] of node.cases) {
+    for (let [condition, expr, shouldReturnNull] of node.cases) {
       let conditionValue = res.register(this.visit(condition, context));
-      if (res.error) return res;
+      if (res.shouldReturn()) return res;
 
       if (conditionValue.isTrue()) {
         let exprValue = res.register(this.visit(expr, context));
-        if (res.error) return res;
-        return res.success(exprValue);
+        if (res.shouldReturn()) return res;
+        return res.success(
+          shouldReturnNull ? SWNull.NULL : exprValue.elements[0]
+        );
       }
     }
 
     if (node.elseCase) {
-      let elseValue = res.register(this.visit(node.elseCase, context));
-      if (res.error) return res;
-      return res.success(elseValue);
+      let [expr, shouldReturnNull] = node.elseCase;
+      let elseValue = res.register(this.visit(expr, context));
+      if (res.shouldReturn()) return res;
+      return res.success(
+        shouldReturnNull ? SWNull.NULL : elseValue.elements[0]
+      );
     }
 
     return res.success(SWNull.NULL);
@@ -298,10 +303,10 @@ class Interpreter {
     let condition = null;
 
     let startValue = res.register(this.visit(node.startValueNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     let endValue = res.register(this.visit(node.endValueNode, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     if (node.stepValueNode) {
       stepValue = res.register(this.visit(node.stepValueNode, context));
@@ -324,8 +329,15 @@ class Interpreter {
       context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
       i += stepValue.value;
 
-      elements.push(res.register(this.visit(node.bodyNode, context)));
-      if (res.error) return res;
+      let value = res.register(this.visit(node.bodyNode, context));
+      if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
+        return res;
+
+      if (res.loopShouldContinue) continue;
+
+      if (res.loopShouldBreak) break;
+
+      elements.push(value);
 
       // prevent infinite loops
       calls++;
@@ -344,9 +356,11 @@ class Interpreter {
     if (!preExistingVar) context.symbolTable.remove(node.varNameTok.value);
 
     return res.success(
-      new SWList(elements)
-        .setContext(context)
-        .setPosition(node.posStart, node.posEnd)
+      node.shouldReturnNull
+        ? SWNull.NULL
+        : new SWList(elements)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -364,12 +378,22 @@ class Interpreter {
 
     while (true) {
       let condition = res.register(this.visit(node.conditionNode, context));
-      if (res.error) return res;
+      if (res.shouldReturn()) return res;
 
       if (!condition.isTrue()) break;
 
-      elements.push(res.register(this.visit(node.bodyNode, context)));
-      if (res.error) return res;
+      let value = res.register(this.visit(node.bodyNode, context));
+      if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
+        return res;
+
+      if (res.loopShouldContinue) {
+        continue;
+      }
+      if (res.loopShouldBreak) {
+        break;
+      }
+
+      elements.push(value);
 
       // prevent infinite loops
       calls++;
@@ -385,9 +409,11 @@ class Interpreter {
     }
 
     return res.success(
-      new SWList(elements)
-        .setContext(context)
-        .setPosition(node.posStart, node.posEnd)
+      node.shouldReturnNull
+        ? SWNull.NULL
+        : new SWList(elements)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -422,16 +448,16 @@ class Interpreter {
     let args = [];
 
     let valueToCall = res.register(this.visit(node.nodeToCall, context));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
     valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
 
     for (let argNode of node.argNodes) {
       args.push(res.register(this.visit(argNode, context)));
-      if (res.error) return res;
+      if (res.shouldReturn()) return res;
     }
 
     let returnValue = res.register(valueToCall.execute(args));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     if (returnValue)
       returnValue = returnValue
@@ -439,6 +465,44 @@ class Interpreter {
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
     return res.success(returnValue);
+  };
+
+  /**
+   * Evaluates a return node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitReturnNode = (node, context) => {
+    let res = new RTResult();
+    let value = SWNull.NULL;
+
+    if (node.nodeToReturn) {
+      value = res.register(this.visit(node.nodeToReturn, context));
+      if (res.shouldReturn()) return res;
+    }
+
+    return res.successReturn(value);
+  };
+
+  /**
+   * Evaluates a continue node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitContinueNode = (node, context) => {
+    return new RTResult().successContinue();
+  };
+
+  /**
+   * Evaluates a break node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitBreakNode = (node, context) => {
+    return new RTResult().successBreak();
   };
 }
 
@@ -530,7 +594,7 @@ class SWBaseFunction extends SWValue {
   checkAndPopulateArgs(argNames, args, executionContext) {
     let res = new RTResult();
     res.register(this.checkArgs(argNames, args));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     this.populateArgs(argNames, args, executionContext);
     return res.success(SWNull.NULL);
@@ -577,12 +641,13 @@ class SWFunction extends SWBaseFunction {
     res.register(
       this.checkAndPopulateArgs(this.argNames, args, executionContext)
     );
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
-    let value = res.register(INT.visit(this.bodyNode, executionContext));
-    if (res.error) return res;
+    res.register(INT.visit(this.bodyNode, executionContext));
+    if (res.shouldReturn() && res.funcReturnValue === null) return res;
 
-    return res.success(value);
+    let returnValue = res.funcReturnValue;
+    return res.success(returnValue || SWNull.NULL);
   }
 
   /**
@@ -622,10 +687,10 @@ class SWBuiltInFunction extends SWBaseFunction {
     let argNames = this[this.name];
 
     res.register(this.checkAndPopulateArgs(argNames, args, executionContext));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
 
     let returnValue = res.register(method(executionContext));
-    if (res.error) return res;
+    if (res.shouldReturn()) return res;
     return res.success(returnValue);
   }
 

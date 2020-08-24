@@ -116,6 +116,17 @@ class SWString extends SWValue {
   }
 
   /**
+   * returns true if a value is falsy, and false if a value is truthy
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [
+      new SWBoolean(this.value.length === 0).setContext(this.context),
+      null,
+    ];
+  }
+
+  /**
    * creates a new instance of the string
    * @returns {SWString}
    */

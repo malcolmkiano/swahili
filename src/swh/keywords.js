@@ -26,4 +26,13 @@ module.exports = [
 
   // SWFunction (function declarations)
   'shughuli',
+
+  // RETURN (return value)
+  'rudisha',
+
+  // CONTINUE (skip iteration)
+  'endelea',
+
+  // BREAK (terminate iteration)
+  'ondoka',
 ];
