@@ -4,6 +4,7 @@ const print = require('../utils/print');
 const prompt = require('prompt-sync')();
 
 const SWValue = require('./types/value');
+const SWNull = require('./types/null');
 const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
@@ -281,7 +282,7 @@ class Interpreter {
       return res.success(elseValue);
     }
 
-    return res.success(null);
+    return res.success(SWNull.NULL);
   };
 
   /**
@@ -316,6 +317,9 @@ class Interpreter {
 
     let calls = 0;
 
+    // check if variable existed in symbol table before loop call
+    let preExistingVar = !!context.symbolTable.get(node.varNameTok.value, true);
+
     while (condition()) {
       context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
       i += stepValue.value;
@@ -335,6 +339,9 @@ class Interpreter {
           )
         );
     }
+
+    // delete iterator variable if it wasn't pre-existing
+    if (!preExistingVar) context.symbolTable.remove(node.varNameTok.value);
 
     return res.success(
       new SWList(elements)
@@ -431,7 +438,7 @@ class Interpreter {
         .copy()
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
-    return res.success(returnValue || null);
+    return res.success(returnValue);
   };
 }
 
@@ -495,7 +502,7 @@ class SWBaseFunction extends SWValue {
         )
       );
 
-    return res.success(null);
+    return res.success(SWNull.NULL);
   }
 
   /**
@@ -526,7 +533,7 @@ class SWBaseFunction extends SWValue {
     if (res.error) return res;
 
     this.populateArgs(argNames, args, executionContext);
-    return res.success(null);
+    return res.success(SWNull.NULL);
   }
 
   [util.inspect.custom](depth, options) {
@@ -664,7 +671,7 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_andika(executionContext) {
     let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
     print(ujumbe); // 2 -> the arguments are then accessed from the execution context's symbol table
-    return new RTResult().success(null);
+    return new RTResult().success(SWNull.NULL);
   }
   andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
 
@@ -706,7 +713,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_futa(executionContext) {
     console.clear();
-    return new RTResult().success(null);
+    return new RTResult().success(SWNull.NULL);
   }
   futa = []; // built in functions that don't need args still need this empty array
 

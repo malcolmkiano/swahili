@@ -1,5 +1,6 @@
 const util = require('util');
 const SWValue = require('./value');
+const SWNull = require('./null');
 const SWNumber = require('./number');
 
 const { RTError } = require('../error');
@@ -113,7 +114,10 @@ class SWList extends SWValue {
    * @returns {String}
    */
   toString() {
-    return `[${this.elements.map((node) => node.toString()).join(', ')}]`;
+    let elements = this.elements.filter(Boolean);
+    return elements.length
+      ? `[${elements.map((node) => node.toString()).join(', ')}]`
+      : SWNull.NULL;
   }
 }
 
