@@ -1,4 +1,4 @@
-# Hifadhi jina litakaloandikwa na mtumizi
-# Tumia "Dunia" mtumizi asipoandika jina
+// Hifadhi jina litakaloandikwa na mtumizi
+// Tumia "Dunia" mtumizi asipoandika jina
 wacha jina = soma("Jina lako? ") || "Dunia"
 andika("Jambo, " + jina + "!")

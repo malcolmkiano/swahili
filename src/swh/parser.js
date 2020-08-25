@@ -69,7 +69,6 @@ class Parser {
   parse() {
     let res = this.statements();
     if (!res.error && this.currentTok.type !== TT.EOF) {
-      console.log(this.currentTok);
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,

@@ -1042,6 +1042,7 @@ function run(fileName, text, temp = false) {
   const lexer = new Lexer(fileName, text);
   const [tokens, error] = lexer.makeTokens();
   if (error) return [null, error];
+  if (tokens.length === 1) return [null, null];
 
   // Generate abstract syntax tree
   const parser = new Parser(tokens);

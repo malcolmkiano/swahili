@@ -17,7 +17,7 @@ const rl = readline.createInterface({
 const setTitle = require('node-bash-title');
 
 /** Swahili Interpreter */
-const { run } = require('./swh//interpreter');
+const { run } = require('./swh/interpreter');
 
 /** Prompt user for input in the terminal */
 function getInput() {

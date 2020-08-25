@@ -86,14 +86,4 @@ module.exports = {
 
   /** New line */
   NEWLINE: 'NEWLINE',
-
-  /** Not really token types, but capture groups */
-  /** Digits 0-9 */
-  DIGITS: '0123456789',
-
-  /** Letters A-Z (both cases) */
-  LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_',
-
-  /** Line endings */
-  ENDINGS: '\r\n;',
 };
