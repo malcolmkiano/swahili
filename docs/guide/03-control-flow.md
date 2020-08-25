@@ -1,4 +1,4 @@
-# Flow control Structures.
+# Control Flow Structures.
 
 There are currently 2 control structures implemented:
 
