@@ -1,0 +1,90 @@
+// orodha ya mipango
+wacha mipango = []
+
+// andika mipango yote kwenye skrini
+shughuli onyeshaMipango() {
+  futa()
+  kwa i = 0 mpaka idadi(mipango) {
+    wacha mpango = mipango / i
+    wacha hali = kama (mpango / 0) { "[x]" } sivyo { "[ ]" }
+    wacha ujumbe = mpango / 1
+    andika(hali + " " + Jina(i + 1) + ". " + ujumbe)
+  }
+
+  kama (idadi(mipango) == 0) {
+    andika("-- Hakuna mipango bado --")
+  }
+
+  andika("")
+}
+
+// menyu ya kuongeza mpango
+shughuli mpangoMpya() {
+  wacha jibu = soma("Mpango mpya: ")
+  kama (!!jibu) {
+    mipango = mipango + [uwongo, jibu]
+  } sivyo {
+    soma("Mpango mpya haukuongezwa\n")
+  }
+}
+
+// menyu ya kubadili mpango
+shughuli badiliMpango() {
+  wacha pahala = somaNambari("Nambari ya mpango wa kubadili: ") - 1
+  kama (pahala >= 0 && pahala < idadi(mipango)) {
+    wacha mpango = mipango / pahala
+    wacha hali = mpango / 0
+    wacha ujumbe = mpango / 1
+    hali = !hali
+
+    wacha mpangoMpya = [hali, ujumbe]
+    badili(mipango, pahala, mpangoMpya)
+  } sivyo {
+    soma("Mpango haukubadilishwa\n")
+  }
+}
+
+// menu ya kuondoa mpango
+shughuli ondoaMpango() {
+  wacha pahala = somaNambari("Nambari ya mpango wa kuondoa: ") - 1
+  kama (pahala >= 0 && pahala < idadi(mipango)) {
+    mipango = mipango - pahala
+  } sivyo {
+    soma("Mpango haukuondolewa\n")
+  }
+}
+
+// onyesha menyu kuu ili mtumizi aweze kutumia programu
+shughuli menyuKuu() {
+  wacha jibu = tupu
+  wacha vyaguo = [
+    ["Ongeza mpango", mpangoMpya],
+    ["Badili mpango", badiliMpango],
+    ["Ondoa mpango", ondoaMpango]
+  ]
+
+  ambapo (kweli) {
+    onyeshaMipango()
+    andika("=================")
+    kwa i = 0 mpaka idadi(vyaguo) {
+      wacha chaguo = vyaguo / i
+      wacha ujumbe = chaguo / 0
+      andika(Jina(i + 1) + ". " + ujumbe)
+    }
+
+    // chaguo zaidi ya kuondoka
+    andika(Jina(idadi(vyaguo) + 1) + ". Funga programu")
+
+    jibu = somaNambari("Chaguo? ") - 1
+    kama (jibu >= 0 && jibu < idadi(vyaguo)) {
+      wacha tokeo = vyaguo / jibu
+      wacha menyuTokeo = tokeo / 1
+      menyuTokeo()
+    } sivyo {
+      soma("Asante kwa kutumia Swahili!\n")
+      rudisha
+    }
+  }
+}
+
+menyuKuu()
