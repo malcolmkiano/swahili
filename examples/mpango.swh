@@ -4,8 +4,9 @@ wacha mipango = [
   [uwongo, "Tayarisha watoto waende shuleni"]
 ]
 
-shughuli onyeshaMipango() {
+shughuli onyeshaMipango(jina) {
   futa()
+  andika("Habari yako, " + jina + "!")
   kwa i = 0 mpaka idadi(mipango) {
     wacha mpango = mipango / i
     wacha hali = kama (mpango / 0) { "[x]" } sivyo { "[ ]" }
@@ -14,4 +15,5 @@ shughuli onyeshaMipango() {
   }
 }
 
-onyeshaMipango()
+wacha jina = soma("Jina lako? ")
+onyeshaMipango(jina)
