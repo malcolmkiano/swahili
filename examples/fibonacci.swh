@@ -1,17 +1,19 @@
 shughuli fibonacci(nambari){
-    wacha tokeo = 0;
-    //andika(nambari);
-    kama (nambari == 0 || nambari ==1){
-        tokeo = nambari
-    } sivyo{
-        tokeo = fibonacci(nambari-1) + fibonacci(nambari-2)
-    }
-    rudisha tokeo
+  wacha tokeo = 0;
+  
+  kama (nambari == 0 || nambari ==1){
+    tokeo = nambari
+  } sivyo {
+    tokeo = fibonacci(nambari - 1) + fibonacci(nambari - 2)
+  }
+
+  rudisha tokeo
 }
 
 wacha nambari = somaNambari("Andkia nambari ya vifaa katika mfuatano wa fibonacci \n")
 wacha mfuatano_fibonacci = []
 kwa i = 0 mpaka nambari {
-    mfuatano_fibonacci = mfuatano_fibonacci + fibonacci(i)
+  mfuatano_fibonacci = mfuatano_fibonacci + fibonacci(i)
 }
+
 andika( mfuatano_fibonacci )
