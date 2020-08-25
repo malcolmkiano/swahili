@@ -84,10 +84,6 @@ module.exports = {
   /** End of file */
   EOF: 'EOF',
 
-  /** Not really token types, but capture groups */
-  /** Digits 0-9 */
-  DIGITS: '0123456789',
-
-  /** Letters A-Z (both cases) */
-  LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_',
+  /** New line */
+  NEWLINE: 'NEWLINE',
 };

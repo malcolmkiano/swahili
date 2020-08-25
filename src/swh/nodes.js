@@ -178,9 +178,8 @@ class IfNode {
     this.elseCase = elseCase;
 
     this.posStart = this.cases[0][0].posStart;
-    this.posEnd = (
-      this.elseCase || this.cases[this.cases.length - 1][0]
-    ).posEnd;
+    this.posEnd = (this.elseCase ||
+      this.cases[this.cases.length - 1])[0].posEnd;
   }
 }
 
@@ -193,19 +192,22 @@ class ForNode {
    * @param {Node} endValueNode node containing the value to end iteration at
    * @param {Node} stepValueNode node containing the value used to step through
    * @param {Node} bodyNode node containing the expressions to be run each iteration
+   * @param {Boolean} shouldReturnNull whether the node should return null
    */
   constructor(
     varNameTok,
     startValueNode,
     endValueNode,
     stepValueNode,
-    bodyNode
+    bodyNode,
+    shouldReturnNull
   ) {
     this.varNameTok = varNameTok;
     this.startValueNode = startValueNode;
     this.endValueNode = endValueNode;
     this.stepValueNode = stepValueNode;
     this.bodyNode = bodyNode;
+    this.shouldReturnNull = shouldReturnNull;
 
     this.posStart = this.varNameTok.posStart;
     this.posEnd = this.bodyNode.posEnd;
@@ -218,10 +220,12 @@ class WhileNode {
    * instantiates a while node
    * @param {Node} conditionNode node containing the condition to be met
    * @param {Node} bodyNode node containing the expressions to run each iteration
+   * @param {Boolean} shouldReturnNull whether the node should return null
    */
-  constructor(conditionNode, bodyNode) {
+  constructor(conditionNode, bodyNode, shouldReturnNull) {
     this.conditionNode = conditionNode;
     this.bodyNode = bodyNode;
+    this.shouldReturnNull = shouldReturnNull;
 
     this.posStart = this.conditionNode.posStart;
     this.posEnd = this.bodyNode.posEnd;
@@ -274,6 +278,47 @@ class CallNode {
   }
 }
 
+/** node representing a return value */
+class ReturnNode {
+  /**
+   * instantiate a return value node
+   * @param {Node} nodeToReturn node representing the function to be called
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(nodeToReturn, posStart, posEnd) {
+    this.nodeToReturn = nodeToReturn;
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
+/** node representing a continue statement */
+class ContinueNode {
+  /**
+   * instantiate a continue statement node
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(posStart, posEnd) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
+/** node representing a break statement */
+class BreakNode {
+  /**
+   * instantiate a break statement node
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(posStart, posEnd) {
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 module.exports = {
   NumberNode,
   StringNode,
@@ -288,4 +333,7 @@ module.exports = {
   WhileNode,
   FuncDefNode,
   CallNode,
+  ReturnNode,
+  ContinueNode,
+  BreakNode,
 };

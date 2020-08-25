@@ -13,6 +13,9 @@ const {
   WhileNode,
   FuncDefNode,
   CallNode,
+  ReturnNode,
+  ContinueNode,
+  BreakNode,
 } = require('./nodes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('./error');
@@ -34,22 +37,29 @@ class Parser {
    */
   advance() {
     this.tokIdx++;
-    if (this.tokIdx < this.tokens.length) {
-      this.currentTok = this.tokens[this.tokIdx];
-    }
+    this.updateCurrentTok();
     return this.currentTok;
   }
 
   /**
-   * moves to the previous token from the lexer
+   * moves backwards through the tokens for a given number of steps
+   * @param {Number} amount number of advancements to reverse
    * @returns {Token}
    */
-  backStep() {
-    if (this.tokIdx > 0) {
-      this.tokIdx--;
+  reverse(amount = 1) {
+    this.tokIdx -= amount;
+    this.updateCurrentTok();
+    return this.currentTok;
+  }
+
+  /**
+   * sets the current token to match the parser's token index
+   * @returns {Token}
+   */
+  updateCurrentTok() {
+    if (this.tokIdx >= 0 && this.tokIdx < this.tokens.length) {
       this.currentTok = this.tokens[this.tokIdx];
     }
-    return this.currentTok;
   }
 
   /**
@@ -57,7 +67,7 @@ class Parser {
    * @returns {ParseResult}
    */
   parse() {
-    let res = this.setExpr();
+    let res = this.statements();
     if (!res.error && this.currentTok.type !== TT.EOF) {
       return res.failure(
         new InvalidSyntaxError(
@@ -70,12 +80,94 @@ class Parser {
     return res;
   }
 
-  /** creates nodes based on the set-expr rule in the grammar document */
-  setExpr = () => {
+  /** creates nodes based on the statements rule in the grammar document */
+  statements = () => {
     let res = new ParseResult();
+    let statements = [];
+    let posStart = this.currentTok.posStart.copy();
+
+    while (this.currentTok.type === TT.NEWLINE) {
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    let statement = res.register(this.statement());
+    if (res.error) return res;
+    statements.push(statement);
+
+    let moreStatements = true;
+
+    while (true) {
+      let newLineCount = 0;
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
+        newLineCount += 1;
+      }
+
+      if (newLineCount === 0) moreStatements = false;
+      if (!moreStatements) break;
+
+      // look for any statements
+      let statement = res.tryRegister(this.statement());
+      if (!statement) {
+        this.reverse(res.toReverseCount);
+        moreStatements = false;
+        continue;
+      }
+
+      // add it to our list if found
+      statements.push(statement);
+    }
+
+    return res.success(
+      new ListNode(statements, posStart, this.currentTok.posEnd.copy())
+    );
+  };
+
+  /** creates nodes based on the statement rule in the grammar document */
+  statement = () => {
+    let res = new ParseResult();
+    let posStart = this.currentTok.posStart.copy();
+
+    if (this.currentTok.matches(TT.KEYWORD, 'rudisha')) {
+      res.registerAdvancement();
+      this.advance();
+
+      let expr = res.tryRegister(this.expr());
+      if (!expr) {
+        this.reverse(res.toReverseCount);
+      }
+      return res.success(
+        new ReturnNode(expr, posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, 'endelea')) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(
+        new ContinueNode(posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, 'ondoka')) {
+      res.registerAdvancement();
+      this.advance();
+      return res.success(
+        new BreakNode(posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    let advanced = false;
     if (this.currentTok.type === TT.IDENTIFIER) {
       let varName = this.currentTok;
+
+      // skip registering an advancement here just in case we need to back-track
+      // since this is checking for specific tokens,
+      // we don't have a method we can run `tryRegister` on
       this.advance();
+      advanced = true;
 
       if (this.currentTok.type === TT.EQ) {
         res.registerAdvancement();
@@ -89,18 +181,18 @@ class Parser {
       }
     }
 
-    this.backStep();
-    let node = res.register(this.expr());
+    if (advanced) this.reverse();
+    let expr = res.register(this.expr());
     if (res.error)
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+          `Expected 'rudisha', 'endelea', 'ondoka', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
         )
       );
 
-    return res.success(node);
+    return res.success(expr);
   };
 
   /** creates nodes based on the expr rule in the grammar document */
@@ -355,6 +447,12 @@ class Parser {
       res.registerAdvancement();
       this.advance();
     } else {
+      // skip past any new lines after [
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
+      }
+
       elementNodes.push(res.register(this.expr()));
       if (res.error)
         return res.failure(
@@ -369,8 +467,20 @@ class Parser {
         res.registerAdvancement();
         this.advance();
 
+        // skip past any new lines between list items
+        while (this.currentTok.type === TT.NEWLINE) {
+          res.registerAdvancement();
+          this.advance();
+        }
+
         elementNodes.push(res.register(this.expr()));
         if (res.error) return res;
+      }
+
+      // skip past any more new lines
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
       }
 
       if (this.currentTok.type !== TT.RSQUARE) {
@@ -395,72 +505,21 @@ class Parser {
   /** parse tokens to make an If Node with cases and an optional else case */
   ifExpr = () => {
     let res = new ParseResult();
-    let cases = [];
+    let allCases = res.register(this.ifExprCases('kama'));
+    if (res.error) return res;
+    let [cases, elseCase] = allCases;
+    return res.success(new IfNode(cases, elseCase));
+  };
+
+  /** parse tokens to make an ElseIf portion of an If Node */
+  ifExprB = () => {
+    return this.ifExprCases('au');
+  };
+
+  /** parse tokens to make an Else portion of an If Node */
+  ifExprC = () => {
+    let res = new ParseResult();
     let elseCase = null;
-    let output = null;
-
-    if (!this.currentTok.matches(TT.KEYWORD, 'kama')) {
-      return res.failure(
-        new InvalidSyntaxError(
-          this.currentTok.posStart,
-          this.currentTok.posEnd,
-          `Expected 'kama'`
-        )
-      );
-    }
-
-    /**
-     * extract a case (condition, expr) from a set of tokens
-     * @returns {Error}
-     */
-    const getCase = () => {
-      res.registerAdvancement();
-      this.advance();
-
-      let condition = res.register(this.expr());
-      if (res.error) return res;
-
-      if (this.currentTok.type !== TT.LCURL) {
-        return res.failure(
-          new InvalidSyntaxError(
-            this.currentTok.posStart,
-            this.currentTok.posEnd,
-            `Expected '{'`
-          )
-        );
-      }
-
-      res.registerAdvancement();
-      this.advance();
-
-      let expr = res.register(this.expr());
-      if (res.error) return res;
-
-      if (this.currentTok.type !== TT.RCURL) {
-        return res.failure(
-          new InvalidSyntaxError(
-            this.currentTok.posStart,
-            this.currentTok.posEnd,
-            `Expected '}'`
-          )
-        );
-      }
-
-      cases.push([condition, expr]);
-
-      res.registerAdvancement();
-      this.advance();
-    };
-
-    // Get the first case
-    output = getCase();
-    if (output) return output;
-
-    // Grab the cases from any ELSEIF(AU) blocks
-    while (this.currentTok.matches(TT.KEYWORD, 'au')) {
-      output = getCase();
-      if (output) return output;
-    }
 
     if (this.currentTok.matches(TT.KEYWORD, 'sivyo')) {
       res.registerAdvancement();
@@ -479,10 +538,14 @@ class Parser {
       res.registerAdvancement();
       this.advance();
 
-      elseCase = res.register(this.expr());
+      let statements = res.register(this.statements());
       if (res.error) return res;
+      elseCase = [statements, statements.length > 1];
 
-      if (this.currentTok.type !== TT.RCURL) {
+      if (this.currentTok.type === TT.RCURL) {
+        res.registerAdvancement();
+        this.advance();
+      } else {
         return res.failure(
           new InvalidSyntaxError(
             this.currentTok.posStart,
@@ -491,17 +554,94 @@ class Parser {
           )
         );
       }
-
-      res.registerAdvancement();
-      this.advance();
     }
 
-    return res.success(new IfNode(cases, elseCase));
+    return res.success(elseCase);
+  };
+
+  /** creates nodes based on the if-expr-b or if-expr-c rules in the grammar document */
+  ifExprBOrC = () => {
+    let res = new ParseResult();
+    let cases = [];
+    let elseCase = null;
+
+    if (this.currentTok.matches(TT.KEYWORD, 'au')) {
+      let allCases = res.register(this.ifExprB());
+      if (res.error) return res;
+      [cases, elseCase] = allCases;
+    } else {
+      elseCase = res.register(this.ifExprC());
+      if (res.error) return res;
+    }
+
+    return res.success([cases, elseCase]);
+  };
+
+  /** obtains all the cases and else case for an if node */
+  ifExprCases = (caseKeyword) => {
+    let res = new ParseResult();
+    let cases = [];
+    let elseCase = null;
+    let newCases = [];
+
+    if (!this.currentTok.matches(TT.KEYWORD, caseKeyword)) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${caseKeyword}'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    let condition = res.register(this.expr());
+    if (res.error) return res;
+
+    if (this.currentTok.type !== TT.LCURL) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '{'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    let statements = res.register(this.statements());
+    if (res.error) return res;
+    cases.push([condition, statements, statements.length > 1]);
+
+    if (this.currentTok.type === TT.RCURL) {
+      res.registerAdvancement();
+      this.advance();
+
+      let allCases = res.register(this.ifExprBOrC());
+      if (res.error) return res;
+      [newCases, elseCase] = allCases;
+      cases = cases.concat(newCases);
+    } else {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '}'`
+        )
+      );
+    }
+
+    return res.success([cases, elseCase]);
   };
 
   /** creates a For Node */
   forExpr = () => {
     let res = new ParseResult();
+    let body = null;
 
     if (!this.currentTok.matches(TT.KEYWORD, 'kwa')) {
       return res.failure(
@@ -584,7 +724,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    let body = res.register(this.expr());
+    body = res.register(this.statements());
     if (res.error) return res;
 
     if (this.currentTok.type !== TT.RCURL) {
@@ -601,13 +741,14 @@ class Parser {
     this.advance();
 
     return res.success(
-      new ForNode(varName, startValue, endValue, stepValue, body)
+      new ForNode(varName, startValue, endValue, stepValue, body, true)
     );
   };
 
   /** creates a while node */
   whileExpr = () => {
     let res = new ParseResult();
+    let body = null;
 
     if (!this.currentTok.matches(TT.KEYWORD, 'ambapo')) {
       return res.failure(
@@ -638,7 +779,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    let body = res.register(this.expr());
+    body = res.register(this.statements());
     if (res.error) return res;
 
     if (this.currentTok.type !== TT.RCURL) {
@@ -654,13 +795,14 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    return res.success(new WhileNode(condition, body));
+    return res.success(new WhileNode(condition, body, true));
   };
 
   /** creates a function definition node */
   funcDef = () => {
     let res = new ParseResult();
     let varNameTok = null;
+    let body = null;
 
     if (!this.currentTok.matches(TT.KEYWORD, 'shughuli')) {
       return res.failure(
@@ -752,7 +894,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    let nodeToReturn = res.register(this.expr());
+    body = res.register(this.statements());
     if (res.error) return res;
 
     if (this.currentTok.type !== TT.RCURL) {
@@ -768,7 +910,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    return res.success(new FuncDefNode(varNameTok, argNameToks, nodeToReturn));
+    return res.success(new FuncDefNode(varNameTok, argNameToks, body));
   };
 
   /**

@@ -11,7 +11,7 @@ class SymbolTable {
   /**
    * accesses and returns the value of a variable
    * @param {String} name variable name to be accessed
-   * @param {Boolean} shallow check parent scope for variable
+   * @param {Boolean} shallow checks parent scope for variable if false
    */
   get(name, shallow = false) {
     const value = this.symbols[name] || null;
@@ -24,9 +24,20 @@ class SymbolTable {
    * assigns a value to a variable (or overrides existing value)
    * @param {String} name variable name to be assigned
    * @param {*} value value to be assigned to the variable
+   * @param {Boolean} deep indicates whether to store variable in first pre-existing scope
    */
-  set(name, value) {
-    this.symbols[name] = value;
+  set(name, value, deep = false) {
+    if (!deep) {
+      this.symbols[name] = value;
+    } else {
+      // Traverse up the scope chain and assign the variable
+      // in the first scope where it already existed
+      if (!this.symbols[name]) {
+        if (this.parent) this.parent.set(name, value, deep);
+      } else {
+        this.symbols[name] = value;
+      }
+    }
   }
 
   /**

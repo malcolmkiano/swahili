@@ -1,4 +1,5 @@
 const TT = require('./tokenTypes');
+const LEX = require('./lexemes');
 const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
@@ -16,7 +17,7 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text;
+    this.text = text.replace(/\r\n/g, ';');
     this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
     this.advance();
@@ -43,15 +44,14 @@ class Lexer {
     // keep going while character is a digit or a dot, and we haven't seen a dot yet
     while (
       this.currentChar !== null &&
-      (TT.DIGITS + '.').includes(this.currentChar)
+      (LEX.digits.test(this.currentChar) || LEX.dot.test(this.currentChar))
     ) {
-      if (this.currentChar === '.') {
+      if (LEX.dot.test(this.currentChar)) {
         if (dotCount === 1) break;
         dotCount++;
-        numStr += '.';
-      } else {
-        numStr += this.currentChar;
       }
+
+      numStr += this.currentChar;
       this.advance();
     }
 
@@ -111,7 +111,7 @@ class Lexer {
     // keep going while character is a alphanumeric or an underscore
     while (
       this.currentChar !== null &&
-      (TT.LETTERS + TT.DIGITS).includes(this.currentChar)
+      (LEX.digits.test(this.currentChar) || LEX.alpha.test(this.currentChar))
     ) {
       idStr += this.currentChar;
       this.advance();
@@ -123,14 +123,14 @@ class Lexer {
   }
 
   /**
-   * generates an AND token after encountering a '&' in the text
+   * generates an AND token after encountering a ampersand in the text
    * @returns {Token}
    */
   makeAnd() {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '&') {
+    if (LEX.ampersand.test(this.currentChar)) {
       this.advance();
       return [new Token(TT.AND, null, posStart, this.pos), null];
     }
@@ -138,19 +138,19 @@ class Lexer {
     this.advance();
     return [
       null,
-      new ExpectedCharError(posStart, this.pos, `'&' (to make '&&')`),
+      new ExpectedCharError(posStart, this.pos, `'${LEX.ampersand.source}'`),
     ];
   }
 
   /**
-   * generates an OR token after encountering a '|' in the text
+   * generates an OR token after encountering a pipe in the text
    * @returns {Token}
    */
   makeOr() {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '|') {
+    if (LEX.pipe.test(this.currentChar)) {
       this.advance();
       return [new Token(TT.OR, null, posStart, this.pos), null];
     }
@@ -158,12 +158,12 @@ class Lexer {
     this.advance();
     return [
       null,
-      new ExpectedCharError(posStart, this.pos, `'|' (to make '||')`),
+      new ExpectedCharError(posStart, this.pos, `'${LEX.pipe.source}'`),
     ];
   }
 
   /**
-   * generates a NOT/NE token after encountering a '!' in the text
+   * generates a NOT/NE token after encountering an exclamation in the text
    * @returns {Token}
    */
   makeNotEquals() {
@@ -171,7 +171,7 @@ class Lexer {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '=') {
+    if (LEX.equals.test(this.currentChar)) {
       this.advance();
       tokType = TT.NE;
     }
@@ -180,7 +180,7 @@ class Lexer {
   }
 
   /**
-   * generates an EQ/EE token after encountering a '=' in the text
+   * generates an EQ/EE token after encountering an equals sign in the text
    * @returns {Token}
    */
   makeEquals() {
@@ -188,7 +188,7 @@ class Lexer {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '=') {
+    if (LEX.equals.test(this.currentChar)) {
       this.advance();
       tokType = TT.EE;
     }
@@ -197,7 +197,7 @@ class Lexer {
   }
 
   /**
-   * generates a LT/LTE token after encountering a '<' in the text
+   * generates a LT/LTE token after encountering a leftArrow in the text
    * @returns {Token}
    */
   makeLessThan() {
@@ -205,7 +205,7 @@ class Lexer {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '=') {
+    if (LEX.equals.test(this.currentChar)) {
       this.advance();
       tokType = TT.LTE;
     }
@@ -222,12 +222,60 @@ class Lexer {
     let posStart = this.pos.copy();
     this.advance();
 
-    if (this.currentChar === '=') {
+    if (LEX.equals.test(this.currentChar)) {
       this.advance();
       tokType = TT.GTE;
     }
 
     return new Token(tokType, null, posStart, this.pos);
+  }
+
+  /** makes a div token or skips a comment block */
+  makeDivide() {
+    let posStart = this.pos.copy();
+    this.advance();
+
+    if (
+      LEX.forwardSlash.test(this.currentChar) ||
+      LEX.asterisk.test(this.currentChar)
+    ) {
+      this.skipComment();
+    } else {
+      return new Token(TT.DIV, null, posStart);
+    }
+  }
+
+  /** grabs all characters in a comment and ignores them */
+  skipComment() {
+    if (LEX.forwardSlash.test(this.currentChar)) {
+      // if next char is a forward slash, line comment
+      // keep going until new line
+      this.advance();
+      while (
+        this.currentChar !== null &&
+        !LEX.lineEndings.test(this.currentChar)
+      ) {
+        this.advance();
+      }
+    } else if (LEX.asterisk.test(this.currentChar)) {
+      // if next char is an asterisk, block comment
+      // keep going until find other asterisk
+      this.advance();
+
+      while (
+        this.currentChar !== null &&
+        !LEX.asterisk.test(this.currentChar)
+      ) {
+        this.advance();
+        if (LEX.asterisk.test(this.currentChar)) {
+          this.advance();
+          // if char after that is forward slash, done
+          if (LEX.forwardSlash.test(this.currentChar)) break;
+        }
+      }
+    }
+
+    this.advance(); // past the final character
   }
 
   /**
@@ -238,65 +286,68 @@ class Lexer {
     let tokens = [];
 
     while (this.currentChar !== null) {
-      if (' \t'.includes(this.currentChar)) {
+      if (LEX.spacesAndTabs.test(this.currentChar)) {
         this.advance(); // ignore spaces and tabs
-      } else if (TT.DIGITS.includes(this.currentChar)) {
+      } else if (LEX.lineEndings.test(this.currentChar)) {
+        tokens.push(new Token(TT.NEWLINE, null, this.pos));
+        this.advance();
+      } else if (LEX.digits.test(this.currentChar)) {
         tokens.push(this.makeNumber());
-      } else if (TT.LETTERS.includes(this.currentChar)) {
+      } else if (LEX.alpha.test(this.currentChar)) {
         tokens.push(this.makeIdentifier());
-      } else if (this.currentChar == '"') {
+      } else if (LEX.doubleQuotes.test(this.currentChar)) {
         tokens.push(this.makeString());
-      } else if (this.currentChar === '+') {
+      } else if (LEX.plus.test(this.currentChar)) {
         tokens.push(new Token(TT.PLUS, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '-') {
+      } else if (LEX.hyphen.test(this.currentChar)) {
         tokens.push(new Token(TT.MINUS, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '*') {
+      } else if (LEX.asterisk.test(this.currentChar)) {
         tokens.push(new Token(TT.MUL, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '/') {
-        tokens.push(new Token(TT.DIV, null, this.pos));
-        this.advance();
-      } else if (this.currentChar === '^') {
+      } else if (LEX.forwardSlash.test(this.currentChar)) {
+        let tok = this.makeDivide();
+        if (tok) tokens.push(tok);
+      } else if (LEX.caret.test(this.currentChar)) {
         tokens.push(new Token(TT.POW, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '(') {
+      } else if (LEX.leftParen.test(this.currentChar)) {
         tokens.push(new Token(TT.LPAREN, null, this.pos));
         this.advance();
-      } else if (this.currentChar === ')') {
+      } else if (LEX.rightParen.test(this.currentChar)) {
         tokens.push(new Token(TT.RPAREN, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '[') {
+      } else if (LEX.leftSquare.test(this.currentChar)) {
         tokens.push(new Token(TT.LSQUARE, null, this.pos));
         this.advance();
-      } else if (this.currentChar === ']') {
+      } else if (LEX.rightSquare.test(this.currentChar)) {
         tokens.push(new Token(TT.RSQUARE, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '{') {
+      } else if (LEX.leftCurly.test(this.currentChar)) {
         tokens.push(new Token(TT.LCURL, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '}') {
+      } else if (LEX.rightCurly.test(this.currentChar)) {
         tokens.push(new Token(TT.RCURL, null, this.pos));
         this.advance();
-      } else if (this.currentChar === ',') {
+      } else if (LEX.comma.test(this.currentChar)) {
         tokens.push(new Token(TT.COMMA, null, this.pos));
         this.advance();
-      } else if (this.currentChar === '&') {
+      } else if (LEX.ampersand.test(this.currentChar)) {
         let [tok, error] = this.makeAnd();
         if (error) return [[], error];
         tokens.push(tok);
-      } else if (this.currentChar === '|') {
+      } else if (LEX.pipe.test(this.currentChar)) {
         let [tok, error] = this.makeOr();
         if (error) return [[], error];
         tokens.push(tok);
-      } else if (this.currentChar === '!') {
+      } else if (LEX.exclamation.test(this.currentChar)) {
         tokens.push(this.makeNotEquals());
-      } else if (this.currentChar === '=') {
+      } else if (LEX.equals.test(this.currentChar)) {
         tokens.push(this.makeEquals());
-      } else if (this.currentChar === '<') {
+      } else if (LEX.leftArrow.test(this.currentChar)) {
         tokens.push(this.makeLessThan());
-      } else if (this.currentChar === '>') {
+      } else if (LEX.rightArrow.test(this.currentChar)) {
         tokens.push(this.makeGreaterThan());
       } else {
         let posStart = this.pos.copy();

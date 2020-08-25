@@ -234,7 +234,7 @@ class SWNumber extends SWValue {
    * @returns {SWBoolean}
    */
   notted() {
-    return [new SWBoolean(!(this.value === 0)).setContext(this.context), null];
+    return [new SWBoolean(this.value === 0).setContext(this.context), null];
   }
 
   /**
@@ -262,10 +262,13 @@ class SWNumber extends SWValue {
 
   /**
    * string representation of the number class
+   * @param {Boolean} showColor whether to show number color or not
    * @returns {String}
    */
-  toString() {
-    return `${colors.yellow(this.value)}`;
+  toString(showColor = true) {
+    return showColor
+      ? `${colors.yellow(this.value)}`
+      : colors.reset(this.value);
   }
 }
 

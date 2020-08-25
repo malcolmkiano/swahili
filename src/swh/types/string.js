@@ -2,7 +2,6 @@ const util = require('util');
 const colors = require('colors');
 const SWValue = require('./value');
 const SWBoolean = require('./boolean');
-const SWNumber = require('./number');
 const { RTError } = require('../error');
 
 /**  String data type */
@@ -116,6 +115,17 @@ class SWString extends SWValue {
   }
 
   /**
+   * returns true if a value is falsy, and false if a value is truthy
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [
+      new SWBoolean(this.value.length === 0).setContext(this.context),
+      null,
+    ];
+  }
+
+  /**
    * creates a new instance of the string
    * @returns {SWString}
    */
@@ -144,9 +154,7 @@ class SWString extends SWValue {
    * @returns {String}
    */
   toString(showQuotes = true) {
-    return showQuotes
-      ? colors.green(`"${this.value}"`)
-      : colors.brightWhite(this.value);
+    return showQuotes ? colors.green(`"${this.value}"`) : this.value;
   }
 }
 

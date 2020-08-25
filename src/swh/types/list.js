@@ -1,5 +1,7 @@
 const util = require('util');
+const colors = require('colors');
 const SWValue = require('./value');
+const SWBoolean = require('./boolean');
 const SWNull = require('./null');
 const SWNumber = require('./number');
 
@@ -95,6 +97,17 @@ class SWList extends SWValue {
   }
 
   /**
+   * returns true if a value is falsy, and false if a value is truthy
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [
+      new SWBoolean(this.elements.length === 0).setContext(this.context),
+      null,
+    ];
+  }
+
+  /**
    * creates a new instance of the list
    * @returns {SWList}
    */
@@ -105,19 +118,30 @@ class SWList extends SWValue {
     return copy;
   }
 
+  /**
+   * returns true if the list is empty
+   * @returns {Boolean}
+   */
+  isTrue() {
+    return this.elements.length > 0;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }
 
   /**
    * string representation of the number class
+   * @param {Boolean} showBrackets whether to show brackets and color or not
    * @returns {String}
    */
-  toString() {
+  toString(showBrackets = true) {
     let elements = this.elements.filter(Boolean);
     return elements.length
-      ? `[${elements.map((node) => node.toString()).join(', ')}]`
-      : SWNull.NULL;
+      ? showBrackets
+        ? `[${elements.map((node) => node.toString(showBrackets)).join(', ')}]`
+        : elements.map((node) => node.toString(showBrackets)).join(', ')
+      : `[]`;
   }
 }
 

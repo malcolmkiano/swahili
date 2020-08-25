@@ -2,7 +2,9 @@ class ParseResult {
   constructor() {
     this.error = null;
     this.node = null;
+    this.lastRegisteredAdvanceCount = 0;
     this.advanceCount = 0;
+    this.toReverseCount = 0;
   }
 
   /**
@@ -18,9 +20,23 @@ class ParseResult {
    * @returns {Node}
    */
   register(res) {
+    this.lastRegisteredAdvanceCount = res.advanceCount;
     this.advanceCount += res.advanceCount;
     if (res.error) this.error = res.error;
     return res.node;
+  }
+
+  /**
+   * attempts to extract a node from a successful ParseResult or returns its associated error
+   * @param {ParseResult} res parsed {node, error} to process
+   * @returns {Node}
+   */
+  tryRegister(res) {
+    if (res.error) {
+      this.toReverseCount = res.advanceCount;
+      return null;
+    }
+    return this.register(res);
   }
 
   /**
