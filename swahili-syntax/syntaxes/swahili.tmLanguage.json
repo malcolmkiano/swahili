@@ -78,7 +78,7 @@
 			"patterns": [
 				{
 					"name": "entity.name.function.swahili",
-					"match": "\\b(niNambari|soma|andika|somaNambari|futa|niShughuli|idadi|niNambari|niJina|niOrodha|Nambari|niTupu|Jina)\\b"
+					"match": "\\b(soma|andika|somaNambari|futa|niShughuli|idadi|niNambari|niJina|niOrodha|Nambari|niTupu|Jina)\\b"
 				}
 			]
 		},
