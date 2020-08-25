@@ -1,6 +1,7 @@
 const util = require('util');
 const colors = require('colors');
 const SWValue = require('./value');
+const SWNumber = require('./number')
 const SWBoolean = require('./boolean');
 const { RTError } = require('../error');
 

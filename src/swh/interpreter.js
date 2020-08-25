@@ -371,8 +371,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
+          .setContext(context)
+          .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -420,8 +420,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
+          .setContext(context)
+          .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -556,7 +556,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${args.length - argNames.length} too many args passed into ${
-            this.name
+          this.name
           }`,
           this.context
         )
@@ -568,7 +568,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${argNames.length - args.length} too few args passed into ${
-            this.name
+          this.name
           }`,
           this.context
         )
@@ -765,7 +765,6 @@ class SWBuiltInFunction extends SWBaseFunction {
     let res = new RTResult();
     let swali = executionContext.symbolTable.get('swali').toString(false);
     let textInput = prompt(swali);
-
     return res.success(new SWString(textInput || ''));
   }
   soma = ['swali'];
@@ -992,6 +991,15 @@ class SWBuiltInFunction extends SWBaseFunction {
   badili = ['orodha', 'pahala', 'kitu'];
 
   // =========================================================
+  // EASTER EGGS
+  // =========================================================
+  execute_wamlambez(executionContext) {
+    let res = new RTResult();
+    return res.success(new SWString("Wamnyonyez! "));
+  }
+  wamlambez = []
+
+  // =========================================================
   // RUN FILES
   // =========================================================
 
@@ -1067,6 +1075,9 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   // Run
   static run = new SWBuiltInFunction('anza');
+
+  //easter egg
+  static easter = new SWBuiltInFunction('wamlambez');
 }
 
 module.exports.SWBuiltInFunction = SWBuiltInFunction;
@@ -1098,6 +1109,7 @@ globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
 globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
 globalSymbolTable.set('badili', SWBuiltInFunction.insert);
 globalSymbolTable.set('anza', SWBuiltInFunction.run);
+globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
 
 /**
  * Processes a file through the lexer, parser and interpreter
