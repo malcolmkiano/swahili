@@ -1,4 +1,5 @@
 const util = require('util');
+const fs = require('fs');
 const colors = require('colors');
 const print = require('../utils/print');
 const prompt = require('prompt-sync')();
@@ -11,10 +12,13 @@ const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
 const TT = require('./tokenTypes');
 
+const Lexer = require('./lexer');
+const Parser = require('./parser');
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
 const { RTError } = require('./error');
+const { exec } = require('child_process');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
@@ -148,7 +152,7 @@ class Interpreter {
         )
       );
 
-    context.symbolTable.set(varName, value);
+    context.symbolTable.set(varName, value, true);
     return res.success(value);
   };
 
@@ -264,6 +268,8 @@ class Interpreter {
    */
   visitIfNode = (node, context) => {
     let res = new RTResult();
+    let originalScope = context.symbolTable;
+    context.symbolTable = new SymbolTable(context.symbolTable);
 
     for (let [condition, expr, shouldReturnNull] of node.cases) {
       let conditionValue = res.register(this.visit(condition, context));
@@ -286,6 +292,8 @@ class Interpreter {
         shouldReturnNull ? SWNull.NULL : elseValue.elements[0]
       );
     }
+
+    context.symbolTable = originalScope;
 
     return res.success(SWNull.NULL);
   };
@@ -322,11 +330,14 @@ class Interpreter {
 
     let calls = 0;
 
-    // check if variable existed in symbol table before loop call
-    let preExistingVar = !!context.symbolTable.get(node.varNameTok.value, true);
+    let originalScope = context.symbolTable;
+    let blockScope = new SymbolTable(context.symbolTable);
+    context.symbolTable = blockScope;
+    context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
 
     while (condition()) {
-      context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
+      context.symbolTable = new SymbolTable(context.symbolTable);
+      context.symbolTable.set(node.varNameTok.value, new SWNumber(i), true);
       i += stepValue.value;
 
       let value = res.register(this.visit(node.bodyNode, context));
@@ -334,10 +345,12 @@ class Interpreter {
         return res;
 
       if (res.loopShouldContinue) continue;
-
       if (res.loopShouldBreak) break;
 
       elements.push(value);
+
+      // restore original context
+      context.symbolTable = blockScope;
 
       // prevent infinite loops
       calls++;
@@ -352,8 +365,7 @@ class Interpreter {
         );
     }
 
-    // delete iterator variable if it wasn't pre-existing
-    if (!preExistingVar) context.symbolTable.remove(node.varNameTok.value);
+    context.symbolTable = originalScope;
 
     return res.success(
       node.shouldReturnNull
@@ -386,12 +398,8 @@ class Interpreter {
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
-      if (res.loopShouldContinue) {
-        continue;
-      }
-      if (res.loopShouldBreak) {
-        break;
-      }
+      if (res.loopShouldContinue) continue;
+      if (res.loopShouldBreak) break;
 
       elements.push(value);
 
@@ -600,6 +608,14 @@ class SWBaseFunction extends SWValue {
     return res.success(SWNull.NULL);
   }
 
+  /**
+   * returns true
+   * @returns {Boolean}
+   */
+  isTrue() {
+    return true;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }
@@ -734,9 +750,10 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_andika(executionContext) {
+    let res = new RTResult();
     let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
     print(ujumbe); // 2 -> the arguments are then accessed from the execution context's symbol table
-    return new RTResult().success(SWNull.NULL);
+    return res.success(SWNull.NULL);
   }
   andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
 
@@ -745,10 +762,11 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_soma(executionContext) {
+    let res = new RTResult();
     let swali = executionContext.symbolTable.get('swali').toString(false);
     let textInput = prompt(swali);
 
-    return new RTResult().success(new SWString(textInput || ''));
+    return res.success(new SWString(textInput || ''));
   }
   soma = ['swali'];
 
@@ -757,6 +775,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_somaNambari(executionContext) {
+    let res = new RTResult();
     let swali = executionContext.symbolTable.get('swali').toString(false);
     let numInput = 0;
     while (true) {
@@ -768,7 +787,7 @@ class SWBuiltInFunction extends SWBaseFunction {
       }
     }
 
-    return new RTResult().success(new SWNumber(numInput || 0));
+    return res.success(new SWNumber(numInput || 0));
   }
   somaNambari = ['swali'];
 
@@ -777,19 +796,25 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_futa(executionContext) {
+    let res = new RTResult();
     console.clear();
-    return new RTResult().success(SWNull.NULL);
+    return res.success(SWNull.NULL);
   }
   futa = []; // built in functions that don't need args still need this empty array
+
+  // =========================================================
+  // TYPE CHECKING
+  // =========================================================
 
   /**
    * Checks if a value is a number
    * @param {Context} executionContext the calling context
    */
   execute_niNambari(executionContext) {
+    let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
     let isNumber = kitu instanceof SWNumber;
-    return new RTResult().success(isNumber ? SWBoolean.TRUE : SWBoolean.FALSE);
+    return res.success(isNumber ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
   niNambari = ['kitu'];
 
@@ -798,9 +823,10 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_niJina(executionContext) {
+    let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
     let isString = kitu instanceof SWString;
-    return new RTResult().success(isString ? SWBoolean.TRUE : SWBoolean.FALSE);
+    return res.success(isString ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
   niJina = ['kitu'];
 
@@ -809,9 +835,10 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_niOrodha(executionContext) {
+    let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
     let isList = kitu instanceof SWList;
-    return new RTResult().success(isList ? SWBoolean.TRUE : SWBoolean.FALSE);
+    return res.success(isList ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
   niOrodha = ['kitu'];
 
@@ -820,13 +847,76 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_niShughuli(executionContext) {
+    let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
     let isFunction = kitu instanceof SWBaseFunction;
-    return new RTResult().success(
-      isFunction ? SWBoolean.TRUE : SWBoolean.FALSE
-    );
+    return res.success(isFunction ? SWBoolean.TRUE : SWBoolean.FALSE);
   }
   niShughuli = ['kitu'];
+
+  /**
+   * Checks if a value is null/empty
+   * @param {Context} executionContext the calling context
+   */
+  execute_niTupu(executionContext) {
+    let res = new RTResult();
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isNull = !kitu.isTrue();
+    return res.success(isNull ? SWBoolean.TRUE : SWBoolean.FALSE);
+  }
+  niTupu = ['kitu'];
+
+  // =========================================================
+  // TYPE CONVERSION
+  // =========================================================
+
+  /**
+   * Converts a value to a SWNumber
+   * @param {Context} executionContext the calling context
+   */
+  execute_Nambari = (executionContext) => {
+    let res = new RTResult();
+    let kitu = executionContext.symbolTable.get('kitu');
+    try {
+      if (
+        kitu instanceof SWString ||
+        kitu instanceof SWNumber ||
+        kitu instanceof SWBoolean
+      ) {
+        return res.success(new SWNumber(Number(kitu.value)));
+      } else {
+        throw new Error('Illegal conversion');
+      }
+    } catch (err) {
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Illegal conversion`,
+          executionContext
+        )
+      );
+    }
+  };
+  Nambari = ['kitu'];
+
+  /**
+   * Converts a value to a SWString
+   * @param {Context} executionContext the calling context
+   */
+  execute_Jina = (executionContext) => {
+    let res = new RTResult();
+    let kitu = executionContext.symbolTable.get('kitu');
+    let value = kitu.toString(false);
+    if (kitu instanceof SWBaseFunction) value = kitu.name;
+
+    return res.success(new SWString(value));
+  };
+  Jina = ['kitu'];
+
+  // =========================================================
+  // LIST FUNCTIONS
+  // =========================================================
 
   /**
    * Returns the length of a list/string
@@ -834,7 +924,6 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   execute_idadi(executionContext) {
     let res = new RTResult();
-
     let kitu = executionContext.symbolTable.get('kitu');
     if (kitu instanceof SWString || kitu instanceof SWList) {
       return res.success(
@@ -853,6 +942,59 @@ class SWBuiltInFunction extends SWBaseFunction {
   }
   idadi = ['kitu'];
 
+  // =========================================================
+  // RUN FILES
+  // =========================================================
+
+  /**
+   * Runs code from a file
+   * @param {Context} executionContext the calling context
+   */
+  execute_anza = (executionContext) => {
+    let res = new RTResult();
+    let faili = executionContext.symbolTable.get('faili');
+    let script = '';
+
+    if (faili instanceof SWString !== true) {
+      return res.failure(
+        new RTError(
+          faili.posStart,
+          faili.posEnd,
+          `Argument must be a string`,
+          executionContext
+        )
+      );
+    }
+
+    faili = faili.value;
+    try {
+      script = fs.readFileSync(faili, 'utf8');
+    } catch (err) {
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Failed to load script "${faili}"\n` + err.toString(),
+          executionContext
+        )
+      );
+    }
+
+    let [_, error] = run(faili, script, true);
+    if (error)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Failed to finish executing script "${faili}"\n` + error.toString(),
+          executionContext
+        )
+      );
+
+    return new RTResult().success(SWNull.NULL);
+  };
+  anza = ['faili'];
+
   // I/O
   static print = new SWBuiltInFunction('andika');
   static input = new SWBuiltInFunction('soma');
@@ -864,9 +1006,80 @@ class SWBuiltInFunction extends SWBaseFunction {
   static isString = new SWBuiltInFunction('niJina');
   static isList = new SWBuiltInFunction('niOrodha');
   static isFunction = new SWBuiltInFunction('niShughuli');
+  static isNull = new SWBuiltInFunction('niTupu');
+
+  // Type conversions
+  static parseNum = new SWBuiltInFunction('Nambari');
+  static parseStr = new SWBuiltInFunction('Jina');
 
   // Lists
   static sizeof = new SWBuiltInFunction('idadi');
+
+  // Run
+  static run = new SWBuiltInFunction('anza');
 }
 
 module.exports.SWBuiltInFunction = SWBuiltInFunction;
+
+// =========================================================
+// RUN.
+// =========================================================
+
+/** holds all variables and their values in the global scope */
+const globalSymbolTable = new SymbolTable();
+
+/** instantiate predefined global vars */
+globalSymbolTable.set('tupu', SWNull.NULL); // NULL
+globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
+
+/** built in functions */
+globalSymbolTable.set('andika', SWBuiltInFunction.print);
+globalSymbolTable.set('soma', SWBuiltInFunction.input);
+globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.set('futa', SWBuiltInFunction.clear);
+
+globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
+globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
+
+globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
+globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
+
+globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
+
+globalSymbolTable.set('anza', SWBuiltInFunction.run);
+
+/**
+ * Processes a file through the lexer, parser and interpreter
+ * @param {String} fileName name of file to be processed
+ * @param {String} text content of the file
+ * @param {Boolean} temp run the program in a temporary isolated scope if true
+ * @returns {[String, Error]}
+ */
+function run(fileName, text, temp = false) {
+  // Generate tokens
+  const lexer = new Lexer(fileName, text);
+  const [tokens, error] = lexer.makeTokens();
+  if (error) return [null, error];
+  if (tokens.length === 1) return [null, null];
+
+  // Generate abstract syntax tree
+  const parser = new Parser(tokens);
+  const ast = parser.parse();
+  if (ast.error) return [null, ast.error];
+
+  // Run program
+  const intr = new Interpreter();
+  const context = new Context('<program>');
+  context.symbolTable = temp
+    ? new SymbolTable(globalSymbolTable)
+    : globalSymbolTable;
+  const result = intr.visit(ast.node, context);
+
+  return [result.value, result.error];
+}
+
+module.exports.run = run;

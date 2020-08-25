@@ -118,6 +118,14 @@ class SWList extends SWValue {
     return copy;
   }
 
+  /**
+   * returns true if the list is empty
+   * @returns {Boolean}
+   */
+  isTrue() {
+    return this.elements.length > 0;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }
@@ -132,9 +140,7 @@ class SWList extends SWValue {
     return elements.length
       ? showBrackets
         ? `[${elements.map((node) => node.toString(showBrackets)).join(', ')}]`
-        : colors.brightWhite(
-            elements.map((node) => node.toString(showBrackets)).join(', ')
-          )
+        : elements.map((node) => node.toString(showBrackets)).join(', ')
       : `[]`;
   }
 }

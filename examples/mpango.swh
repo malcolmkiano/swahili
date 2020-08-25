@@ -1,0 +1,17 @@
+wacha mipango = [
+  [kweli, "Soma kitabu"],
+  [uwongo, "Anua nguo zilizokauka"],
+  [uwongo, "Tayarisha watoto waende shuleni"]
+]
+
+shughuli onyeshaMipango() {
+  futa()
+  kwa i = 0 mpaka idadi(mipango) {
+    wacha mpango = mipango / i
+    wacha hali = kama (mpango / 0) { "[x]" } sivyo { "[ ]" }
+    wacha ujumbe = mpango / 1
+    andika(hali + " " + ujumbe)
+  }
+}
+
+onyeshaMipango()

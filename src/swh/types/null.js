@@ -57,10 +57,11 @@ class SWNull extends SWValue {
 
   /**
    * string representation of the null class
+   * @param {Boolean} showValue whether to show value and color or not
    * @returns {String}
    */
-  toString() {
-    return `tupu`;
+  toString(showValue = true) {
+    return showValue ? colors.grey(`tupu`) : '';
   }
 }
 
