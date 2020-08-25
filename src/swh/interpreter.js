@@ -781,7 +781,7 @@ class SWBuiltInFunction extends SWBaseFunction {
     while (true) {
       numInput = prompt(swali);
       if (isNaN(numInput)) {
-        print('Jibu yako si nambari. Jaribu tena.');
+        print('Jibu lako si nambari. Jaribu tena.');
       } else {
         break;
       }
@@ -942,6 +942,55 @@ class SWBuiltInFunction extends SWBaseFunction {
   }
   idadi = ['kitu'];
 
+  /**
+   * Alters the element at the given index of a list
+   * @param {Context} executionContext the calling context
+   */
+  execute_badili(executionContext) {
+    let res = new RTResult();
+    let orodha = executionContext.symbolTable.get('orodha');
+    let pahala = executionContext.symbolTable.get('pahala');
+    let kitu = executionContext.symbolTable.get('kitu');
+
+    // check types
+    if (!orodha instanceof SWList)
+      return res.failure(
+        new RTError(
+          orodha.posStart,
+          orodha.posEnd,
+          `First parameter must be a list`,
+          executionContext
+        )
+      );
+
+    if (!pahala instanceof SWNumber || !Number.isInteger(pahala.value))
+      return res.failure(
+        new RTError(
+          pahala.posStart,
+          pahala.posEnd,
+          `Second param must be an int`,
+          executionContext
+        )
+      );
+
+    // check index in bounds
+    if (pahala.value < 0 || pahala.value > orodha.elements.length)
+      return res.failure(
+        new RTError(
+          pahala.posStart,
+          pahala.posEnd,
+          `Index is out of bounds`,
+          executionContext
+        )
+      );
+
+    // replace value in list
+    orodha.elements[pahala.value] = kitu;
+
+    return res.success(kitu);
+  }
+  badili = ['orodha', 'pahala', 'kitu'];
+
   // =========================================================
   // RUN FILES
   // =========================================================
@@ -1014,6 +1063,7 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   // Lists
   static sizeof = new SWBuiltInFunction('idadi');
+  static insert = new SWBuiltInFunction('badili');
 
   // Run
   static run = new SWBuiltInFunction('anza');
@@ -1038,18 +1088,15 @@ globalSymbolTable.set('andika', SWBuiltInFunction.print);
 globalSymbolTable.set('soma', SWBuiltInFunction.input);
 globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
 globalSymbolTable.set('futa', SWBuiltInFunction.clear);
-
 globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
 globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
 globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
 globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
 globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
-
 globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
 globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
-
 globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
-
+globalSymbolTable.set('badili', SWBuiltInFunction.insert);
 globalSymbolTable.set('anza', SWBuiltInFunction.run);
 
 /**
