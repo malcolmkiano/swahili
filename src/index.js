@@ -44,6 +44,7 @@ function getInput() {
 
 // exit event handler
 rl.on('SIGINT', () => {
+  print(''); // empty line before output
   print('Kwaheri Mwanaprogramu!', true);
   process.exit(0);
 });

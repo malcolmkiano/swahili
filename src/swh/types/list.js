@@ -132,9 +132,7 @@ class SWList extends SWValue {
     return elements.length
       ? showBrackets
         ? `[${elements.map((node) => node.toString(showBrackets)).join(', ')}]`
-        : colors.brightWhite(
-            elements.map((node) => node.toString(showBrackets)).join(', ')
-          )
+        : elements.map((node) => node.toString(showBrackets)).join(', ')
       : `[]`;
   }
 }

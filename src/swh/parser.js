@@ -448,6 +448,12 @@ class Parser {
       res.registerAdvancement();
       this.advance();
     } else {
+      // skip past any new lines after [
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
+      }
+
       elementNodes.push(res.register(this.expr()));
       if (res.error)
         return res.failure(
@@ -462,8 +468,20 @@ class Parser {
         res.registerAdvancement();
         this.advance();
 
+        // skip past any new lines between list items
+        while (this.currentTok.type === TT.NEWLINE) {
+          res.registerAdvancement();
+          this.advance();
+        }
+
         elementNodes.push(res.register(this.expr()));
         if (res.error) return res;
+      }
+
+      // skip past any more new lines
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
       }
 
       if (this.currentTok.type !== TT.RSQUARE) {

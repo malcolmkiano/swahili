@@ -91,11 +91,9 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `File ${pos.fileName}, line ${pos.lineNumber + 1}, in ${
+        `File "${pos.fileName}", line ${pos.lineNumber + 1}, in ${
           ctx.displayName
-        }` +
-        '\n' +
-        result;
+        }\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
