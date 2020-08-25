@@ -764,8 +764,7 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_soma(executionContext) {
     let res = new RTResult();
     let swali = executionContext.symbolTable.get('swali').toString(false);
-    let textInput = prompt(swali);
-
+    let textInput = prompt(swali); 
     return res.success(new SWString(textInput || ''));
   }
   soma = ['swali'];
@@ -781,7 +780,7 @@ class SWBuiltInFunction extends SWBaseFunction {
     while (true) {
       numInput = prompt(swali);
       if (isNaN(numInput)) {
-        print('Jibu yako si nambari. Jaribu tena.');
+        print('Jibu lako si nambari. Jaribu tena.');
       } else {
         break;
       }
@@ -943,6 +942,15 @@ class SWBuiltInFunction extends SWBaseFunction {
   idadi = ['kitu'];
 
   // =========================================================
+  // EASTER EGGS
+  // =========================================================
+  execute_wamlambez(executionContext){
+    let res = new RTResult();
+    return res.success(new SWString("Wamnyonyez! "));
+  }
+  wamlambez = []
+
+  // =========================================================
   // RUN FILES
   // =========================================================
 
@@ -1017,6 +1025,9 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   // Run
   static run = new SWBuiltInFunction('anza');
+
+  //easter egg
+  static easter = new SWBuiltInFunction('wamlambez');
 }
 
 module.exports.SWBuiltInFunction = SWBuiltInFunction;
@@ -1038,19 +1049,16 @@ globalSymbolTable.set('andika', SWBuiltInFunction.print);
 globalSymbolTable.set('soma', SWBuiltInFunction.input);
 globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
 globalSymbolTable.set('futa', SWBuiltInFunction.clear);
-
 globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
 globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
 globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
 globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
 globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
-
 globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
 globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
-
 globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
-
 globalSymbolTable.set('anza', SWBuiltInFunction.run);
+globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
 
 /**
  * Processes a file through the lexer, parser and interpreter

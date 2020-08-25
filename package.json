@@ -13,6 +13,7 @@
   "dependencies": {
     "colors": "^1.4.0",
     "node-bash-title": "0.0.2",
+    "prettier": "^2.1.0",
     "prompt-sync": "^4.2.0"
   },
   "devDependencies": {
