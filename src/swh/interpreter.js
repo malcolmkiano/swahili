@@ -608,6 +608,14 @@ class SWBaseFunction extends SWValue {
     return res.success(SWNull.NULL);
   }
 
+  /**
+   * returns true
+   * @returns {Boolean}
+   */
+  isTrue() {
+    return true;
+  }
+
   [util.inspect.custom](depth, options) {
     return this.toString();
   }
@@ -846,6 +854,18 @@ class SWBuiltInFunction extends SWBaseFunction {
   }
   niShughuli = ['kitu'];
 
+  /**
+   * Checks if a value is null/empty
+   * @param {Context} executionContext the calling context
+   */
+  execute_niTupu(executionContext) {
+    let res = new RTResult();
+    let kitu = executionContext.symbolTable.get('kitu');
+    let isNull = !kitu.isTrue();
+    return res.success(isNull ? SWBoolean.TRUE : SWBoolean.FALSE);
+  }
+  niTupu = ['kitu'];
+
   // =========================================================
   // TYPE CONVERSION
   // =========================================================
@@ -986,6 +1006,7 @@ class SWBuiltInFunction extends SWBaseFunction {
   static isString = new SWBuiltInFunction('niJina');
   static isList = new SWBuiltInFunction('niOrodha');
   static isFunction = new SWBuiltInFunction('niShughuli');
+  static isNull = new SWBuiltInFunction('niTupu');
 
   // Type conversions
   static parseNum = new SWBuiltInFunction('Nambari');
@@ -1022,6 +1043,7 @@ globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
 globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
 globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
 globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
+globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
 
 globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
 globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);

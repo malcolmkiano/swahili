@@ -266,7 +266,9 @@ class SWNumber extends SWValue {
    * @returns {String}
    */
   toString(showColor = true) {
-    return showColor ? `${colors.yellow(this.value)}` : this.value;
+    return showColor
+      ? `${colors.yellow(this.value)}`
+      : colors.reset(this.value);
   }
 }
 

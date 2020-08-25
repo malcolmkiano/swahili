@@ -111,9 +111,9 @@ class SWBoolean extends SWValue {
    * @param {Boolean} showColor whether to show color or not
    * @returns {String}
    */
-  toString(showColor) {
-    let method = showColor ? (str) => colors.yellow(str) : (str) => str;
-    return method(this.value ? 'kweli' : 'uwongo');
+  toString(showColor = true) {
+    let output = (str) => (showColor ? colors.yellow(str) : str);
+    return output(this.value ? 'kweli' : 'uwongo');
   }
 }
 
