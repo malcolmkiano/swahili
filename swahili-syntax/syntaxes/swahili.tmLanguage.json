@@ -37,7 +37,7 @@
 		"keywords": {
 			"patterns": [{
 				"name": "keyword.control.swahili",
-				"match": "\\b(wacha|shughuli|kweli|uwongo)\\b"
+				"match": "\\b(wacha|shughuli|kweli|uwongo|tupu)\\b"
 			}]
 		},
 		"strings": {
@@ -78,7 +78,7 @@
 			"patterns": [
 				{
 					"name": "entity.name.function.swahili",
-					"match": "\\b(shughuli|tupu|niNambari|soma|andika|somaNambari|futa|niShughuli|idadi|niNambari|niJina|niOrodha|Nambari|niTupu )\\b"
+					"match": "\\b(niNambari|soma|andika|somaNambari|futa|niShughuli|idadi|niNambari|niJina|niOrodha|Nambari|niTupu|Jina)\\b"
 				}
 			]
 		},
