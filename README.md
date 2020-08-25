@@ -24,5 +24,5 @@ A new programming language to be written in Swahili to help teach programming co
 ### Examples
 
 1. (Beginner) [Jambo, Dunia/Hello, World!](./examples/jambo.swh)
-2. (Intermediate) [To Do List](./examples/mpango.swh)
+2. (Intermediate) [To Do List](./examples/tarihi.swh)
 3. (Advanced) Decision-based Game
