@@ -1,3 +1,5 @@
+const LEX = require('./lexemes');
+
 /**
  * represents the exact line/colNumber/file position for the lexer, parser and interpreter
  */
@@ -27,7 +29,7 @@ class Position {
     this.idx++;
     this.colNumber++;
 
-    if (currentChar === '\n') {
+    if (LEX.lineEndings.test(currentChar)) {
       this.lineNumber++;
       this.colNumber = 0;
     }

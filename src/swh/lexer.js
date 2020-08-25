@@ -17,7 +17,7 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text.replace(/\r\n/g, ';');
+    this.text = text.replace(/\r?\n/g, ';');
     this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
     this.advance();
