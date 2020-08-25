@@ -1,4 +1,5 @@
 const util = require('util');
+const fs = require('fs');
 const colors = require('colors');
 const print = require('../utils/print');
 const prompt = require('prompt-sync')();
@@ -11,6 +12,8 @@ const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
 const TT = require('./tokenTypes');
 
+const Lexer = require('./lexer');
+const Parser = require('./parser');
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
@@ -148,7 +151,7 @@ class Interpreter {
         )
       );
 
-    context.symbolTable.set(varName, value);
+    context.symbolTable.set(varName, value, true);
     return res.success(value);
   };
 
@@ -264,6 +267,8 @@ class Interpreter {
    */
   visitIfNode = (node, context) => {
     let res = new RTResult();
+    let originalScope = context.symbolTable;
+    context.symbolTable = new SymbolTable(context.symbolTable);
 
     for (let [condition, expr, shouldReturnNull] of node.cases) {
       let conditionValue = res.register(this.visit(condition, context));
@@ -286,6 +291,8 @@ class Interpreter {
         shouldReturnNull ? SWNull.NULL : elseValue.elements[0]
       );
     }
+
+    context.symbolTable = originalScope;
 
     return res.success(SWNull.NULL);
   };
@@ -322,11 +329,14 @@ class Interpreter {
 
     let calls = 0;
 
-    // check if variable existed in symbol table before loop call
-    let preExistingVar = !!context.symbolTable.get(node.varNameTok.value, true);
+    let originalScope = context.symbolTable;
+    let blockScope = new SymbolTable(context.symbolTable);
+    context.symbolTable = blockScope;
+    context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
 
     while (condition()) {
-      context.symbolTable.set(node.varNameTok.value, new SWNumber(i));
+      context.symbolTable = new SymbolTable(context.symbolTable);
+      context.symbolTable.set(node.varNameTok.value, new SWNumber(i), true);
       i += stepValue.value;
 
       let value = res.register(this.visit(node.bodyNode, context));
@@ -334,10 +344,12 @@ class Interpreter {
         return res;
 
       if (res.loopShouldContinue) continue;
-
       if (res.loopShouldBreak) break;
 
       elements.push(value);
+
+      // restore original context
+      context.symbolTable = blockScope;
 
       // prevent infinite loops
       calls++;
@@ -352,8 +364,7 @@ class Interpreter {
         );
     }
 
-    // delete iterator variable if it wasn't pre-existing
-    if (!preExistingVar) context.symbolTable.remove(node.varNameTok.value);
+    context.symbolTable = originalScope;
 
     return res.success(
       node.shouldReturnNull
@@ -386,12 +397,8 @@ class Interpreter {
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
-      if (res.loopShouldContinue) {
-        continue;
-      }
-      if (res.loopShouldBreak) {
-        break;
-      }
+      if (res.loopShouldContinue) continue;
+      if (res.loopShouldBreak) break;
 
       elements.push(value);
 
@@ -833,15 +840,13 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} executionContext the calling context
    */
   execute_idadi(executionContext) {
-    let res = new RTResult();
-
     let kitu = executionContext.symbolTable.get('kitu');
     if (kitu instanceof SWString || kitu instanceof SWList) {
-      return res.success(
+      return new RTResult().success(
         new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
       );
     } else {
-      return res.failure(
+      return new RTResult().failure(
         new RTError(
           kitu.posStart,
           kitu.posEnd,
@@ -852,6 +857,54 @@ class SWBuiltInFunction extends SWBaseFunction {
     }
   }
   idadi = ['kitu'];
+
+  /**
+   * Runs code from a file
+   * @param {Context} executionContext the calling context
+   */
+  execute_anza = (executionContext) => {
+    let faili = executionContext.symbolTable.get('faili');
+    let script = '';
+
+    if (faili instanceof SWString !== true) {
+      return new RTResult().failure(
+        new RTError(
+          faili.posStart,
+          faili.posEnd,
+          `Argument must be a string`,
+          executionContext
+        )
+      );
+    }
+
+    faili = faili.value;
+    try {
+      script = fs.readFileSync(faili, 'utf8');
+    } catch (err) {
+      return new RTResult().failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Failed to load script "${faili}"\n` + err.toString(),
+          executionContext
+        )
+      );
+    }
+
+    let [_, error] = run(faili, script, true);
+    if (error)
+      return new RTResult().failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Failed to finish executing script "${faili}"\n` + error.toString(),
+          executionContext
+        )
+      );
+
+    return new RTResult().success(SWNull.NULL);
+  };
+  anza = ['faili'];
 
   // I/O
   static print = new SWBuiltInFunction('andika');
@@ -867,6 +920,67 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   // Lists
   static sizeof = new SWBuiltInFunction('idadi');
+
+  // Run
+  static run = new SWBuiltInFunction('anza');
 }
 
 module.exports.SWBuiltInFunction = SWBuiltInFunction;
+
+// =========================================================
+// RUN.
+// =========================================================
+
+/** holds all variables and their values in the global scope */
+const globalSymbolTable = new SymbolTable();
+
+/** instantiate predefined global vars */
+globalSymbolTable.set('tupu', SWNull.NULL); // NULL
+globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
+
+/** built in functions */
+globalSymbolTable.set('andika', SWBuiltInFunction.print);
+globalSymbolTable.set('soma', SWBuiltInFunction.input);
+globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.set('futa', SWBuiltInFunction.clear);
+
+globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
+
+globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
+
+globalSymbolTable.set('anza', SWBuiltInFunction.run);
+
+/**
+ * Processes a file through the lexer, parser and interpreter
+ * @param {String} fileName name of file to be processed
+ * @param {String} text content of the file
+ * @param {Boolean} temp run the program in a temporary isolated scope if true
+ * @returns {[String, Error]}
+ */
+function run(fileName, text, temp = false) {
+  // Generate tokens
+  const lexer = new Lexer(fileName, text);
+  const [tokens, error] = lexer.makeTokens();
+  if (error) return [null, error];
+
+  // Generate abstract syntax tree
+  const parser = new Parser(tokens);
+  const ast = parser.parse();
+  if (ast.error) return [null, ast.error];
+
+  // Run program
+  const intr = new Interpreter();
+  const context = new Context('<program>');
+  context.symbolTable = temp
+    ? new SymbolTable(globalSymbolTable)
+    : globalSymbolTable;
+  const result = intr.visit(ast.node, context);
+
+  return [result.value, result.error];
+}
+
+module.exports.run = run;

@@ -95,5 +95,5 @@ module.exports = {
   LETTERS: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz_',
 
   /** Line endings */
-  ENDINGS: ';\n',
+  ENDINGS: '\r\n;',
 };

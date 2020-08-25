@@ -60,7 +60,7 @@ class SWNull extends SWValue {
    * @returns {String}
    */
   toString() {
-    return `tupu`;
+    return colors.grey(`tupu`);
   }
 }
 

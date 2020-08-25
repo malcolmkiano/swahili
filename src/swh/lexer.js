@@ -230,6 +230,17 @@ class Lexer {
     return new Token(tokType, null, posStart, this.pos);
   }
 
+  /** grabs all characters in a comment and ignores them */
+  skipComment() {
+    this.advance();
+
+    while (!TT.ENDINGS.includes(this.currentChar)) {
+      this.advance();
+    }
+
+    this.advance(); // past the newline character
+  }
+
   /**
    * generates a list of tokens by going through each char in the text
    * @returns {[Token[], Error]}
@@ -240,6 +251,8 @@ class Lexer {
     while (this.currentChar !== null) {
       if (' \t'.includes(this.currentChar)) {
         this.advance(); // ignore spaces and tabs
+      } else if (this.currentChar === '#') {
+        this.skipComment();
       } else if (TT.ENDINGS.includes(this.currentChar)) {
         tokens.push(new Token(TT.NEWLINE, null, this.pos));
         this.advance();
