@@ -1,9 +1,10 @@
-//shughuli itakayo andika miraba ya nambari 1-10
-//a function that will write the squares of numbers 1-10
+// Shughuli itakayo andika miraba ya nambari 1-10 (A function that will write the squares of numbers 1-10)
 shughuli mraba(nambari){
-    rudisha(nambari^2)
+  rudisha(nambari^2)
 }
 
-kwa i = 1 mpaka 11{ 
-    andika(mraba(i))
+// Rudia sehemu hii mara kumi, 11 haihesabiwi (Repeat this segment 10 times, 11 is excluded)
+*/
+kwa i = 1 mpaka 11 { 
+  andika(mraba(i))
 }

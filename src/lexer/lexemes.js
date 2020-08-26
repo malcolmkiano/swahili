@@ -26,4 +26,19 @@ module.exports = {
   rightArrow: />/,
   lineEndings: /\r|\n|;/,
   spacesAndTabs: /\s|\t/, // ignored
+  keywords: {
+    let: 'wacha',
+    if: 'kama',
+    elif: 'au',
+    else: 'sivyo',
+    for: 'kwa',
+    to: 'mpaka',
+    in: 'katika',
+    step: 'hatua',
+    while: 'ambapo',
+    function: 'shughuli',
+    return: 'rudisha',
+    continue: 'endelea',
+    break: 'ondoka',
+  },
 };

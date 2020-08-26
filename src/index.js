@@ -1,23 +1,15 @@
 const colors = require('colors');
-const print = require('./utils/print');
 const readline = require('readline');
+const setTitle = require('node-bash-title');
 
-const SWNull = require('./swh/types/null');
+const print = require('./utils/print');
+const { run } = require('./interpreter');
 
 /** set up terminal interface */
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
-/**
- * update the terminal title
- * @param {String} text text to show in the terminal title bar
- */
-const setTitle = require('node-bash-title');
-
-/** Swahili Interpreter */
-const { run } = require('./swh/interpreter');
 
 /** Prompt user for input in the terminal */
 function getInput() {

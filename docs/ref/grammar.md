@@ -15,7 +15,7 @@ This will be updated as the language develops
 | **comp-expr**  | NOT `comp-expr`                                       |
 |                | `arith-expr` ((EE\|LT\|GT\|LTE\|GTE) `arith-expr`)\*  |
 | **arith-expr** | `term` ((PLUS\|MINUS) `term`)\*                       |
-| **term**       | `factor` (MUL\|DIV) `factor`)\*                       |
+| **term**       | `factor` (MUL\|DIV\|MOD) `factor`)\*                  |
 | **factor**     | (PLUS\|MINUS) `factor`                                |
 |                | `power`                                               |
 | **power**      | `call` (POW `factor`)\*                               |

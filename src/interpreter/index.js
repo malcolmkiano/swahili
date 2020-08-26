@@ -1,8 +1,11 @@
 const util = require('util');
 const fs = require('fs');
 const colors = require('colors');
-const print = require('../utils/print');
 const prompt = require('prompt-sync')();
+
+const print = require('../utils/print');
+
+const TT = require('../lexer/tokenTypes');
 
 const SWValue = require('./types/value');
 const SWNull = require('./types/null');
@@ -10,15 +13,13 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
-const TT = require('./tokenTypes');
 
-const Lexer = require('./lexer');
-const Parser = require('./parser');
+const Lexer = require('../lexer');
+const Parser = require('../parser');
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
 const { RTError } = require('./error');
-const { exec } = require('child_process');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
@@ -209,6 +210,8 @@ class Interpreter {
       [result, error] = left.divvedBy(right);
     } else if (node.opTok.type === TT.POW) {
       [result, error] = left.powedBy(right);
+    } else if (node.opTok.type === TT.MOD) {
+      [result, error] = left.moddedBy(right);
     } else if (node.opTok.type === TT.EE) {
       [result, error] = left.getComparisonEQ(right);
     } else if (node.opTok.type == TT.NE) {
@@ -764,7 +767,7 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_soma(executionContext) {
     let res = new RTResult();
     let swali = executionContext.symbolTable.get('swali').toString(false);
-    let textInput = prompt(swali); 
+    let textInput = prompt(swali);
     return res.success(new SWString(textInput || ''));
   }
   soma = ['swali'];
@@ -941,14 +944,63 @@ class SWBuiltInFunction extends SWBaseFunction {
   }
   idadi = ['kitu'];
 
+  /**
+   * Alters the element at the given index of a list
+   * @param {Context} executionContext the calling context
+   */
+  execute_badili(executionContext) {
+    let res = new RTResult();
+    let orodha = executionContext.symbolTable.get('orodha');
+    let pahala = executionContext.symbolTable.get('pahala');
+    let kitu = executionContext.symbolTable.get('kitu');
+
+    // check types
+    if (!orodha instanceof SWList)
+      return res.failure(
+        new RTError(
+          orodha.posStart,
+          orodha.posEnd,
+          `First parameter must be a list`,
+          executionContext
+        )
+      );
+
+    if (!pahala instanceof SWNumber || !Number.isInteger(pahala.value))
+      return res.failure(
+        new RTError(
+          pahala.posStart,
+          pahala.posEnd,
+          `Second param must be an int`,
+          executionContext
+        )
+      );
+
+    // check index in bounds
+    if (pahala.value < 0 || pahala.value > orodha.elements.length)
+      return res.failure(
+        new RTError(
+          pahala.posStart,
+          pahala.posEnd,
+          `Index is out of bounds`,
+          executionContext
+        )
+      );
+
+    // replace value in list
+    orodha.elements[pahala.value] = kitu;
+
+    return res.success(kitu);
+  }
+  badili = ['orodha', 'pahala', 'kitu'];
+
   // =========================================================
   // EASTER EGGS
   // =========================================================
-  execute_wamlambez(executionContext){
+  execute_wamlambez(executionContext) {
     let res = new RTResult();
-    return res.success(new SWString("Wamnyonyez! "));
+    return res.success(new SWString('Wamnyonyez! '));
   }
-  wamlambez = []
+  wamlambez = [];
 
   // =========================================================
   // RUN FILES
@@ -1022,6 +1074,7 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   // Lists
   static sizeof = new SWBuiltInFunction('idadi');
+  static insert = new SWBuiltInFunction('badili');
 
   // Run
   static run = new SWBuiltInFunction('anza');
@@ -1057,6 +1110,7 @@ globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
 globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
 globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
 globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
+globalSymbolTable.set('badili', SWBuiltInFunction.insert);
 globalSymbolTable.set('anza', SWBuiltInFunction.run);
 globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
 
