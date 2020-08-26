@@ -1,90 +1,109 @@
-// orodha ya mipango
-wacha mipango = []
+wacha mipango = [] // kutayarisha orodha tupu (declaring an empty list)
+wacha sema = soma // kutumia shughuli kwenye hifadha (using a function in a variable)
 
-// andika mipango yote kwenye skrini
+/*
+  andika mipango yote kwenye skrini
+  =
+  write all the tasks to the screen
+*/
 shughuli onyeshaMipango() {
-  futa()
+  futa() // futa maandishi yote kwenye skrini (clears the screen)
   kwa i = 0 mpaka idadi(mipango) {
-    wacha mpango = mipango / i
-    wacha hali = kama (mpango / 0) { "[x]" } sivyo { "[ ]" }
-    wacha ujumbe = mpango / 1
+    wacha mpango = mipango/i // chagua mpango ya pahala "i" (select the task at index "i")
+    wacha hali = kama (mpango/0) { "[x]" } sivyo { "[ ]" }
+    wacha ujumbe = mpango/1
     andika(hali + " " + Jina(i + 1) + ". " + ujumbe)
   }
 
   kama (idadi(mipango) == 0) {
-    andika("-- Hakuna mipango bado --")
+    andika("-- Hakuna mipango bado --") // huandikwa kama hakuna vitu kwenye orodha (gets printed if there are no items in the list)
   }
 
   andika("")
 }
 
-// menyu ya kuongeza mpango
+// menyu ya kuongeza mpango (interaction to add new tasks)
 shughuli mpangoMpya() {
   wacha jibu = soma("Mpango mpya: ")
   kama (!!jibu) {
-    mipango = mipango + [uwongo, jibu]
+    mipango = mipango + [uwongo, jibu] // ongeza mpango kama jibu liliandikwa (only add the item if the user entered a response)
   } sivyo {
-    soma("Mpango mpya haukuongezwa\n")
+    sema("-> Mpango mpya haukuongezwa\n")
   }
 }
 
-// menyu ya kubadili mpango
+// menyu ya kubadili hali ya mpango (interaction to change the state of tasks)
 shughuli badiliMpango() {
+  kama (niTupu(mipango)) { // chunguza kama idadi ya vitu kwenye orodha ni 0 (check if the number of items in the list is 0)
+    sema("-> Hakuna mipango ya kubadili\n")
+    rudisha 
+  }
+
+  // tunaondoa moja kwa sababu pahala huanzia 0 (we subtract 1 because lists are zero-indexed)
   wacha pahala = somaNambari("Nambari ya mpango wa kubadili: ") - 1
   kama (pahala >= 0 && pahala < idadi(mipango)) {
-    wacha mpango = mipango / pahala
-    wacha hali = mpango / 0
-    wacha ujumbe = mpango / 1
-    hali = !hali
+    wacha mpango = mipango/pahala
+    wacha hali = mpango/0
+    wacha ujumbe = mpango/1
 
-    wacha mpangoMpya = [hali, ujumbe]
-    badili(mipango, pahala, mpangoMpya)
+    wacha mpangoMpya = [!hali, ujumbe]
+    badili(mipango, pahala, mpangoMpya) // namna ya kubadili kitu kwenye orodha (method to change an item in a list)
   } sivyo {
-    soma("Mpango haukubadilishwa\n")
+    sema("-> Mpango haukubadilishwa\n")
   }
 }
 
-// menu ya kuondoa mpango
+// menu ya kuondoa mpango (interaction to delete tasks)
 shughuli ondoaMpango() {
+  kama (niTupu(mipango)) {
+    sema("-> Hakuna mipango ya kuondoa\n")
+    rudisha 
+  }
+  
   wacha pahala = somaNambari("Nambari ya mpango wa kuondoa: ") - 1
   kama (pahala >= 0 && pahala < idadi(mipango)) {
     mipango = mipango - pahala
   } sivyo {
-    soma("Mpango haukuondolewa\n")
+    sema("-> Mpango haukuondolewa\n")
   }
 }
 
-// onyesha menyu kuu ili mtumizi aweze kutumia programu
+// onyesha menyu kuu ili mtumizi aweze kutumia programu (main menu to let user navigate the program)
 shughuli menyuKuu() {
   wacha jibu = tupu
   wacha vyaguo = [
-    ["Ongeza mpango", mpangoMpya],
+    ["Ongeza mpango", mpangoMpya], // jina na shughuli kwenye hifadha moja katika orodha (Strings and functions stored in the same list)
     ["Badili mpango", badiliMpango],
     ["Ondoa mpango", ondoaMpango]
   ]
 
+  /*
+    kitanzi hiki kitakachoendelea mpaka kiondokwe kwa kutumia "rudisha" au "ondoka"
+    =
+    this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
+  */
   ambapo (kweli) {
     onyeshaMipango()
     andika("=================")
     kwa i = 0 mpaka idadi(vyaguo) {
-      wacha chaguo = vyaguo / i
-      wacha ujumbe = chaguo / 0
+      wacha chaguo = vyaguo/i
+      wacha ujumbe = chaguo/0
       andika(Jina(i + 1) + ". " + ujumbe)
     }
 
-    // chaguo zaidi ya kuondoka
     andika(Jina(idadi(vyaguo) + 1) + ". Funga programu")
 
     jibu = somaNambari("Chaguo? ") - 1
     kama (jibu >= 0 && jibu < idadi(vyaguo)) {
-      wacha tokeo = vyaguo / jibu
-      wacha menyuTokeo = tokeo / 1
+      wacha tokeo = vyaguo/jibu
+      wacha menyuTokeo = tokeo/1
       menyuTokeo()
     } sivyo {
-      soma("Asante kwa kutumia Swahili!\n")
-      rudisha
+      sema("Asante kwa kutumia Swahili!\n")
+      rudisha // ondoka kitanzi (exit the loop)
     }
   }
 }
 
+// anzisha programu (begin the program)
 menyuKuu()

@@ -70,6 +70,13 @@ class SWValue {
   /**
    * not supported on this data type
    */
+  moddedBy(other) {
+    return [null, this.illegalOperation(other)];
+  }
+
+  /**
+   * not supported on this data type
+   */
   getComparisonEQ(other) {
     return [null, this.illegalOperation(other)];
   }
