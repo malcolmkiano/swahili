@@ -2,7 +2,37 @@
 
 A new programming language to be written in Swahili to help teach programming concepts to swahili speaking students.
 
-![Version 0.1.0](https://img.shields.io/badge/version-0.1.0-blue)
+![Version 0.1.0](https://img.shields.io/badge/version-0.8.4-blue)
+
+## Get Started
+
+### Installation
+
+Swahili is built on Node. To get started, clone this repo and run `npm start`.
+
+```
+> git clone https://github.com/malcolmkiano/swahili
+> cd swahili
+> npm start
+```
+
+This will open a terminal for you to type commands into. Try this, for starters:
+
+```swahili
+> andika("Jambo Dunia!")
+```
+
+### External files
+
+If you would like to run code from a separate file, use the following command:
+
+```swahili
+> anza("./path/to/your/file.swh")
+```
+
+To enable syntax highlighting in VS Code (more coming soon!), follow [this guide](./swahili-syntax/).
+
+---
 
 ## Documentation
 
@@ -14,15 +44,26 @@ A new programming language to be written in Swahili to help teach programming co
 4. [Loops and iterations](./docs/guide/04-loops.md)
 5. [Functions](./docs/guide/05-functions.md)
 6. [Expressions and operators](./docs/guide/06-expressions.md)
-7. [Numbers and dates](<(./docs/guide/07-numbers.md)>)
+7. [Numbers and dates](./docs/guide/07-numbers-and-dates.md)
 
 ### References
 
 1. [Grammar](./docs/ref/grammar.md)
 2. [Built-in functions](./docs/ref/built-in-functions.md)
 
-### Examples
+---
 
-1. (Beginner) [Jambo, Dunia/Hello, World!](./examples/jambo.swh)
-2. (Intermediate) [To Do List](./examples/tarihi.swh)
-3. (Advanced) Decision-based Game
+## Examples
+
+### Beginner
+
+- [Jambo, Dunia! (Hello, World!)](./examples/jambo.swh)
+- [Mraba (Squares)](./examples/)
+
+### Intermediate
+
+- [Mfuatano wa Fibonacci (Fibonacci Sequence)](./examples/fibonacci.swh)
+
+### Advanced
+
+- [Tarihi (To-do List)](./examples/tarihi.swh)

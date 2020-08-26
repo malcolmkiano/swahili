@@ -21,7 +21,7 @@ class Error {
    */
   toString() {
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `File ${this.posStart.fileName}, line ${
+    result += `File "${this.posStart.fileName}", line ${
       this.posStart.lineNumber + 1
     }`;
     result +=

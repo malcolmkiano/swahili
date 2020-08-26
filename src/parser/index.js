@@ -1,4 +1,7 @@
-const TT = require('./tokenTypes');
+const TT = require('../lexer/tokenTypes');
+
+const ParseResult = require('./parseResult');
+const { InvalidSyntaxError } = require('../interpreter/error');
 const {
   NumberNode,
   StringNode,
@@ -16,9 +19,7 @@ const {
   ReturnNode,
   ContinueNode,
   BreakNode,
-} = require('./nodes');
-const ParseResult = require('./parseResult');
-const { InvalidSyntaxError } = require('./error');
+} = require('../interpreter/nodes');
 
 class Parser {
   /**
@@ -73,7 +74,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '+', '-', '*' or '/'`
+          `Unexpected ${this.currentTok.type.toLowerCase()}`
         )
       );
     }
@@ -281,7 +282,7 @@ class Parser {
 
   /** creates nodes based on the term rule in the grammar document */
   term = () => {
-    return this.binOp(this.factor, [TT.MUL, TT.DIV]);
+    return this.binOp(this.factor, [TT.MUL, TT.DIV, TT.MOD]);
   };
 
   /** creates nodes based on the power rule in the grammar document */

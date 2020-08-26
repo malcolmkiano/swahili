@@ -1,2 +1,5 @@
+// Tumia "Dunia" mtumizi asipoandika chochote (Use "Dunia" if the user doesn't input anything)
 wacha jina = soma("Jina lako? ") || "Dunia"
+
+// Onyesha ujumbe kwenye skrini (Write the message to the screen)
 andika("Jambo, " + jina + "!")

@@ -30,6 +30,9 @@ module.exports = {
   /** Power operator */
   POW: 'POW',
 
+  /** Modulo operator */
+  MOD: 'MOD',
+
   /** Assignment operator */
   EQ: 'EQ',
 

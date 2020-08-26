@@ -4,7 +4,7 @@ const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
 const Position = require('./position');
-const { IllegalCharError, ExpectedCharError } = require('./error');
+const { IllegalCharError, ExpectedCharError } = require('../interpreter/error');
 
 /**
  * Performs a lexical analysis to ensure correct syntax of the programming language
@@ -17,8 +17,8 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text.replace(/\r?\n/g, ';');
-    this.pos = new Position(-1, 0, -1, fileName, text);
+    this.text = text.replace(/\r/g, '');
+    this.pos = new Position(-1, 0, -1, fileName, this.text);
     this.currentChar = null;
     this.advance();
   }
@@ -270,12 +270,13 @@ class Lexer {
         if (LEX.asterisk.test(this.currentChar)) {
           this.advance();
           // if char after that is forward slash, done
-          if (LEX.forwardSlash.test(this.currentChar)) break;
+          if (LEX.forwardSlash.test(this.currentChar)) {
+            this.advance();
+            break;
+          }
         }
       }
     }
-
-    this.advance(); // past the final character
   }
 
   /**
@@ -311,6 +312,9 @@ class Lexer {
         if (tok) tokens.push(tok);
       } else if (LEX.caret.test(this.currentChar)) {
         tokens.push(new Token(TT.POW, null, this.pos));
+        this.advance();
+      } else if (LEX.modulo.test(this.currentChar)) {
+        tokens.push(new Token(TT.MOD, null, this.pos));
         this.advance();
       } else if (LEX.leftParen.test(this.currentChar)) {
         tokens.push(new Token(TT.LPAREN, null, this.pos));

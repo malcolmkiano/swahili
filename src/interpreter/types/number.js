@@ -110,6 +110,22 @@ class SWNumber extends SWValue {
   }
 
   /**
+   * mathematically evaluates the modulo of the current number by the other and returns a new number with the result
+   * @param {SWNumber} other number to mod the current by
+   * @returns {SWNumber}
+   */
+  moddedBy(other) {
+    if (other instanceof SWNumber) {
+      return [
+        new SWNumber(this.value % other.value).setContext(this.context),
+        null,
+      ];
+    } else {
+      return [null, super.illegalOperation(other)];
+    }
+  }
+
+  /**
    * compares two values for equality
    * @param {*} other node to be compared to the current
    * @returns {SWBoolean}

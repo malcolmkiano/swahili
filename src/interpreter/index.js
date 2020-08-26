@@ -1,8 +1,11 @@
 const util = require('util');
 const fs = require('fs');
 const colors = require('colors');
-const print = require('../utils/print');
 const prompt = require('prompt-sync')();
+
+const print = require('../utils/print');
+
+const TT = require('../lexer/tokenTypes');
 
 const SWValue = require('./types/value');
 const SWNull = require('./types/null');
@@ -10,15 +13,13 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
-const TT = require('./tokenTypes');
 
-const Lexer = require('./lexer');
-const Parser = require('./parser');
+const Lexer = require('../lexer');
+const Parser = require('../parser');
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
 const { RTError } = require('./error');
-const { exec } = require('child_process');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
@@ -209,6 +210,8 @@ class Interpreter {
       [result, error] = left.divvedBy(right);
     } else if (node.opTok.type === TT.POW) {
       [result, error] = left.powedBy(right);
+    } else if (node.opTok.type === TT.MOD) {
+      [result, error] = left.moddedBy(right);
     } else if (node.opTok.type === TT.EE) {
       [result, error] = left.getComparisonEQ(right);
     } else if (node.opTok.type == TT.NE) {
@@ -371,8 +374,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -420,8 +423,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -556,7 +559,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${args.length - argNames.length} too many args passed into ${
-          this.name
+            this.name
           }`,
           this.context
         )
@@ -568,7 +571,7 @@ class SWBaseFunction extends SWValue {
           this.posStart,
           this.posEnd,
           `${argNames.length - args.length} too few args passed into ${
-          this.name
+            this.name
           }`,
           this.context
         )
@@ -995,9 +998,9 @@ class SWBuiltInFunction extends SWBaseFunction {
   // =========================================================
   execute_wamlambez(executionContext) {
     let res = new RTResult();
-    return res.success(new SWString("Wamnyonyez! "));
+    return res.success(new SWString('Wamnyonyez! '));
   }
-  wamlambez = []
+  wamlambez = [];
 
   // =========================================================
   // RUN FILES

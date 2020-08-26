@@ -10,7 +10,7 @@ function stringWithArrows(text, posStart, posEnd) {
   let result = '';
 
   /** Calculate indices */
-  let lastNewLine = text.indexOf('\n', posStart.idx);
+  let lastNewLine = text.lastIndexOf('\n', posStart.idx);
   lastNewLine = lastNewLine !== -1 ? lastNewLine + 1 : 0;
   let idxStart = lastNewLine;
   let idxEnd = text.indexOf('\n', idxStart + 1);
@@ -22,7 +22,7 @@ function stringWithArrows(text, posStart, posEnd) {
     /** Calculate line columns */
     const line = text.substr(idxStart, idxEnd);
     let colStart = i === 0 ? Math.max(posStart.colNumber, 0) : 0;
-    let colEnd = i === lineCount - 1 ? posEnd.colNumber : line.length;
+    let colEnd = i === lineCount - 1 ? posEnd.colNumber : line.length - 1;
     if (colStart > colEnd) {
       [colStart, colEnd] = [colEnd, colStart];
     }
