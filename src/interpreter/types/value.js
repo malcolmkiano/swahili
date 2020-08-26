@@ -131,11 +131,17 @@ class SWValue {
   }
 
   /**
-   * returns 1 if a value is falsy, and 0 if a value is truthy
-   * @returns {value}
+   * not supported on this data type
    */
   notted() {
     return [null, this.illegalOperation(this)];
+  }
+
+  /**
+   * not supported on this data type
+   */
+  toFormat(formatNode) {
+    return [null, this.illegalOperation(formatNode)];
   }
 
   /**

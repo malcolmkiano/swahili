@@ -13,6 +13,7 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
+const SWDateTime = require('./types/datetime');
 
 const Lexer = require('../lexer');
 const Parser = require('../parser');
@@ -374,8 +375,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -423,8 +424,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -1064,6 +1065,43 @@ class SWBuiltInFunction extends SWBaseFunction {
   badili = ['orodha', 'pahala', 'kitu'];
 
   // =========================================================
+  // DATETIME FUNCTIONS
+  // =========================================================
+
+  execute_Tarehe = (executionContext) => {
+    let res = new RTResult();
+    let tarehe = executionContext.symbolTable.get('tarehe');
+    let muundo = executionContext.symbolTable.get('muundo');
+    let val = null;
+    try {
+      if (tarehe instanceof SWString || tarehe instanceof SWDateTime) {
+        let dateString = tarehe.value;
+        val = new Date(dateString);
+        if (val.toString() === 'Invalid Date') throw new Error('Invalid date');
+      } else if (tarehe instanceof SWNull) {
+        val = new Date();
+      } else {
+        throw new Error('Invalid date');
+      }
+    } catch (err) {
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Could not create date`,
+          executionContext
+        )
+      );
+    }
+
+    let date = new SWDateTime(val);
+    if (muundo instanceof SWString) return res.success(date.toFormat(muundo));
+
+    return res.success(date);
+  };
+  Tarehe = ['tarehe', 'muundo'];
+
+  // =========================================================
   // EASTER EGGS
   // =========================================================
 
@@ -1161,6 +1199,9 @@ class SWBuiltInFunction extends SWBaseFunction {
   static sizeof = new SWBuiltInFunction('idadi');
   static insert = new SWBuiltInFunction('badili');
 
+  // DateTime generation
+  static newDate = new SWBuiltInFunction('Tarehe');
+
   // Run
   static run = new SWBuiltInFunction('anza');
 
@@ -1196,6 +1237,7 @@ globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
 globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
 globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
 globalSymbolTable.set('badili', SWBuiltInFunction.insert);
+globalSymbolTable.set('Tarehe', SWBuiltInFunction.newDate);
 globalSymbolTable.set('anza', SWBuiltInFunction.run);
 globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
 
