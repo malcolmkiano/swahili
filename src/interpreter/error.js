@@ -19,13 +19,9 @@ class Error {
    */
   toString() {
     let result = `${this.errorName}: ${this.details}` + '\n';
-    let errorPosition =
-      this.posStart.fileName === '<stdin>'
-        ? this.posStart.fileName
-        : `${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
-            this.posStart.colNumber + 1
-          }`;
-    result += `at ${errorPosition}`;
+    result += `at ${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
+      this.posStart.colNumber + 1
+      }`;
     return result;
   }
 }
@@ -89,11 +85,10 @@ class RTError extends Error {
     let ctx = this.context;
 
     while (ctx) {
-      let errorPosition =
-        pos.fileName === '<stdin>'
-          ? pos.fileName
-          : `"${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}"`;
-      result += `at ${errorPosition}, in ${ctx.displayName}\n`;
+      result =
+        `at ${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}, in ${
+        ctx.displayName
+        }\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
