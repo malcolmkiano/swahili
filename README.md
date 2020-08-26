@@ -2,7 +2,7 @@
 
 A new programming language to be written in Swahili to help teach programming concepts to swahili speaking students.
 
-![Version 0.1.0](https://img.shields.io/badge/version-0.8.4-blue)
+![Version 0.4.3](https://img.shields.io/badge/version-0.4.3-blue)
 
 ## Get Started
 
