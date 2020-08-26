@@ -21,7 +21,7 @@ class Error {
     let result = `${this.errorName}: ${this.details}` + '\n';
     result += `at ${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
       this.posStart.colNumber + 1
-    }`;
+      }`;
     return result;
   }
 }
@@ -87,13 +87,13 @@ class RTError extends Error {
     while (ctx) {
       result =
         `at ${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}, in ${
-          ctx.displayName
+        ctx.displayName
         }\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
 
-    return 'Traceback (most recent call last):\n' + result;
+    return '\nTraceback (most recent call last):\n' + result;
   }
 
   /**

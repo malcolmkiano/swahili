@@ -1,6 +1,6 @@
 # Swahili
 
-A new programming language to be written in Swahili to help teach programming concepts to swahili speaking students.
+A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
 
 ![Version 0.4.3](https://img.shields.io/badge/version-0.4.3-blue)
 
