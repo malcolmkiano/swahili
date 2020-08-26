@@ -24,6 +24,6 @@ module.exports = {
   equals: /=/,
   leftArrow: /</,
   rightArrow: />/,
-  lineEndings: /\n|;/,
+  lineEndings: /\r|\n|;/,
   spacesAndTabs: /\s|\t/, // ignored
 };

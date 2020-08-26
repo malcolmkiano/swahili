@@ -28,14 +28,14 @@ shughuli mpangoMpya() {
   kama (!!jibu) {
     mipango = mipango + [uwongo, jibu] // ongeza mpango kama jibu liliandikwa (only add the item if the user entered a response)
   } sivyo {
-    sema("Mpango mpya haukuongezwa\n")
+    sema("-> Mpango mpya haukuongezwa\n")
   }
 }
 
 // menyu ya kubadili hali ya mpango (interaction to change the state of tasks)
 shughuli badiliMpango() {
   kama (niTupu(mipango)) { // chunguza kama idadi ya vitu kwenye orodha ni 0 (check if the number of items in the list is 0)
-    sema("Hakuna mipango ya kubadili\n")
+    sema("-> Hakuna mipango ya kubadili\n")
     rudisha 
   }
 
@@ -49,14 +49,14 @@ shughuli badiliMpango() {
     wacha mpangoMpya = [!hali, ujumbe]
     badili(mipango, pahala, mpangoMpya) // namna ya kubadili kitu kwenye orodha (method to change an item in a list)
   } sivyo {
-    sema("Mpango haukubadilishwa\n")
+    sema("-> Mpango haukubadilishwa\n")
   }
 }
 
 // menu ya kuondoa mpango (interaction to delete tasks)
 shughuli ondoaMpango() {
   kama (niTupu(mipango)) {
-    sema("Hakuna mipango ya kubadili\n")
+    sema("-> Hakuna mipango ya kuondoa\n")
     rudisha 
   }
   
@@ -64,7 +64,7 @@ shughuli ondoaMpango() {
   kama (pahala >= 0 && pahala < idadi(mipango)) {
     mipango = mipango - pahala
   } sivyo {
-    sema("Mpango haukuondolewa\n")
+    sema("-> Mpango haukuondolewa\n")
   }
 }
 
@@ -106,5 +106,4 @@ shughuli menyuKuu() {
 }
 
 // anzisha programu (begin the program)
-andika(1 / 0)
 menyuKuu()
