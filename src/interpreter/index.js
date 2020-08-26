@@ -374,8 +374,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
+          .setContext(context)
+          .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -423,8 +423,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
+          .setContext(context)
+          .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -553,9 +553,9 @@ class SWBaseFunction extends SWValue {
    */
   populateArgs(argNames, args, executionContext) {
     let res = new RTResult();
-    for (let i = 0; i < args.length; i++) {
+    for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
-      let argValue = args[i];
+      let argValue = i < args.length ? args[i] : SWNull.NULL;
       argValue.setContext(executionContext);
       executionContext.symbolTable.set(argName, argValue);
     }
