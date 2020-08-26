@@ -22,7 +22,7 @@ const {
 } = require('../interpreter/nodes');
 
 // abstraction to make code shorter
-const lc = (str) => str.toLowerCase();
+const lc = (str) => str.replace('\\', '').toLowerCase();
 
 class Parser {
   /**
@@ -198,11 +198,11 @@ class Parser {
             LEX.keywords.for
           }', '${LEX.keywords.while}', '${LEX.keywords.function}', ${lc(
             TT.INT
-          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${LEX.plus.source}', '${
-            LEX.hyphen.source
-          }', '${LEX.leftParen.source}', '${LEX.leftSquare.source}' or '${
-            LEX.exclamation.source
-          }'`
+          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+            LEX.plus.source
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+            LEX.leftSquare.source
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -234,7 +234,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.equals.source}'`
+            `Expected '${lc(LEX.equals.source)}'`
           )
         );
 
@@ -255,11 +255,11 @@ class Parser {
             LEX.keywords.for
           }', '${LEX.keywords.while}', '${LEX.keywords.function}', ${lc(
             TT.INT
-          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${LEX.plus.source}', '${
-            LEX.hyphen.source
-          }', '${LEX.leftParen.source}', '${LEX.leftSquare.source}' or '${
-            LEX.exclamation.source
-          }'`
+          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+            LEX.plus.source
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+            LEX.leftSquare.source
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -289,11 +289,11 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${
+          `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
             LEX.plus.source
-          }', '${LEX.hyphen.source}', '${LEX.leftParen.source}', '${
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
             LEX.leftSquare.source
-          }' or '${LEX.exclamation.source}'`
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -353,15 +353,17 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected '${LEX.rightParen.source}','${LEX.keywords.let}', '${
-                LEX.keywords.if
-              }', '${LEX.keywords.for}', '${LEX.keywords.while}', '${
-                LEX.keywords.function
-              }', ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${
-                LEX.plus.source
-              }', '${LEX.hyphen.source}', '${LEX.leftParen.source}', '${
+              `Expected '${lc(LEX.rightParen.source)}','${
+                LEX.keywords.let
+              }', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+                LEX.keywords.while
+              }', '${LEX.keywords.function}', ${lc(TT.INT)}, ${lc(
+                TT.FLOAT
+              )}, ${lc(TT.IDENTIFIER)}, '${lc(LEX.plus.source)}', '${lc(
+                LEX.hyphen.source
+              )}', '${lc(LEX.leftParen.source)}', '${lc(
                 LEX.leftSquare.source
-              }' or '${LEX.exclamation.source}'`
+              )}' or '${lc(LEX.exclamation.source)}'`
             )
           );
 
@@ -378,7 +380,9 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected '${LEX.comma.source}' or '${LEX.rightParen.source}'`
+              `Expected '${lc(LEX.comma.source)}' or '${lc(
+                LEX.rightParen.source
+              )}'`
             )
           );
         }
@@ -420,7 +424,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.rightParen.source}'`
+            `Expected '${lc(LEX.rightParen.source)}'`
           )
         );
       }
@@ -454,11 +458,11 @@ class Parser {
       new InvalidSyntaxError(
         tok.posStart,
         tok.posEnd,
-        `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${
+        `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
           LEX.plus.source
-        }', '${LEX.hyphen.source}', '${LEX.leftParen.source}', '${
+        )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
           LEX.leftSquare.source
-        }', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+        )}', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
           LEX.keywords.while
         }' or '${LEX.keywords.function}'`
       )
@@ -499,15 +503,17 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.rightSquare.source}', '${LEX.keywords.let}', '${
-              LEX.keywords.if
-            }', '${LEX.keywords.for}', '${LEX.keywords.while}', '${
-              LEX.keywords.function
-            }', ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${
-              LEX.plus.source
-            }', '${LEX.hyphen.source}', '${LEX.leftParen.source}', '${
+            `Expected '${lc(LEX.rightSquare.source)}', '${
+              LEX.keywords.let
+            }', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+              LEX.keywords.while
+            }', '${LEX.keywords.function}', ${lc(TT.INT)}, ${lc(
+              TT.FLOAT
+            )}, ${lc(TT.IDENTIFIER)}, '${lc(LEX.plus.source)}', '${lc(
+              LEX.hyphen.source
+            )}', '${lc(LEX.leftParen.source)}', '${lc(
               LEX.leftSquare.source
-            }' or '${LEX.exclamation.source}'`
+            )}' or '${lc(LEX.exclamation.source)}'`
           )
         );
 
@@ -536,7 +542,9 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.comma.source}' or '${LEX.rightSquare.source}'`
+            `Expected '${lc(LEX.comma.source)}' or '${lc(
+              LEX.rightSquare.source
+            )}'`
           )
         );
       }
@@ -578,7 +586,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.leftCurly.source}'`
+            `Expected '${lc(LEX.leftCurly.source)}'`
           )
         );
       }
@@ -598,7 +606,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.rightCurly.source}'`
+            `Expected '${lc(LEX.rightCurly.source)}'`
           )
         );
       }
@@ -678,7 +686,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.rightCurly.source}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -723,7 +731,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.equals.source}'`
+          `Expected '${lc(LEX.equals.source)}'`
         )
       );
     }
@@ -764,7 +772,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.leftCurly.source}'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -780,7 +788,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.rightCurly.source}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -819,7 +827,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.leftCurly.source}'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -835,7 +843,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.rightCurly.source}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -877,8 +885,8 @@ class Parser {
           this.currentTok.posStart,
           this.currentTok.posEnd,
           varNameTok
-            ? `Expected '${LEX.leftParen.source}'`
-            : `Expected ${lc(TT.IDENTIFIER)} or '${LEX.leftParen.source}'`
+            ? `Expected '${lc(LEX.leftParen.source)}'`
+            : `Expected ${lc(TT.IDENTIFIER)} or '${lc(LEX.leftParen.source)}'`
         )
       );
 
@@ -901,8 +909,10 @@ class Parser {
               this.currentTok.posStart,
               this.currentTok.posEnd,
               varNameTok
-                ? `Expected '${LEX.leftParen.source}'`
-                : `Expected ${lc(TT.IDENTIFIER)} or '${LEX.leftParen.source}'`
+                ? `Expected '${lc(LEX.leftParen.source)}'`
+                : `Expected ${lc(TT.IDENTIFIER)} or '${lc(
+                    LEX.leftParen.source
+                  )}'`
             )
           );
 
@@ -916,7 +926,9 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${LEX.comma.source}' or '${LEX.rightParen.source}'`
+            `Expected '${lc(LEX.comma.source)}' or '${lc(
+              LEX.rightParen.source
+            )}'`
           )
         );
     } else {
@@ -925,7 +937,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ${lc(TT.IDENTIFIER)} or '${LEX.rightParen.source}'`
+            `Expected ${lc(TT.IDENTIFIER)} or '${lc(LEX.rightParen.source)}'`
           )
         );
     }
@@ -938,7 +950,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.leftCurly.source}'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -954,7 +966,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${LEX.rightCurly.source}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
