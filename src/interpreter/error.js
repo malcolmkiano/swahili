@@ -1,5 +1,3 @@
-const stringWithArrows = require('../utils/stringWithArrows');
-
 class Error {
   /**
    * Error representation class
@@ -21,12 +19,13 @@ class Error {
    */
   toString() {
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `File "${this.posStart.fileName}", line ${
-      this.posStart.lineNumber + 1
-    }`;
-    result +=
-      '\n\n' +
-      stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
+    let errorPosition =
+      this.posStart.fileName === '<stdin>'
+        ? this.posStart.fileName
+        : `${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
+            this.posStart.colNumber + 1
+          }`;
+    result += `at ${errorPosition}`;
     return result;
   }
 }
@@ -90,15 +89,16 @@ class RTError extends Error {
     let ctx = this.context;
 
     while (ctx) {
-      result =
-        `File "${pos.fileName}", line ${pos.lineNumber + 1}, in ${
-          ctx.displayName
-        }\n` + result;
+      let errorPosition =
+        pos.fileName === '<stdin>'
+          ? pos.fileName
+          : `"${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}"`;
+      result += `at ${errorPosition}, in ${ctx.displayName}\n`;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
 
-    return 'Traceback (most recent call last):\n' + result;
+    return '\nTraceback (most recent call last):\n' + result;
   }
 
   /**
@@ -108,9 +108,6 @@ class RTError extends Error {
   toString() {
     let result = this.generateTraceback();
     result += `${this.errorName}: ${this.details}`;
-    result +=
-      '\n\n' +
-      stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
     return result;
   }
 }

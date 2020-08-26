@@ -1,6 +1,5 @@
 const TT = require('./tokenTypes');
 const LEX = require('./lexemes');
-const KEYWORDS = require('./keywords');
 
 const Token = require('./token');
 const Position = require('./position');
@@ -17,7 +16,7 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text.replace(/\r?\n/g, ';');
+    this.text = text.replace(/\r/g, '').replace(/\n/g, ';');
     this.pos = new Position(-1, 0, -1, fileName, this.text);
     this.currentChar = null;
     this.advance();
@@ -118,7 +117,8 @@ class Lexer {
     }
 
     // check if KEYWORD or IDENTIFIER
-    let tokType = KEYWORDS.includes(idStr) ? TT.KEYWORD : TT.IDENTIFIER;
+    const keywords = Object.values(LEX.keywords);
+    let tokType = keywords.includes(idStr) ? TT.KEYWORD : TT.IDENTIFIER;
     return new Token(tokType, idStr, posStart, this.pos);
   }
 

@@ -1,5 +1,5 @@
 const TT = require('../lexer/tokenTypes');
-
+const LEX = require('../lexer/lexemes');
 const ParseResult = require('./parseResult');
 const { InvalidSyntaxError } = require('../interpreter/error');
 const {
@@ -20,6 +20,9 @@ const {
   ContinueNode,
   BreakNode,
 } = require('../interpreter/nodes');
+
+// abstraction to make code shorter
+const lc = (str) => str.replace('\\', '').toLowerCase();
 
 class Parser {
   /**
@@ -74,7 +77,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Unexpected ${this.currentTok.type.toLowerCase()}`
+          `Unexpected ${lc(this.currentTok.type)}`
         )
       );
     }
@@ -131,7 +134,7 @@ class Parser {
     let res = new ParseResult();
     let posStart = this.currentTok.posStart.copy();
 
-    if (this.currentTok.matches(TT.KEYWORD, 'rudisha')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.return)) {
       res.registerAdvancement();
       this.advance();
 
@@ -144,7 +147,7 @@ class Parser {
       );
     }
 
-    if (this.currentTok.matches(TT.KEYWORD, 'endelea')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.continue)) {
       res.registerAdvancement();
       this.advance();
       return res.success(
@@ -152,7 +155,7 @@ class Parser {
       );
     }
 
-    if (this.currentTok.matches(TT.KEYWORD, 'ondoka')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.break)) {
       res.registerAdvancement();
       this.advance();
       return res.success(
@@ -189,7 +192,17 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'rudisha', 'endelea', 'ondoka', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+          `Expected '${LEX.keywords.return}', '${LEX.keywords.continue}', '${
+            LEX.keywords.break
+          }', '${LEX.keywords.let}', '${LEX.keywords.if}', '${
+            LEX.keywords.for
+          }', '${LEX.keywords.while}', '${LEX.keywords.function}', ${lc(
+            TT.INT
+          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+            LEX.plus.source
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+            LEX.leftSquare.source
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -199,7 +212,7 @@ class Parser {
   /** creates nodes based on the expr rule in the grammar document */
   expr = () => {
     let res = new ParseResult();
-    if (this.currentTok.matches(TT.KEYWORD, 'wacha')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.let)) {
       res.registerAdvancement();
       this.advance();
 
@@ -208,7 +221,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected identifier`
+            `Expected ${lc(TT.IDENTIFIER)}`
           )
         );
 
@@ -221,7 +234,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '='`
+            `Expected '${lc(LEX.equals.source)}'`
           )
         );
 
@@ -238,7 +251,15 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+          `Expected '${LEX.keywords.let}', '${LEX.keywords.if}', '${
+            LEX.keywords.for
+          }', '${LEX.keywords.while}', '${LEX.keywords.function}', ${lc(
+            TT.INT
+          )}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+            LEX.plus.source
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+            LEX.leftSquare.source
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -268,7 +289,11 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected int, float, identifier, '+', '-', '(', '[' or 'si'`
+          `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+            LEX.plus.source
+          )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+            LEX.leftSquare.source
+          )}' or '${lc(LEX.exclamation.source)}'`
         )
       );
 
@@ -328,7 +353,17 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected ')', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+              `Expected '${lc(LEX.rightParen.source)}','${
+                LEX.keywords.let
+              }', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+                LEX.keywords.while
+              }', '${LEX.keywords.function}', ${lc(TT.INT)}, ${lc(
+                TT.FLOAT
+              )}, ${lc(TT.IDENTIFIER)}, '${lc(LEX.plus.source)}', '${lc(
+                LEX.hyphen.source
+              )}', '${lc(LEX.leftParen.source)}', '${lc(
+                LEX.leftSquare.source
+              )}' or '${lc(LEX.exclamation.source)}'`
             )
           );
 
@@ -345,7 +380,9 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected ',' or ')'`
+              `Expected '${lc(LEX.comma.source)}' or '${lc(
+                LEX.rightParen.source
+              )}'`
             )
           );
         }
@@ -387,7 +424,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ')'`
+            `Expected '${lc(LEX.rightParen.source)}'`
           )
         );
       }
@@ -399,19 +436,19 @@ class Parser {
       let listExpr = res.register(this.listExpr());
       if (res.error) return res;
       return res.success(listExpr);
-    } else if (tok.matches(TT.KEYWORD, 'kama')) {
+    } else if (tok.matches(TT.KEYWORD, LEX.keywords.if)) {
       let ifExpr = res.register(this.ifExpr());
       if (res.error) return res;
       return res.success(ifExpr);
-    } else if (tok.matches(TT.KEYWORD, 'kwa')) {
+    } else if (tok.matches(TT.KEYWORD, LEX.keywords.for)) {
       let forExpr = res.register(this.forExpr());
       if (res.error) return res;
       return res.success(forExpr);
-    } else if (tok.matches(TT.KEYWORD, 'ambapo')) {
+    } else if (tok.matches(TT.KEYWORD, LEX.keywords.while)) {
       let whileExpr = res.register(this.whileExpr());
       if (res.error) return res;
       return res.success(whileExpr);
-    } else if (tok.matches(TT.KEYWORD, 'shughuli')) {
+    } else if (tok.matches(TT.KEYWORD, LEX.keywords.function)) {
       let funcDef = res.register(this.funcDef());
       if (res.error) return res;
       return res.success(funcDef);
@@ -421,7 +458,13 @@ class Parser {
       new InvalidSyntaxError(
         tok.posStart,
         tok.posEnd,
-        `Expected int, float, identifier, '+', '-', '(', '[', 'kama', 'kwa', 'ambapo' or 'shughuli'`
+        `Expected ${lc(TT.INT)}, ${lc(TT.FLOAT)}, ${lc(TT.IDENTIFIER)}, '${lc(
+          LEX.plus.source
+        )}', '${lc(LEX.hyphen.source)}', '${lc(LEX.leftParen.source)}', '${lc(
+          LEX.leftSquare.source
+        )}', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+          LEX.keywords.while
+        }' or '${LEX.keywords.function}'`
       )
     );
   };
@@ -460,7 +503,17 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ']', 'wacha', 'kama', 'kwa', 'ambapo', 'shughuli', int, float, identifier, '+', '-', '(', '[' or 'si'`
+            `Expected '${lc(LEX.rightSquare.source)}', '${
+              LEX.keywords.let
+            }', '${LEX.keywords.if}', '${LEX.keywords.for}', '${
+              LEX.keywords.while
+            }', '${LEX.keywords.function}', ${lc(TT.INT)}, ${lc(
+              TT.FLOAT
+            )}, ${lc(TT.IDENTIFIER)}, '${lc(LEX.plus.source)}', '${lc(
+              LEX.hyphen.source
+            )}', '${lc(LEX.leftParen.source)}', '${lc(
+              LEX.leftSquare.source
+            )}' or '${lc(LEX.exclamation.source)}'`
           )
         );
 
@@ -489,7 +542,9 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ',' or ']'`
+            `Expected '${lc(LEX.comma.source)}' or '${lc(
+              LEX.rightSquare.source
+            )}'`
           )
         );
       }
@@ -506,7 +561,7 @@ class Parser {
   /** parse tokens to make an If Node with cases and an optional else case */
   ifExpr = () => {
     let res = new ParseResult();
-    let allCases = res.register(this.ifExprCases('kama'));
+    let allCases = res.register(this.ifExprCases(LEX.keywords.if));
     if (res.error) return res;
     let [cases, elseCase] = allCases;
     return res.success(new IfNode(cases, elseCase));
@@ -514,7 +569,7 @@ class Parser {
 
   /** parse tokens to make an ElseIf portion of an If Node */
   ifExprB = () => {
-    return this.ifExprCases('au');
+    return this.ifExprCases(LEX.keywords.elif);
   };
 
   /** parse tokens to make an Else portion of an If Node */
@@ -522,7 +577,7 @@ class Parser {
     let res = new ParseResult();
     let elseCase = null;
 
-    if (this.currentTok.matches(TT.KEYWORD, 'sivyo')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.else)) {
       res.registerAdvancement();
       this.advance();
 
@@ -531,7 +586,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '{'`
+            `Expected '${lc(LEX.leftCurly.source)}'`
           )
         );
       }
@@ -551,7 +606,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '}'`
+            `Expected '${lc(LEX.rightCurly.source)}'`
           )
         );
       }
@@ -566,7 +621,7 @@ class Parser {
     let cases = [];
     let elseCase = null;
 
-    if (this.currentTok.matches(TT.KEYWORD, 'au')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.elif)) {
       let allCases = res.register(this.ifExprB());
       if (res.error) return res;
       [cases, elseCase] = allCases;
@@ -631,7 +686,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -644,12 +699,12 @@ class Parser {
     let res = new ParseResult();
     let body = null;
 
-    if (!this.currentTok.matches(TT.KEYWORD, 'kwa')) {
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.for)) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'kwa'`
+          `Expected '${LEX.keywords.for}'`
         )
       );
     }
@@ -662,7 +717,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected identifier`
+          `Expected ${lc(TT.IDENTIFIER)}`
         )
       );
     }
@@ -676,7 +731,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '='`
+          `Expected '${lc(LEX.equals.source)}'`
         )
       );
     }
@@ -687,12 +742,12 @@ class Parser {
     let startValue = res.register(this.expr());
     if (res.error) return res;
 
-    if (!this.currentTok.matches(TT.KEYWORD, 'mpaka')) {
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.to)) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'mpaka'`
+          `Expected '${LEX.keywords.to}'`
         )
       );
     }
@@ -704,7 +759,7 @@ class Parser {
     if (res.error) return res;
 
     let stepValue = null;
-    if (this.currentTok.matches(TT.KEYWORD, 'hatua')) {
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.step)) {
       res.registerAdvancement();
       this.advance();
 
@@ -717,7 +772,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '{'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -733,7 +788,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -751,12 +806,12 @@ class Parser {
     let res = new ParseResult();
     let body = null;
 
-    if (!this.currentTok.matches(TT.KEYWORD, 'ambapo')) {
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.while)) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'ambapo'`
+          `Expected '${LEX.keywords.while}'`
         )
       );
     }
@@ -772,7 +827,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '{'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -788,7 +843,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
@@ -805,12 +860,12 @@ class Parser {
     let varNameTok = null;
     let body = null;
 
-    if (!this.currentTok.matches(TT.KEYWORD, 'shughuli')) {
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.function)) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected 'shughuli'`
+          `Expected '${LEX.keywords.function}'`
         )
       );
     }
@@ -829,7 +884,9 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          varNameTok ? `Expected '('` : `Expected identifier or '('`
+          varNameTok
+            ? `Expected '${lc(LEX.leftParen.source)}'`
+            : `Expected ${lc(TT.IDENTIFIER)} or '${lc(LEX.leftParen.source)}'`
         )
       );
 
@@ -851,7 +908,11 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              varNameTok ? `Expected '('` : `Expected identifier or '('`
+              varNameTok
+                ? `Expected '${lc(LEX.leftParen.source)}'`
+                : `Expected ${lc(TT.IDENTIFIER)} or '${lc(
+                    LEX.leftParen.source
+                  )}'`
             )
           );
 
@@ -865,7 +926,9 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ',' or ')'`
+            `Expected '${lc(LEX.comma.source)}' or '${lc(
+              LEX.rightParen.source
+            )}'`
           )
         );
     } else {
@@ -874,7 +937,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected identifier or ')'`
+            `Expected ${lc(TT.IDENTIFIER)} or '${lc(LEX.rightParen.source)}'`
           )
         );
     }
@@ -887,7 +950,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '{'`
+          `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
     }
@@ -903,7 +966,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '}'`
+          `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
     }
