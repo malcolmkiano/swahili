@@ -13,6 +13,7 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
+const SWDateTime = require('./types/datetime');
 
 const Lexer = require('../lexer');
 const Parser = require('../parser');
@@ -153,7 +154,17 @@ class Interpreter {
         )
       );
 
-    context.symbolTable.set(varName, value, true);
+    let isSet = context.symbolTable.set(varName, value, true);
+    if (!isSet)
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `Cannot change value of constant '${varName}'`,
+          context
+        )
+      );
+
     return res.success(value);
   };
 
@@ -443,7 +454,28 @@ class Interpreter {
       .setContext(context)
       .setPosition(node.posStart, node.posEnd);
 
-    if (node.varNameTok) context.symbolTable.set(funcName, funcValue);
+    if (node.varNameTok) {
+      if (context.symbolTable.get(funcName, true))
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot re-declare '${funcName}'`,
+            context
+          )
+        );
+
+      let isSet = context.symbolTable.set(funcName, funcValue);
+      if (!isSet)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot change value of constant '${funcName}'`,
+            context
+          )
+        );
+    }
 
     return res.success(funcValue);
   };
@@ -546,68 +578,20 @@ class SWBaseFunction extends SWValue {
   }
 
   /**
-   * Ensures required number of args are provided to run function
-   * @param {String[]} argNames list of argument names from function definition
-   * @param {Node[]} args list of argument nodes
-   */
-  checkArgs(argNames, args) {
-    let res = new RTResult();
-
-    if (args.length > argNames.length)
-      return res.failure(
-        new RTError(
-          this.posStart,
-          this.posEnd,
-          `${args.length - argNames.length} too many args passed into ${
-            this.name
-          }`,
-          this.context
-        )
-      );
-
-    if (args.length < argNames.length)
-      return res.failure(
-        new RTError(
-          this.posStart,
-          this.posEnd,
-          `${argNames.length - args.length} too few args passed into ${
-            this.name
-          }`,
-          this.context
-        )
-      );
-
-    return res.success(SWNull.NULL);
-  }
-
-  /**
    * adds all the arguments into the symbol table
    * @param {String[]} argNames list of argument names from function definition
    * @param {Node[]} args list of argument nodes
    * @param {Context} executionContext executing context
    */
   populateArgs(argNames, args, executionContext) {
-    for (let i = 0; i < args.length; i++) {
+    let res = new RTResult();
+    for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
-      let argValue = args[i];
+      let argValue = i < args.length ? args[i] : SWNull.NULL;
       argValue.setContext(executionContext);
       executionContext.symbolTable.set(argName, argValue);
     }
-  }
 
-  /**
-   * verifies correct number of arguments are provided and
-   * adds the arguments into the symbol table
-   * @param {String[]} argNames list of argument names from function definition
-   * @param {Node[]} args list of argument nodes
-   * @param {Context} executionContext executing context
-   */
-  checkAndPopulateArgs(argNames, args, executionContext) {
-    let res = new RTResult();
-    res.register(this.checkArgs(argNames, args));
-    if (res.shouldReturn()) return res;
-
-    this.populateArgs(argNames, args, executionContext);
     return res.success(SWNull.NULL);
   }
 
@@ -657,9 +641,7 @@ class SWFunction extends SWBaseFunction {
     const INT = new Interpreter();
     let executionContext = this.generateNewContext();
 
-    res.register(
-      this.checkAndPopulateArgs(this.argNames, args, executionContext)
-    );
+    res.register(this.populateArgs(this.argNames, args, executionContext));
     if (res.shouldReturn()) return res;
 
     res.register(INT.visit(this.bodyNode, executionContext));
@@ -705,7 +687,7 @@ class SWBuiltInFunction extends SWBaseFunction {
     let method = this[methodName] || this.noExecuteMethod;
     let argNames = this[this.name];
 
-    res.register(this.checkAndPopulateArgs(argNames, args, executionContext));
+    res.register(this.populateArgs(argNames, args, executionContext));
     if (res.shouldReturn()) return res;
 
     let returnValue = res.register(method(executionContext));
@@ -752,33 +734,46 @@ class SWBuiltInFunction extends SWBaseFunction {
    * Print a value to the screen
    * @param {Context} executionContext the calling context
    */
-  execute_andika(executionContext) {
+  execute_andika = (executionContext) => {
     let res = new RTResult();
-    let ujumbe = executionContext.symbolTable.get('ujumbe').toString(false);
-    print(ujumbe); // 2 -> the arguments are then accessed from the execution context's symbol table
+    let ujumbe = executionContext.symbolTable.get('ujumbe'); // 2 -> the arguments are then accessed from the execution context's symbol table
+    if (!ujumbe)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'ujumbe' is required`,
+          executionContext
+        )
+      );
+
+    ujumbe = ujumbe.toString(false);
+    print(ujumbe);
     return res.success(SWNull.NULL);
-  }
+  };
   andika = ['ujumbe']; // 1 -> this contains all the args the built in function requires
 
   /**
    * Gets input from STDIN
    * @param {Context} executionContext the calling context
    */
-  execute_soma(executionContext) {
+  execute_soma = (executionContext) => {
     let res = new RTResult();
-    let swali = executionContext.symbolTable.get('swali').toString(false);
+    let swali = executionContext.symbolTable.get('swali');
+    swali = swali ? swali.toString(false) : '> ';
     let textInput = prompt(swali);
     return res.success(new SWString(textInput || ''));
-  }
+  };
   soma = ['swali'];
 
   /**
    * Gets numeric input from STDIN
    * @param {Context} executionContext the calling context
    */
-  execute_somaNambari(executionContext) {
+  execute_somaNambari = (executionContext) => {
     let res = new RTResult();
-    let swali = executionContext.symbolTable.get('swali').toString(false);
+    let swali = executionContext.symbolTable.get('swali');
+    swali = swali ? swali.toString(false) : '> ';
     let numInput = 0;
     while (true) {
       numInput = prompt(swali);
@@ -790,14 +785,11 @@ class SWBuiltInFunction extends SWBaseFunction {
     }
 
     return res.success(new SWNumber(numInput || 0));
-  }
+  };
   somaNambari = ['swali'];
 
-  /**
-   * Clears the terminal
-   * @param {Context} executionContext the calling context
-   */
-  execute_futa(executionContext) {
+  /** Clears the terminal */
+  execute_futa() {
     let res = new RTResult();
     console.clear();
     return res.success(SWNull.NULL);
@@ -812,60 +804,110 @@ class SWBuiltInFunction extends SWBaseFunction {
    * Checks if a value is a number
    * @param {Context} executionContext the calling context
    */
-  execute_niNambari(executionContext) {
+  execute_niNambari = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let isNumber = kitu instanceof SWNumber;
     return res.success(isNumber ? SWBoolean.TRUE : SWBoolean.FALSE);
-  }
+  };
   niNambari = ['kitu'];
 
   /**
    * Checks if a value is a string
    * @param {Context} executionContext the calling context
    */
-  execute_niJina(executionContext) {
+  execute_niJina = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let isString = kitu instanceof SWString;
     return res.success(isString ? SWBoolean.TRUE : SWBoolean.FALSE);
-  }
+  };
   niJina = ['kitu'];
 
   /**
    * Checks if a value is a list
    * @param {Context} executionContext the calling context
    */
-  execute_niOrodha(executionContext) {
+  execute_niOrodha = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let isList = kitu instanceof SWList;
     return res.success(isList ? SWBoolean.TRUE : SWBoolean.FALSE);
-  }
+  };
   niOrodha = ['kitu'];
 
   /**
    * Checks if a value is a function
    * @param {Context} executionContext the calling context
    */
-  execute_niShughuli(executionContext) {
+  execute_niShughuli = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let isFunction = kitu instanceof SWBaseFunction;
     return res.success(isFunction ? SWBoolean.TRUE : SWBoolean.FALSE);
-  }
+  };
   niShughuli = ['kitu'];
 
   /**
    * Checks if a value is null/empty
    * @param {Context} executionContext the calling context
    */
-  execute_niTupu(executionContext) {
+  execute_niTupu = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let isNull = !kitu.isTrue();
     return res.success(isNull ? SWBoolean.TRUE : SWBoolean.FALSE);
-  }
+  };
   niTupu = ['kitu'];
 
   // =========================================================
@@ -879,6 +921,16 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_Nambari = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     try {
       if (
         kitu instanceof SWString ||
@@ -909,6 +961,16 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_Jina = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     let value = kitu.toString(false);
     if (kitu instanceof SWBaseFunction) value = kitu.name;
 
@@ -924,9 +986,19 @@ class SWBuiltInFunction extends SWBaseFunction {
    * Returns the length of a list/string
    * @param {Context} executionContext the calling context
    */
-  execute_idadi(executionContext) {
+  execute_idadi = (executionContext) => {
     let res = new RTResult();
     let kitu = executionContext.symbolTable.get('kitu');
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
+
     if (kitu instanceof SWString || kitu instanceof SWList) {
       return res.success(
         new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
@@ -941,18 +1013,48 @@ class SWBuiltInFunction extends SWBaseFunction {
         )
       );
     }
-  }
+  };
   idadi = ['kitu'];
 
   /**
    * Alters the element at the given index of a list
    * @param {Context} executionContext the calling context
    */
-  execute_badili(executionContext) {
+  execute_badili = (executionContext) => {
     let res = new RTResult();
     let orodha = executionContext.symbolTable.get('orodha');
     let pahala = executionContext.symbolTable.get('pahala');
     let kitu = executionContext.symbolTable.get('kitu');
+
+    if (!orodha)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'orodha' is required`,
+          executionContext
+        )
+      );
+
+    if (!pahala)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'pahala' is required`,
+          executionContext
+        )
+      );
+
+    if (!kitu)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'kitu' is required`,
+          executionContext
+        )
+      );
 
     // check types
     if (!orodha instanceof SWList)
@@ -990,13 +1092,56 @@ class SWBuiltInFunction extends SWBaseFunction {
     orodha.elements[pahala.value] = kitu;
 
     return res.success(kitu);
-  }
+  };
   badili = ['orodha', 'pahala', 'kitu'];
+
+  // =========================================================
+  // DATETIME FUNCTIONS
+  // =========================================================
+
+  execute_Tarehe = (executionContext) => {
+    let res = new RTResult();
+    let tarehe = executionContext.symbolTable.get('tarehe');
+    let muundo = executionContext.symbolTable.get('muundo');
+    let val = null;
+    try {
+      if (tarehe instanceof SWString || tarehe instanceof SWDateTime) {
+        let dateString = tarehe.value;
+        val = new Date(dateString);
+        if (val.toString() === 'Invalid Date') throw new Error('Invalid date');
+      } else if (tarehe instanceof SWNull) {
+        val = new Date();
+      } else {
+        throw new Error('Invalid date');
+      }
+    } catch (err) {
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Could not create date`,
+          executionContext
+        )
+      );
+    }
+
+    let date = new SWDateTime(val);
+    if (muundo instanceof SWString)
+      return res.success(new SWString(date.toFormat(muundo)));
+
+    return res.success(date);
+  };
+  Tarehe = ['tarehe', 'muundo'];
 
   // =========================================================
   // EASTER EGGS
   // =========================================================
-  execute_wamlambez(executionContext) {
+
+  /**
+   * Fun sheng easter egg from a popular song
+   * https://www.youtube.com/watch?v=ilnOAwKuZLQ
+   */
+  execute_wamlambez() {
     let res = new RTResult();
     return res.success(new SWString('Wamnyonyez! '));
   }
@@ -1013,6 +1158,16 @@ class SWBuiltInFunction extends SWBaseFunction {
   execute_anza = (executionContext) => {
     let res = new RTResult();
     let faili = executionContext.symbolTable.get('faili');
+    if (!faili)
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Parameter 'faili' is required`,
+          executionContext
+        )
+      );
+
     let script = '';
 
     if (faili instanceof SWString !== true) {
@@ -1076,6 +1231,9 @@ class SWBuiltInFunction extends SWBaseFunction {
   static sizeof = new SWBuiltInFunction('idadi');
   static insert = new SWBuiltInFunction('badili');
 
+  // DateTime generation
+  static newDate = new SWBuiltInFunction('Tarehe');
+
   // Run
   static run = new SWBuiltInFunction('anza');
 
@@ -1093,26 +1251,27 @@ module.exports.SWBuiltInFunction = SWBuiltInFunction;
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', SWNull.NULL); // NULL
-globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
-globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
+globalSymbolTable.setConstant('tupu', SWNull.NULL); // NULL
+globalSymbolTable.setConstant('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.setConstant('uwongo', SWBoolean.FALSE); // FALSE
 
 /** built in functions */
-globalSymbolTable.set('andika', SWBuiltInFunction.print);
-globalSymbolTable.set('soma', SWBuiltInFunction.input);
-globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
-globalSymbolTable.set('futa', SWBuiltInFunction.clear);
-globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
-globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
-globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
-globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
-globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
-globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
-globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
-globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
-globalSymbolTable.set('badili', SWBuiltInFunction.insert);
-globalSymbolTable.set('anza', SWBuiltInFunction.run);
-globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
+globalSymbolTable.setConstant('andika', SWBuiltInFunction.print);
+globalSymbolTable.setConstant('soma', SWBuiltInFunction.input);
+globalSymbolTable.setConstant('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.setConstant('futa', SWBuiltInFunction.clear);
+globalSymbolTable.setConstant('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.setConstant('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.setConstant('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.setConstant('niShughuli', SWBuiltInFunction.isFunction);
+globalSymbolTable.setConstant('niTupu', SWBuiltInFunction.isNull);
+globalSymbolTable.setConstant('Nambari', SWBuiltInFunction.parseNum);
+globalSymbolTable.setConstant('Jina', SWBuiltInFunction.parseStr);
+globalSymbolTable.setConstant('idadi', SWBuiltInFunction.sizeof);
+globalSymbolTable.setConstant('badili', SWBuiltInFunction.insert);
+globalSymbolTable.setConstant('Tarehe', SWBuiltInFunction.newDate);
+globalSymbolTable.setConstant('anza', SWBuiltInFunction.run);
+globalSymbolTable.setConstant('wamlambez', SWBuiltInFunction.easter);
 
 /**
  * Processes a file through the lexer, parser and interpreter
