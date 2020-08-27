@@ -1,14 +1,23 @@
 {
   "name": "swahili",
-  "version": "0.5.1",
-  "description": "",
+  "version": "0.5.2",
+  "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/malcolmkiano/swahili"
+  },
   "main": "src/index.js",
   "scripts": {
-    "start": "node src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node src/index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "swahili",
+    "programming-language"
+  ],
+  "contributors": [
+    "Malcolm Kiano <hello@malcolmkiano.com> (https://malcolmkiano.com)",
+    "Wendo Nyang <wendonyang@gmail.com>"
+  ],
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",

@@ -2,7 +2,7 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
 
-![Version 0.5.1](https://img.shields.io/badge/version-0.5.1-blue)
+![Version 0.5.2](https://img.shields.io/badge/version-0.5.2-blue)
 
 ## Get Started
 

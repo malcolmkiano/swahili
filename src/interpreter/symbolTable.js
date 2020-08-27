@@ -8,7 +8,7 @@ const { RTError } = require('./error');
 class SymbolTable {
   constructor(parent) {
     this.symbols = {};
-    this.constants = parent ? parent.constants : {}; // hand constants down every scope
+    this.constants = {};
     this.parent = parent;
   }
 
@@ -25,6 +25,18 @@ class SymbolTable {
   }
 
   /**
+   * checks if given variable is a constant (in current or any containing scope)
+   * @param {String} name name of the variable being searched for
+   * @returns {Boolean}
+   */
+  hasConstant(name) {
+    if (this.constants[name]) return true;
+    if (this.parent) return this.parent.hasConstant(name);
+
+    return false;
+  }
+
+  /**
    * assigns a value to a variable (or overrides existing value)
    * @param {String} name variable name to be assigned
    * @param {*} value value to be assigned to the variable
@@ -33,9 +45,8 @@ class SymbolTable {
    */
   set(name, value, deep = false) {
     let res = new RTResult();
-    if (this.constants[name]) {
-      return false;
-    }
+    if (this.hasConstant(name)) return false;
+
     if (!deep) {
       this.symbols[name] = value;
     } else {
@@ -57,13 +68,8 @@ class SymbolTable {
    * @param {*} value value to be assigned to the variable
    */
   setConstant(name, value) {
-    // Traverse up the scope chain to the highest possible context
-    if (this.parent) {
-      this.parent.setConstant(name, value);
-    } else {
-      this.symbols[name] = value;
-      this.constants[name] = true;
-    }
+    this.symbols[name] = value;
+    this.constants[name] = true;
   }
 
   /**

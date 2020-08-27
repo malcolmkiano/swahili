@@ -160,7 +160,7 @@ class Interpreter {
         new RTError(
           node.posStart,
           node.posEnd,
-          `'${varName}' is reserved and cannot be overwritten`,
+          `Cannot change value of constant '${varName}'`,
           context
         )
       );
@@ -471,7 +471,7 @@ class Interpreter {
           new RTError(
             node.posStart,
             node.posEnd,
-            `'${funcName}' is reserved and cannot be overwritten`,
+            `Cannot change value of constant '${funcName}'`,
             context
           )
         );
