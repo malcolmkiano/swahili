@@ -6,9 +6,12 @@
     "type": "git",
     "url": "https://github.com/malcolmkiano/swahili"
   },
-  "main": "src/index.js",
+  "main": "bin/index.js",
   "scripts": {
-    "start": "node src/index.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "swahili": "./bin/index.js"
   },
   "keywords": [
     "swahili",
@@ -22,7 +25,8 @@
   "dependencies": {
     "colors": "^1.4.0",
     "node-bash-title": "0.0.2",
-    "prompt-sync": "^4.2.0"
+    "prompt-sync": "^4.2.0",
+    "yargs": "^15.4.1"
   },
   "devDependencies": {
     "eslint": "^7.7.0"
