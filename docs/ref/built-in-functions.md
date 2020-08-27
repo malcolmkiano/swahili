@@ -27,5 +27,5 @@
 - **idadi(`kitu: SWList | SWString`): `SWNumber`**<br/>
   Returns the length of a list or string
 
-- **tarehe(`siku: SWDateTime| siku: SWDateTime, "kitu": SWString`): `SWDateTime`** <br/>
+- **tarehe(`siku: SWDateTime, [muundo: SWString]`): `SWDateTime`** <br/>
   Returns the current date if the only parameter entered is `siku`. Returns a formatted date and time if `kitu` matches the formatting strings. 
