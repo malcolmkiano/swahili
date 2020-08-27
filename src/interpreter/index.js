@@ -1095,7 +1095,8 @@ class SWBuiltInFunction extends SWBaseFunction {
     }
 
     let date = new SWDateTime(val);
-    if (muundo instanceof SWString) return res.success(date.toFormat(muundo));
+    if (muundo instanceof SWString)
+      return res.success(new SWString(date.toFormat(muundo)));
 
     return res.success(date);
   };

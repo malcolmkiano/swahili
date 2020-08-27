@@ -55,6 +55,8 @@ class SWDateTime extends SWValue {
    * @param {SWDateTime} element DateTime object to be broken into its parts
    */
   static getParts = (element) => {
+    const addZero = (value, pow = 1) =>
+      value < 10 ** pow ? '0'.repeat(pow) + value.toString() : value.toString();
     const to12 = (num) => (num === 12 || num === 0 ? 12 : num % 12);
     const findSuffix = (hour) =>
       Object.entries(SWDateTime.SUFFIXES).find(([suff, hours]) =>
@@ -64,18 +66,41 @@ class SWDateTime extends SWValue {
     if (element instanceof SWDateTime) {
       let val = element.value;
       return {
-        ms: val.getMilliseconds(),
-        sec: val.getSeconds(),
-        min: val.getMinutes(),
-        hour: to12(val.getHours()),
-        hour24: val.getHours(),
-        suffix: findSuffix(val.getHours()),
-        dayName: SWDateTime.DAYS[val.getDay()],
-        date: val.getDate(),
-        month: val.getMonth() + 1,
-        monthName: SWDateTime.MONTHS[val.getMonth()],
-        year: val.getFullYear().toString().substring(2),
-        yearLong: val.getFullYear(),
+        /** Saa (Hours: 00-23) */
+        SA: addZero(val.getHours()),
+
+        /** Saa (Hours: 1-12) */
+        sa: addZero(to12(val.getHours())),
+
+        /** Dakika (Minutes: 00-59) */
+        d: addZero(val.getMinutes()),
+
+        /** Sekunde (Seconds: 00-59) */
+        se: addZero(val.getSeconds()),
+
+        /** Milisekunde (Milliseconds: 000-999) */
+        ms: addZero(val.getMilliseconds(), 3),
+
+        /** Wakati (Suffix: asubuhi/mchana/jioni/usiku/alfajiri) */
+        w: findSuffix(val.getHours()),
+
+        /** Siku (Day: Jumapili - Jumamosi) */
+        s: SWDateTime.DAYS[val.getDay()],
+
+        /** Tarehe (Date: 00-31) */
+        t: addZero(val.getDate()),
+
+        /** Mwezi fupi (Month short: 1-12) */
+        m: addZero(val.getMonth() + 1),
+
+        /** Mwezi - jina (Month names: Januari - Desemba) */
+        M: SWDateTime.MONTHS[val.getMonth()],
+
+        /** Mwaka fupi (Year short: 30-29) */
+        mk: val.getFullYear().toString().substring(2),
+
+        /** Mwaka (Year: 1930-2029) */
+        MK: val.getFullYear(),
       };
     } else {
       return {};
@@ -89,21 +114,25 @@ class SWDateTime extends SWValue {
     if (!formatNode instanceof SWString)
       return [null, super.illegalOperation(formatNode)];
 
-    // targets
-    // SA => 00 - 23 (hour/24)
-    // sa => 01 - 12 (hour/12)
-    // se => 00 - 59 (second)
-    // s => Jumapili - Jumamosi (day/name)
-    // MK => 1930 - 2029 (year/long)
-    // mk => 30 - 29 (year/short)
-    // ms => 000 - 999 (milliseconds)
-    // M => Januari - Desemba (month/name)
-    // m => 01 - 12 (month/num)
-    // d => 00 - 59 (minute)
-    // t => 01 - 31 (date)
-    // w => asubuhi/mchana/jioni/usiku/alfajiri (suffix)
+    let formatted = formatNode.value;
+    let output = [];
+    let parts = SWDateTime.getParts(this);
 
-    let format = formatNode.value;
+    for (let i = 0; i < formatted.length; i++) {
+      let charSet =
+        i < formatted.length - 1 ? formatted.substr(i, 2) : formatted[i];
+      let char = formatted[i];
+      if (parts[charSet]) {
+        i++;
+        output.push(parts[charSet]);
+      } else if (parts[char]) {
+        output.push(parts[char]);
+      } else {
+        output.push(char);
+      }
+    }
+
+    return output.join('');
   }
 
   /**
@@ -135,15 +164,12 @@ class SWDateTime extends SWValue {
    * @returns {String}
    */
   toString(showColor = true) {
-    const addZero = (value) =>
-      value < 10 ? '0' + value.toString() : value.toString();
-
     let dateParts = SWDateTime.getParts(this);
-    let hour = addZero(dateParts.hour);
-    let minute = addZero(dateParts.min);
-    let date = addZero(dateParts.date);
-    let month = addZero(dateParts.month);
-    let year = dateParts.year;
+    let hour = dateParts.sa;
+    let min = dateParts.d;
+    let date = dateParts.t;
+    let month = dateParts.m;
+    let year = dateParts.MK;
     let fullDate = `${date}/${month}/${year} ${hour}:${min}`;
     let output = (str) => (showColor ? colors.magenta(str) : str);
     return output(fullDate);
