@@ -7,7 +7,6 @@ wacha sema = soma // kutumia shughuli kwenye hifadha (using a function in a vari
   write all the tasks to the screen
 */
 shughuli onyeshaMipango() {
-  futa() // futa maandishi yote kwenye skrini (clears the screen)
   kwa i = 0 mpaka idadi(mipango) {
     wacha mpango = mipango/i // chagua mpango ya pahala "i" (select the task at index "i")
     wacha hali = kama (mpango/0) { "[x]" } sivyo { "[ ]" }
@@ -83,6 +82,8 @@ shughuli menyuKuu() {
     this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
   */
   ambapo (kweli) {
+    futa() // futa maandishi yote kwenye skrini (clears the screen)
+    andika("TARIHI:")
     onyeshaMipango()
     andika("=================")
     kwa i = 0 mpaka idadi(vyaguo) {
