@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 
-const yargs = require('yargs').argv;
+const args = process.argv.slice(2);
 const fs = require('fs');
 
 const colors = require('colors');
 const readline = require('readline');
-const setTitle = require('node-bash-title');
 
 const print = require('./utils/print');
 const { run } = require('./interpreter');
@@ -56,8 +55,8 @@ rl.on('SIGINT', () => {
   process.exit(0);
 });
 
-if (yargs['_'].length) {
-  let fileName = yargs['_'][0];
+if (args.length) {
+  let fileName = args[0];
   let script = null;
 
   try {
@@ -85,6 +84,5 @@ if (yargs['_'].length) {
   process.exit(0);
 } else {
   // begin the repl
-  setTitle('✨ swahili');
   getInput();
 }

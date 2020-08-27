@@ -24,9 +24,7 @@
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
-    "node-bash-title": "0.0.2",
-    "prompt-sync": "^4.2.0",
-    "yargs": "^15.4.1"
+    "prompt-sync": "^4.2.0"
   },
   "devDependencies": {
     "eslint": "^7.7.0"
