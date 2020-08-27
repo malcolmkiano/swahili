@@ -13,6 +13,7 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWBoolean = require('./types/boolean');
 const SWList = require('./types/list');
+const SWDateTime = require('./types/datetime');
 
 const Lexer = require('../lexer');
 const Parser = require('../parser');
@@ -153,7 +154,17 @@ class Interpreter {
         )
       );
 
-    context.symbolTable.set(varName, value, true);
+    let isSet = context.symbolTable.set(varName, value, true);
+    if (!isSet)
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `Cannot change value of constant '${varName}'`,
+          context
+        )
+      );
+
     return res.success(value);
   };
 
@@ -374,8 +385,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -423,8 +434,8 @@ class Interpreter {
       node.shouldReturnNull
         ? SWNull.NULL
         : new SWList(elements)
-          .setContext(context)
-          .setPosition(node.posStart, node.posEnd)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
     );
   };
 
@@ -443,7 +454,28 @@ class Interpreter {
       .setContext(context)
       .setPosition(node.posStart, node.posEnd);
 
-    if (node.varNameTok) context.symbolTable.set(funcName, funcValue);
+    if (node.varNameTok) {
+      if (context.symbolTable.get(funcName, true))
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot re-declare '${funcName}'`,
+            context
+          )
+        );
+
+      let isSet = context.symbolTable.set(funcName, funcValue);
+      if (!isSet)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot change value of constant '${funcName}'`,
+            context
+          )
+        );
+    }
 
     return res.success(funcValue);
   };
@@ -1064,6 +1096,44 @@ class SWBuiltInFunction extends SWBaseFunction {
   badili = ['orodha', 'pahala', 'kitu'];
 
   // =========================================================
+  // DATETIME FUNCTIONS
+  // =========================================================
+
+  execute_Tarehe = (executionContext) => {
+    let res = new RTResult();
+    let tarehe = executionContext.symbolTable.get('tarehe');
+    let muundo = executionContext.symbolTable.get('muundo');
+    let val = null;
+    try {
+      if (tarehe instanceof SWString || tarehe instanceof SWDateTime) {
+        let dateString = tarehe.value;
+        val = new Date(dateString);
+        if (val.toString() === 'Invalid Date') throw new Error('Invalid date');
+      } else if (tarehe instanceof SWNull) {
+        val = new Date();
+      } else {
+        throw new Error('Invalid date');
+      }
+    } catch (err) {
+      return res.failure(
+        new RTError(
+          this.posStart,
+          this.posEnd,
+          `Could not create date`,
+          executionContext
+        )
+      );
+    }
+
+    let date = new SWDateTime(val);
+    if (muundo instanceof SWString)
+      return res.success(new SWString(date.toFormat(muundo)));
+
+    return res.success(date);
+  };
+  Tarehe = ['tarehe', 'muundo'];
+
+  // =========================================================
   // EASTER EGGS
   // =========================================================
 
@@ -1161,6 +1231,9 @@ class SWBuiltInFunction extends SWBaseFunction {
   static sizeof = new SWBuiltInFunction('idadi');
   static insert = new SWBuiltInFunction('badili');
 
+  // DateTime generation
+  static newDate = new SWBuiltInFunction('Tarehe');
+
   // Run
   static run = new SWBuiltInFunction('anza');
 
@@ -1178,26 +1251,27 @@ module.exports.SWBuiltInFunction = SWBuiltInFunction;
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', SWNull.NULL); // NULL
-globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
-globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
+globalSymbolTable.setConstant('tupu', SWNull.NULL); // NULL
+globalSymbolTable.setConstant('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.setConstant('uwongo', SWBoolean.FALSE); // FALSE
 
 /** built in functions */
-globalSymbolTable.set('andika', SWBuiltInFunction.print);
-globalSymbolTable.set('soma', SWBuiltInFunction.input);
-globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
-globalSymbolTable.set('futa', SWBuiltInFunction.clear);
-globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
-globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
-globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
-globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
-globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
-globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
-globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
-globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
-globalSymbolTable.set('badili', SWBuiltInFunction.insert);
-globalSymbolTable.set('anza', SWBuiltInFunction.run);
-globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
+globalSymbolTable.setConstant('andika', SWBuiltInFunction.print);
+globalSymbolTable.setConstant('soma', SWBuiltInFunction.input);
+globalSymbolTable.setConstant('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.setConstant('futa', SWBuiltInFunction.clear);
+globalSymbolTable.setConstant('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.setConstant('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.setConstant('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.setConstant('niShughuli', SWBuiltInFunction.isFunction);
+globalSymbolTable.setConstant('niTupu', SWBuiltInFunction.isNull);
+globalSymbolTable.setConstant('Nambari', SWBuiltInFunction.parseNum);
+globalSymbolTable.setConstant('Jina', SWBuiltInFunction.parseStr);
+globalSymbolTable.setConstant('idadi', SWBuiltInFunction.sizeof);
+globalSymbolTable.setConstant('badili', SWBuiltInFunction.insert);
+globalSymbolTable.setConstant('Tarehe', SWBuiltInFunction.newDate);
+globalSymbolTable.setConstant('anza', SWBuiltInFunction.run);
+globalSymbolTable.setConstant('wamlambez', SWBuiltInFunction.easter);
 
 /**
  * Processes a file through the lexer, parser and interpreter

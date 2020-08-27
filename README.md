@@ -2,35 +2,45 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
 
-![Version 0.4.3](https://img.shields.io/badge/version-0.4.3-blue)
+![Version 0.5.2](https://img.shields.io/badge/version-0.5.2-blue)
 
 ## Get Started
 
 ### Installation
 
-Swahili is built on Node. To get started, clone this repo and run `npm start`.
+Swahili is built on Node. To get started, install swahili in your global scope (it doesn't really make sense to add it to a project just yet 🙂).
 
 ```
-> git clone https://github.com/malcolmkiano/swahili
-> cd swahili
-> npm start
+npm install -g swahili-lang
 ```
 
-This will open a terminal for you to type commands into. Try this, for starters:
+To start the REPL, just run `swahili` in your terminal.
+
+```
+swahili
+```
+
+Try things out! Here's a good command to get you started:
 
 ```swahili
-> andika("Jambo Dunia!")
+> andika("Jambo Dunia! Hello, World!")
 ```
 
 ### External files
 
-If you would like to run code from a separate file, use the following command:
+You can pass in a file path to be executed when you run the `swahili` command in your terminal:
+
+```
+swahili ./examples/jambo.swh
+```
+
+Or, if you're running the REPL, you can use the `anza` function, which takes the file path as its argument
 
 ```swahili
 > anza("./path/to/your/file.swh")
 ```
 
-To enable syntax highlighting in VS Code (more coming soon!), follow [this guide](./swahili-syntax/).
+To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), follow [this guide](./swahili-syntax/).
 
 ---
 
