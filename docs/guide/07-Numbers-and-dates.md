@@ -26,10 +26,8 @@ The Keyword to access the date time class is `Tarehe()`. Entered with no paramet
     MK => year long (1930-2020)
 ```
 
-For Example:
-```
-    // Given today's date is May 21<sup>st</sup> 2019 at 1:23pm
-    
+For Example: (assume current date & time is May 21<sup>st</sup> 2019 at 1:23pm)
+```    
     wacha leo = Tarehe()
     // Will print today's date & time
     andika(leo) 
