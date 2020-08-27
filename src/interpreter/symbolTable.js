@@ -1,3 +1,6 @@
+const RTResult = require('./runtimeResult');
+const { RTError } = require('./error');
+
 /**
  * map to hold all variable names and values in the current scope
  * and a pointer to its parent (if any)
@@ -5,6 +8,7 @@
 class SymbolTable {
   constructor(parent) {
     this.symbols = {};
+    this.constants = parent ? parent.constants : {}; // hand constants down every scope
     this.parent = parent;
   }
 
@@ -25,8 +29,13 @@ class SymbolTable {
    * @param {String} name variable name to be assigned
    * @param {*} value value to be assigned to the variable
    * @param {Boolean} deep indicates whether to store variable in first pre-existing scope
+   * @returns {Boolean} indicating whether value was updated
    */
   set(name, value, deep = false) {
+    let res = new RTResult();
+    if (this.constants[name]) {
+      return false;
+    }
     if (!deep) {
       this.symbols[name] = value;
     } else {
@@ -37,6 +46,23 @@ class SymbolTable {
       } else {
         this.symbols[name] = value;
       }
+    }
+
+    return true;
+  }
+
+  /**
+   * assigns a value to a variable as a constant
+   * @param {String} name variable name to be assigned
+   * @param {*} value value to be assigned to the variable
+   */
+  setConstant(name, value) {
+    // Traverse up the scope chain to the highest possible context
+    if (this.parent) {
+      this.parent.setConstant(name, value);
+    } else {
+      this.symbols[name] = value;
+      this.constants[name] = true;
     }
   }
 

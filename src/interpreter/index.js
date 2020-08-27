@@ -154,7 +154,17 @@ class Interpreter {
         )
       );
 
-    context.symbolTable.set(varName, value, true);
+    let isSet = context.symbolTable.set(varName, value, true);
+    if (!isSet)
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `'${varName}' is reserved and cannot be overwritten`,
+          context
+        )
+      );
+
     return res.success(value);
   };
 
@@ -444,7 +454,28 @@ class Interpreter {
       .setContext(context)
       .setPosition(node.posStart, node.posEnd);
 
-    if (node.varNameTok) context.symbolTable.set(funcName, funcValue);
+    if (node.varNameTok) {
+      if (context.symbolTable.get(funcName, true))
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot re-declare '${funcName}'`,
+            context
+          )
+        );
+
+      let isSet = context.symbolTable.set(funcName, funcValue);
+      if (!isSet)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `'${funcName}' is reserved and cannot be overwritten`,
+            context
+          )
+        );
+    }
 
     return res.success(funcValue);
   };
@@ -1220,27 +1251,27 @@ module.exports.SWBuiltInFunction = SWBuiltInFunction;
 const globalSymbolTable = new SymbolTable();
 
 /** instantiate predefined global vars */
-globalSymbolTable.set('tupu', SWNull.NULL); // NULL
-globalSymbolTable.set('kweli', SWBoolean.TRUE); // TRUE
-globalSymbolTable.set('uwongo', SWBoolean.FALSE); // FALSE
+globalSymbolTable.setConstant('tupu', SWNull.NULL); // NULL
+globalSymbolTable.setConstant('kweli', SWBoolean.TRUE); // TRUE
+globalSymbolTable.setConstant('uwongo', SWBoolean.FALSE); // FALSE
 
 /** built in functions */
-globalSymbolTable.set('andika', SWBuiltInFunction.print);
-globalSymbolTable.set('soma', SWBuiltInFunction.input);
-globalSymbolTable.set('somaNambari', SWBuiltInFunction.inputNumber);
-globalSymbolTable.set('futa', SWBuiltInFunction.clear);
-globalSymbolTable.set('niNambari', SWBuiltInFunction.isNumber);
-globalSymbolTable.set('niJina', SWBuiltInFunction.isString);
-globalSymbolTable.set('niOrodha', SWBuiltInFunction.isList);
-globalSymbolTable.set('niShughuli', SWBuiltInFunction.isFunction);
-globalSymbolTable.set('niTupu', SWBuiltInFunction.isNull);
-globalSymbolTable.set('Nambari', SWBuiltInFunction.parseNum);
-globalSymbolTable.set('Jina', SWBuiltInFunction.parseStr);
-globalSymbolTable.set('idadi', SWBuiltInFunction.sizeof);
-globalSymbolTable.set('badili', SWBuiltInFunction.insert);
-globalSymbolTable.set('Tarehe', SWBuiltInFunction.newDate);
-globalSymbolTable.set('anza', SWBuiltInFunction.run);
-globalSymbolTable.set('wamlambez', SWBuiltInFunction.easter);
+globalSymbolTable.setConstant('andika', SWBuiltInFunction.print);
+globalSymbolTable.setConstant('soma', SWBuiltInFunction.input);
+globalSymbolTable.setConstant('somaNambari', SWBuiltInFunction.inputNumber);
+globalSymbolTable.setConstant('futa', SWBuiltInFunction.clear);
+globalSymbolTable.setConstant('niNambari', SWBuiltInFunction.isNumber);
+globalSymbolTable.setConstant('niJina', SWBuiltInFunction.isString);
+globalSymbolTable.setConstant('niOrodha', SWBuiltInFunction.isList);
+globalSymbolTable.setConstant('niShughuli', SWBuiltInFunction.isFunction);
+globalSymbolTable.setConstant('niTupu', SWBuiltInFunction.isNull);
+globalSymbolTable.setConstant('Nambari', SWBuiltInFunction.parseNum);
+globalSymbolTable.setConstant('Jina', SWBuiltInFunction.parseStr);
+globalSymbolTable.setConstant('idadi', SWBuiltInFunction.sizeof);
+globalSymbolTable.setConstant('badili', SWBuiltInFunction.insert);
+globalSymbolTable.setConstant('Tarehe', SWBuiltInFunction.newDate);
+globalSymbolTable.setConstant('anza', SWBuiltInFunction.run);
+globalSymbolTable.setConstant('wamlambez', SWBuiltInFunction.easter);
 
 /**
  * Processes a file through the lexer, parser and interpreter
