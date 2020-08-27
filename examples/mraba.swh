@@ -3,7 +3,7 @@ shughuli mraba(nambari){
   rudisha(nambari^2)
 }
 
-// Rudia sehemu hii mara kumi, 11 haihesabiwi (Repeat this segment 10 times, 11 is excluded)
+// Rudia sehemu hii mara kumi; 11 haihesabiwi (Repeat this segment 10 times; 11 is excluded)
 */
 kwa i = 1 mpaka 11 { 
   andika(mraba(i))
