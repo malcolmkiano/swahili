@@ -11,7 +11,7 @@ A new programming language with semantics borrowed from the Swahili language to 
 Swahili is built on Node. To get started, install swahili in your global scope (it doesn't really make sense to add it to a project just yet 🙂).
 
 ```
-npm install -g swahili
+npm install -g swahili-lang
 ```
 
 To start the REPL, just run `swahili` in your terminal.

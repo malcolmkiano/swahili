@@ -1,17 +1,17 @@
 {
-  "name": "swahili",
+  "name": "swahili-lang",
   "version": "0.5.2",
   "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/malcolmkiano/swahili"
+    "url": "git+https://github.com/malcolmkiano/swahili.git"
   },
   "main": "bin/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
-    "swahili": "./bin/index.js"
+    "swahili": "bin/index.js"
   },
   "keywords": [
     "swahili",
@@ -30,5 +30,13 @@
   },
   "devDependencies": {
     "eslint": "^7.7.0"
+  },
+  "bugs": {
+    "url": "https://github.com/malcolmkiano/swahili/issues"
+  },
+  "homepage": "https://github.com/malcolmkiano/swahili#readme",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
   }
 }
