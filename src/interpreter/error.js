@@ -1,3 +1,5 @@
+const stringWithArrows = require('../utils/stringWithArrows');
+
 class Error {
   /**
    * Error representation class
@@ -103,6 +105,10 @@ class RTError extends Error {
   toString() {
     let result = this.generateTraceback();
     result += `${this.errorName}: ${this.details}`;
+    if (this.posStart.fileName === '<stdin>')
+      result +=
+        '\n\n' +
+        stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
     return result;
   }
 }
