@@ -2,7 +2,8 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
 
-![Version 0.5.2](https://img.shields.io/badge/version-0.5.2-blue)
+![Version 0.6.1](https://img.shields.io/badge/version-0.6.1-blue)
+![2 Dependencies](https://img.shields.io/badge/dependencies-2-yellow)
 
 ## Get Started
 
@@ -68,7 +69,9 @@ To enable syntax highlighting for your Swahili programs in VS Code (more coming 
 ### Beginner
 
 - [Jambo, Dunia! (Hello, World!)](./examples/jambo.swh)
-- [Mraba (Squares)](./examples/)
+- [Vitanzi (Loops)](./examples/vitanzi.swh)
+- [Mraba (Squares)](./examples/mraba.swh)
+- [FizzBuzz](./examples/fizzbuzz.swh)
 
 ### Intermediate
 

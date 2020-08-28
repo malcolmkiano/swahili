@@ -29,7 +29,7 @@ class Interpreter {
      * The maximum number of calls to a while loop that will run before
      * being forcefully terminated
      */
-    this.maxCallStackSize = 10000;
+    this.maxCallStackSize = 100000;
   }
 
   /**
@@ -334,15 +334,13 @@ class Interpreter {
       stepValue = res.register(this.visit(node.stepValueNode, context));
     }
 
+    let calls = 0;
     let i = startValue.value;
 
-    if (stepValue.value >= 0) {
-      condition = () => i < endValue.value;
-    } else {
-      condition = () => i > endValue.value;
-    }
-
-    let calls = 0;
+    condition =
+      stepValue.value >= 0
+        ? () => i < endValue.value
+        : () => i > endValue.value;
 
     let originalScope = context.symbolTable;
     let blockScope = new SymbolTable(context.symbolTable);
@@ -377,6 +375,76 @@ class Interpreter {
             context
           )
         );
+    }
+
+    context.symbolTable = originalScope;
+
+    return res.success(
+      node.shouldReturnNull
+        ? SWNull.NULL
+        : new SWList(elements)
+            .setContext(context)
+            .setPosition(node.posStart, node.posEnd)
+    );
+  };
+
+  /**
+   * Evaluates a for each node and returns the value of the expression for the number of times in the result
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @returns {RTResult}
+   */
+  visitForEachNode = (node, context) => {
+    let res = new RTResult();
+    let elements = [];
+
+    let iteratorValue = res.register(this.visit(node.iterationNode, context));
+    if (res.shouldReturn()) return res;
+
+    if (!iteratorValue instanceof SWList && !iteratorValue instanceof SWString)
+      return res.failure(
+        new RTError(
+          node.iteratorValue.posStart,
+          node.iteratorValue.posEnd,
+          `Cannot iterate over non-iterable '${iteratorValue.toString(false)}'`,
+          context
+        )
+      );
+
+    let iterable = iteratorValue.value
+      ? iteratorValue.value.split('').map((s) => new SWString(s))
+      : iteratorValue.elements;
+
+    if (!iterable)
+      return res.failure(
+        new RTError(
+          node.iteratorValue.posStart,
+          node.iteratorValue.posEnd,
+          `Cannot iterate over non-iterable '${iteratorValue.toString(false)}'`,
+          context
+        )
+      );
+
+    let originalScope = context.symbolTable;
+    let blockScope = new SymbolTable(context.symbolTable);
+    context.symbolTable = blockScope;
+    context.symbolTable.set(node.varNameTok.value, iterable[0]);
+
+    for (let i = 0; i < iterable.length; i++) {
+      context.symbolTable = new SymbolTable(context.symbolTable);
+      context.symbolTable.set(node.varNameTok.value, iterable[i], true);
+
+      let value = res.register(this.visit(node.bodyNode, context));
+      if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
+        return res;
+
+      if (res.loopShouldContinue) continue;
+      if (res.loopShouldBreak) break;
+
+      elements.push(value);
+
+      // restore original context
+      context.symbolTable = blockScope;
     }
 
     context.symbolTable = originalScope;
@@ -609,10 +677,11 @@ class SWBaseFunction extends SWValue {
 
   /**
    * string representation of the function class
+   * @param {Boolean} format whether to format the name or not
    * @returns {String}
    */
-  toString() {
-    return colors.cyan(`<shughuli ${this.name}>`);
+  toString(format = true) {
+    return format ? colors.cyan(`<shughuli ${this.name}>`) : this.name;
   }
 }
 
@@ -720,10 +789,13 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   /**
    * string representation of the function class
+   * @param {Boolean} format whether to format the name or not
    * @returns {String}
    */
-  toString() {
-    return colors.brightCyan(`<shughuli asili ${this.name}>`);
+  toString(format = true) {
+    return format
+      ? colors.brightCyan(`<shughuli asili ${this.name}>`)
+      : this.name;
   }
 
   // =========================================================

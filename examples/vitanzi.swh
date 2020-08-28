@@ -1,0 +1,33 @@
+wacha watu = [
+  ["Juma", 25, "Nairobi", "Kenya"],
+  ["Hali", 22, "Washington", "USA"],
+  ["Ann", 20, "Coventry", "UK"],
+  ["Eduardo", 19, "Kigali", "Rwanda"]
+]
+
+// kwa ... mpaka idadi
+// andika watu walio na umri chini ya 21
+kwa i = 0 mpaka idadi(watu) {
+  wacha mtu = watu/i
+  wacha jina = mtu/0
+  wacha umri = mtu/1
+  wacha mji = mtu/2
+  wacha nchi = mtu/3
+
+  kama (umri < 21) {
+    andika(jina + " kutoka " + mji + ", " + nchi)
+  }
+}
+
+// kwa ... katika
+// andika watu walio na umri 21 au zaidi
+kwa mtu katika watu {
+  wacha jina = mtu/0
+  wacha umri = mtu/1
+  wacha mji = mtu/2
+  wacha nchi = mtu/3
+
+  kama (umri >= 21) {
+    andika(jina + " kutoka " + mji + ", " + nchi)
+  }
+}

@@ -20,10 +20,11 @@ class Error {
    * @returns {String}
    */
   toString() {
+    let pos = this.posStart;
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `at ${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
-      this.posStart.colNumber + 1
-    }`;
+    result += `at "${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}"`;
+    if (pos.fileName === '<stdin>')
+      result += '\n\n' + stringWithArrows(pos.fileText, pos, this.posEnd);
     return result;
   }
 }
@@ -88,7 +89,7 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `at ${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}, in ${
+        `at "${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}", in ${
           ctx.displayName
         }\n` + result;
       pos = ctx.parentEntryPos;
@@ -103,12 +104,11 @@ class RTError extends Error {
    * @returns {String}
    */
   toString() {
+    let pos = this.posStart;
     let result = this.generateTraceback();
     result += `${this.errorName}: ${this.details}`;
-    if (this.posStart.fileName === '<stdin>')
-      result +=
-        '\n\n' +
-        stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
+    if (pos.fileName === '<stdin>')
+      result += '\n\n' + stringWithArrows(pos.fileText, pos, this.posEnd);
     return result;
   }
 }

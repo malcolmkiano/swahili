@@ -19,8 +19,10 @@ kwa y = 1 Mpaka 10 {
 
 You can also loop through a list using the kwa katika syntax instead
 
-**Syntax 2**: Kwa - Katika 
+**Syntax 2**: Kwa - Katika
+
 - Example:
+
 ```
   kwa i katika ["Malcolm", "Patrick", "Kiano"]{
     andika(i)
@@ -29,13 +31,16 @@ You can also loop through a list using the kwa katika syntax instead
     >> "Patrick"
     >> "Kiano"
 ```
-This syntax also works if you pass in a variable that holds a list. For instance: 
+
+This syntax also works if you pass in a variable that holds a list. For instance:
+
 ```
   wacha majina = ["Malcolm", "Patrick", "Kiano"]
   kwa i katika majina{
     andika(i)
   }
 ```
+
 You can also loop through each character in a string by passing that string or a variable name that holds a string as shown below
 
 ```
@@ -49,7 +54,7 @@ You can also loop through each character in a string by passing that string or a
     >>"o"
 ```
 
-Basically, the Kwa...Katika syntax accepts list expressions, String expressions, identifiers or function calls to functions that evaluate to a list or a string. 
+Basically, the Kwa...Katika syntax accepts list expressions, String expressions, identifiers or function calls to functions that evaluate to a list or a string.
 
 ## While Loops
 

@@ -1,6 +1,6 @@
 /*
   Shughuli inayojirudia mpaka ifike hali kamilifu (ambapo nambari = 0 au 1)
-  =
+  
   A function that recurses (calls itself) until it reaches its base case (when nambari = 0 or 1)
 */
 shughuli fibonacci(nambari){
@@ -17,7 +17,7 @@ shughuli fibonacci(nambari){
 
 /*
   Mtumizi ataandika nambari ya vifaa anavyotaka kuonyeshwa
-  =
+  
   The user enters the number of Fibonacci numbers to output
 */
 wacha nambari = somaNambari("Nambari? ")
