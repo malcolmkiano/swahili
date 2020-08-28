@@ -24,22 +24,22 @@ This will be updated as the language develops
 |                   | LPAREN `expr` RPAREN                                     |
 |                   | `list-expr`                                              |
 |                   | `if-expr`                                                |
-|                   | `for-expr`                                               |
-|                   | `for-each-expr`                                          |
 |                   | `while-expr`                                             |
 |                   | `func-def`                                               |
+|                   | `for-expr`                                               |
+|                   | `for-each-expr`                                          |
 | **list-expr**     | LSQUARE (`expr` (COMMA `expr`)\*)? RSQUARE               |
 | **if-expr**       | KEYWORD:KAMA `expr` LCURL                                |
 |                   | (`statements` RCURL `if-expr-b`\|`if-expr-c`?)           |
 | **if-expr-b**     | KEYWORD:AU `expr` LCURL                                  |
 |                   | (`statements` RCURL `if-expr-b`\|`if-expr-c`?)           |
 | **if-expr-c**     | KEYWORD:SIVYO LCURL `statements` RCURL                   |
+| **while-expr**    | KEYWORD:AMBAPO `expr` LCURL `statements` RCURL           |
+| **func-def**      | KEYWORD:SHUGHULI IDENTIFIER?                             |
+|                   | LPAREN (IDENTIFIER (COMMA IDENTIFIER)\*)? RPAREN         |
+|                   | LCURL `statements` RCURL                                 |
 | **for-expr**      | KEYWORD:KWA IDENTIFIER (`for-to-expr`\|`for-each-expr`)  |
 | **for-to-expr**   | EQ `expr` KEYWORD:MPAKA `expr` (KEYWORD:HATUA `expr`)?   |
 |                   | LCURL `statements` RCURL                                 |
 | **for-each-expr** | KEYWORD:KATIKA (STRING\|IDENTIFIER\|`list-expr`\|`call`) |
-|                   | LCURL `statements` RCURL                                 |
-| **while-expr**    | KEYWORD:AMBAPO `expr` LCURL `statements` RCURL           |
-| **func-def**      | KEYWORD:SHUGHULI IDENTIFIER?                             |
-|                   | LPAREN (IDENTIFIER (COMMA IDENTIFIER)\*)? RPAREN         |
 |                   | LCURL `statements` RCURL                                 |
