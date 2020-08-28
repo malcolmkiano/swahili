@@ -13,6 +13,7 @@ const {
   UnaryOpNode,
   IfNode,
   ForNode,
+  ForEachNode,
   WhileNode,
   FuncDefNode,
   CallNode,
@@ -726,12 +727,21 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
+    // check for keyword
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.in)) {
+      let forEach = res.register(this.forEachExpr(varName));
+      if (res.error) return res;
+
+      return res.success(forEach);
+    }
+
+    // if not a keyword or an equals, that's a problem
     if (this.currentTok.type !== TT.EQ) {
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${lc(LEX.equals.source)}'`
+          `Expected '${lc(LEX.equals.source)}' or '${lc(LEX.keywords.in)}'`
         )
       );
     }
@@ -799,6 +809,78 @@ class Parser {
     return res.success(
       new ForNode(varName, startValue, endValue, stepValue, body, true)
     );
+  };
+
+  /** generates a for each node  */
+  forEachExpr = (varName) => {
+    let res = new ParseResult();
+
+    // if not a keyword, that's a problem
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.in)) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.keywords.in)}'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    let iteration = null;
+    if (this.currentTok.type === TT.LSQUARE) {
+      iteration = res.register(this.listExpr());
+      if (res.error) return res;
+    } else if (this.currentTok.type === TT.STRING) {
+      iteration = res.register(this.atom());
+      if (res.error) return res;
+    } else if (this.currentTok.type === TT.IDENTIFIER) {
+      iteration = res.register(this.call());
+      if (res.error) return res;
+    } else {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.leftSquare.source)}', '${lc(TT.STRING)}' or '${lc(
+            TT.IDENTIFIER
+          )}'`
+        )
+      );
+    }
+
+    if (this.currentTok.type !== TT.LCURL) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.leftCurly.source)}'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    let body = res.register(this.statements());
+    if (res.error) return res;
+
+    if (this.currentTok.type !== TT.RCURL) {
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.rightCurly.source)}'`
+        )
+      );
+    }
+
+    res.registerAdvancement();
+    this.advance();
+
+    return res.success(new ForEachNode(varName, iteration, body, true));
   };
 
   /** creates a while node */

@@ -24,6 +24,10 @@ class Error {
     result += `at ${this.posStart.fileName}:${this.posStart.lineNumber + 1}:${
       this.posStart.colNumber + 1
     }`;
+    if (this.posStart.fileName === '<stdin>')
+      result +=
+        '\n\n' +
+        stringWithArrows(this.posStart.fileText, this.posStart, this.posEnd);
     return result;
   }
 }

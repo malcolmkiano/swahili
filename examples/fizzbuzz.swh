@@ -4,17 +4,17 @@ Fizz buzz is a challenge where we loop from numbers 0 - 100. When we encounter a
 Fizz buzz ni shindano la wanaprogramu ambapo wanastahili kuandika programu itakayo pitia nambari 0 hadi  mia moja. Programu ikipata nambari inayoweza kugawa kwa 3 inafaa iandike "Fizz", iwapo nambari inaweza kugawa kwa 5, inafaa iandike "Buzz" na iwapo inaweza gawanyika kwa 3 na 5, inastahili iandike "fizzbuzz"
 */
 shughuli fizzBuzz(nambari){
-    kwa i = 1 mpaka (nambari+1){
-        kama (i%15 == 0){
-            andika (Jina(i) + ": Fizz Buzz");
-        } au (i%5 == 0){
-            andika (Jina(i) + ": Buzz");
-        } au (i % 3 == 0){
-            andika (Jina(i)+ ": Fizz ");
-        } sivyo {
-            andika (i);
-        }
+  kwa i = 1 mpaka (nambari+1){
+    kama (i %1 5 == 0){
+      andika (Jina(i) + ": Fizz Buzz");
+    } au (i % 5 == 0){
+      andika (Jina(i) + ": Buzz");
+    } au (i % 3 == 0){
+      andika (Jina(i) + ": Fizz ");
+    } sivyo {
+      andika (i);
     }
+  }
 }
 
 fizzBuzz(100);

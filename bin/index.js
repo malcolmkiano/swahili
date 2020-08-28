@@ -84,5 +84,6 @@ if (args.length) {
   process.exit(0);
 } else {
   // begin the repl
+  console.clear();
   getInput();
 }
