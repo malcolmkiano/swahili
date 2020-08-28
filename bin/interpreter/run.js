@@ -7,22 +7,19 @@ const SymbolTable = require('./symbolTable');
 const SWBuiltInFunction = require('./types/built-in-function');
 const SWBoolean = require('./types/boolean');
 const SWNull = require('./types/null');
-const LibFunctions = require('./lib');
+const { libFunctions, libConstants } = require('./lib');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();
 
-// instantiate global constants
-globalSymbolTable.setConstant('tupu', SWNull.NULL); // NULL
-globalSymbolTable.setConstant('kweli', SWBoolean.TRUE); // TRUE
-globalSymbolTable.setConstant('uwongo', SWBoolean.FALSE); // FALSE
-
 // library injection
-for (let {
-  method: { name },
-} of LibFunctions) {
-  let fn = name;
-  globalSymbolTable.setConstant(fn, new SWBuiltInFunction(fn));
+for (let [libConst, value] of Object.entries(libConstants)) {
+  globalSymbolTable.setConstant(libConst, value);
+}
+
+for (let fn of libFunctions) {
+  let libFn = fn.method.name;
+  globalSymbolTable.setConstant(libFn, new SWBuiltInFunction(libFn));
 }
 
 /**

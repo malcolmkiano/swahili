@@ -1,4 +1,8 @@
 // =====================================================
+// Constants
+const libConstants = require('./constants');
+
+// =====================================================
 // I/O methods
 const andika = require('./io/andika');
 const soma = require('./io/soma');
@@ -30,21 +34,24 @@ const wamlambez = require('./misc/wamlambez');
 
 // =====================================================
 // Exports
-module.exports = [
-  andika,
-  soma,
-  somaNambari,
-  futa,
-  niNambari,
-  niJina,
-  niOrodha,
-  niShughuli,
-  niTupu,
-  niTarehe,
-  Nambari,
-  Jina,
-  Tarehe,
-  idadi,
-  badili,
-  wamlambez,
-];
+module.exports = {
+  libConstants,
+  libFunctions: [
+    andika,
+    soma,
+    somaNambari,
+    futa,
+    niNambari,
+    niJina,
+    niOrodha,
+    niShughuli,
+    niTupu,
+    niTarehe,
+    Nambari,
+    Jina,
+    Tarehe,
+    idadi,
+    badili,
+    wamlambez,
+  ],
+};

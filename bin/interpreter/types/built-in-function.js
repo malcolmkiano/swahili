@@ -1,16 +1,9 @@
 const util = require('util');
 const colors = require('colors');
 
-const LibFunctions = require('../lib');
-
-const SWNull = require('./null');
-const SWNumber = require('./number');
-const SWString = require('./string');
-const SWBoolean = require('./boolean');
-const SWList = require('./list');
+const { libFunctions } = require('../lib');
 
 const SWBaseFunction = require('./base-function');
-const SWDateTime = require('./datetime');
 const RTResult = require('../runtimeResult');
 
 /** Built in function data type */
@@ -23,10 +16,10 @@ class SWBuiltInFunction extends SWBaseFunction {
     super(name);
 
     // library injection
-    for (let { method, args } of LibFunctions) {
-      let fn = method.name;
-      this[`execute_${fn}`] = method;
-      this[fn] = args;
+    for (let { method, args } of libFunctions) {
+      let name = method.name;
+      this[`execute_${name}`] = method;
+      this[name] = args;
     }
   }
 
