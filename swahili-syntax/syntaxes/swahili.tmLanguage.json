@@ -27,9 +27,6 @@
           "include": "#functioncall"
         },
         {
-          "include": "#if"
-        },
-        {
           "include": "#ifblock"
         },
         {
@@ -40,6 +37,9 @@
         },
         {
           "include": "#operator"
+        },
+        {
+          "include": "#control"
         },
         {
           "include": "#keyword"
@@ -102,7 +102,7 @@
       "begin": "\\b(shughuli)(\\s+(((\\w(\\w|\\d)*)\\.)*(\\w(\\w|\\d)*)))?\\s*(\\()((\\.\\.\\.|\\w(\\w|\\d)*)(,\\s*(\\.\\.\\.|\\w(\\w|\\d)*))*)?(\\))",
       "beginCaptures": {
         "1": {
-          "name": "keyword.control.swh"
+          "name": "keyword.other.swh"
         },
         "3": {
           "name": "entity.name.function.swh"
@@ -205,9 +205,13 @@
       "name": "keyword.operator.swh",
       "match": "(\\+|-|%|\\*|\\/|\\^|==|<=|>=|<|>|&&|\\|\\|)"
     },
-    "keyword": {
+    "control": {
       "name": "keyword.control.swh",
-      "match": "\\b(ondoka|sivyo|kwa|kama|au|rudisha|katika|ambapo|shughuli|endelea|wacha)\\b"
+      "match": "\\b(ondoka|sivyo|kwa|mpaka|kama|au|rudisha|katika|ambapo|endelea)\\b"
+    },
+    "keyword": {
+      "name": "keyword.other.swh",
+      "match": "\\b(wacha|shughuli)\\b"
     },
     "variable": {
       "name": "variable.other.swh",
