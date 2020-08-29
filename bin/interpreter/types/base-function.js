@@ -18,6 +18,7 @@ class SWBaseFunction extends SWValue {
   constructor(name) {
     super();
     this.name = name || '<isiyotambuliwa>';
+    this.symbolTable = new SymbolTable();
   }
 
   /**
@@ -45,6 +46,7 @@ class SWBaseFunction extends SWValue {
       if (argValue) {
         argValue.setContext(executionContext);
         executionContext.symbolTable.set(argName, argValue);
+        this.symbolTable.set(`__${argName}`, argValue);
       }
     }
 
