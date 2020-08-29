@@ -26,7 +26,9 @@ class SWFunction extends SWBaseFunction {
     let res = new RTResult();
     let executionContext = this.generateNewContext();
 
-    res.register(this.populateArgs(this.argNames, args, executionContext));
+    res.register(
+      this.populateArgs(this.argNames, args, executionContext, true)
+    );
     if (res.shouldReturn()) return res;
 
     res.register(this.interpreter.visit(this.bodyNode, executionContext));

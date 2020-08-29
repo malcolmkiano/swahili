@@ -1,29 +1,16 @@
-/*
-  Shughuli inayojirudia mpaka ifike hali kamilifu (ambapo nambari = 0 au 1)
-  
-  A function that recurses (calls itself) until it reaches its base case (when nambari = 0 or 1)
-*/
+// Shughuli inayojirudia mpaka ifike hali kamilifu (ambapo nambari <= 1)
+// A function that recurses (calls itself) until it reaches its base case (when nambari <= 1)
 shughuli fibonacci(nambari){
-  wacha tokeo = 0;
-  
-  kama (nambari == 0 || nambari == 1){
-    tokeo = nambari
-  } sivyo {
-    tokeo = fibonacci(nambari - 1) + fibonacci(nambari - 2)
+  kama (nambari <= 1) {
+    rudisha 1;
   }
 
-  rudisha tokeo
+  rudisha fibonacci(nambari - 1) + fibonacci(nambari - 2);
 }
 
-/*
-  Mtumizi ataandika nambari ya vifaa anavyotaka kuonyeshwa
-  
-  The user enters the number of Fibonacci numbers to output
-*/
+// Mtumizi ataandika nambari ya vifaa anavyotaka kuonyeshwa
+// The user enters the number of Fibonacci numbers to output
 wacha nambari = somaNambari("Nambari? ")
-wacha matokeo = []
 kwa i = 0 mpaka nambari {
-  matokeo = matokeo + fibonacci(i)
+  andika(fibonacci(i))
 }
-
-andika(matokeo)

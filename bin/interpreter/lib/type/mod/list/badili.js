@@ -17,8 +17,8 @@ function badili(inst, executionContext) {
   if (!orodha)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'orodha' is required`,
         executionContext
       )
@@ -27,8 +27,8 @@ function badili(inst, executionContext) {
   if (!pahala)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'pahala' is required`,
         executionContext
       )
@@ -37,8 +37,8 @@ function badili(inst, executionContext) {
   if (!kitu)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'kitu' is required`,
         executionContext
       )

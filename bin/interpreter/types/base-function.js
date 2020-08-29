@@ -34,14 +34,18 @@ class SWBaseFunction extends SWValue {
    * @param {String[]} argNames list of argument names from function definition
    * @param {Node[]} args list of argument nodes
    * @param {Context} executionContext executing context
+   * @param {Boolean} nullType whether to replace null args with a SWNull value
    */
-  populateArgs(argNames, args, executionContext) {
+  populateArgs(argNames, args, executionContext, nullType = false) {
     let res = new RTResult();
+    let nullValue = nullType ? SWNull.NULL : null;
     for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
-      let argValue = i < args.length ? args[i] : SWNull.NULL;
-      argValue.setContext(executionContext);
-      executionContext.symbolTable.set(argName, argValue);
+      let argValue = i < args.length ? args[i] : nullValue;
+      if (argValue) {
+        argValue.setContext(executionContext);
+        executionContext.symbolTable.set(argName, argValue);
+      }
     }
 
     return res.success(SWNull.NULL);
