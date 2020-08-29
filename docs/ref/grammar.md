@@ -1,4 +1,4 @@
-### Grammar
+# Grammar
 
 This will be updated as the language develops
 

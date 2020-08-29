@@ -1,6 +1,6 @@
 # Swahili
 
-A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
+A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to native Swahili-speaking students.
 
 ![Version 0.6.5](https://img.shields.io/badge/version-0.6.5-blue)
 [![Run on Repl.it](https://repl.it/badge/github/malcolmkiano/swahili)](https://repl.it/github/malcolmkiano/swahili)
@@ -9,7 +9,7 @@ A new programming language with semantics borrowed from the Swahili language to 
 
 ### Installation
 
-Swahili is built on Node. To get started, install swahili in your global scope (it doesn't really make sense to add it to a project just yet 🙂).
+Swahili is built on Node. To get started, you can install Swahili, or follow the instructions to run without installing.
 
 ```
 npm install -g swahili-lang
@@ -37,6 +37,14 @@ swahili ./examples/jambo.swh
 
 To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), get [this VS Code extension](https://marketplace.visualstudio.com/items?itemName=swahili-lang.swahili-syntax).
 
+### Run without installing
+
+If you'd like to run without installing, simply use:
+
+```
+npx swahili-lang [filename]
+```
+
 ---
 
 ## Documentation
@@ -53,24 +61,18 @@ To enable syntax highlighting for your Swahili programs in VS Code (more coming 
 
 ### References
 
-1. [Grammar](./docs/ref/grammar.md)
-2. [Built-in functions](./docs/ref/built-in-functions.md)
+- [Grammar](./docs/ref/grammar.md)
+- [Built-in functions](./docs/ref/built-in-functions.md)
+- [Constants](./docs/ref/constants.md)
 
 ---
 
 ## Examples
 
-### Beginner
-
 - [Jambo, Dunia! (Hello, World!)](./examples/jambo.swh)
 - [Vitanzi (Loops)](./examples/vitanzi.swh)
 - [Mraba (Squares)](./examples/mraba.swh)
 - [FizzBuzz](./examples/fizzbuzz.swh)
-
-### Intermediate
-
+- [Vyupa 99 (99 Bottles)](./examples/99.swh)
 - [Mfuatano wa Fibonacci (Fibonacci Sequence)](./examples/fibonacci.swh)
-
-### Advanced
-
 - [Tarihi (To-do List)](./examples/tarihi.swh)

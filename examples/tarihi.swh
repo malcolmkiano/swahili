@@ -72,11 +72,8 @@ shughuli menyuKuu() {
     ["Ondoa mpango", ondoaMpango]
   ]
 
-  /*
-    kitanzi hiki kitakachoendelea mpaka kiondokwe kwa kutumia "rudisha" au "ondoka"
-    
-    this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
-  */
+  // kitanzi hiki kitakachoendelea mpaka kiondokwe kwa kutumia "rudisha" au "ondoka"
+  // this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
   ambapo (kweli) {
     futa() // futa maandishi yote kwenye skrini (clears the screen)
     andika("TARIHI:")

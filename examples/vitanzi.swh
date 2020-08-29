@@ -7,6 +7,8 @@ wacha watu = [
 
 // kwa ... mpaka idadi
 // andika watu walio na umri chini ya 21
+// loop for a range of numbers (in this case, 0 till the length of the "watu" list)
+// print everyone whose age is less than 21
 kwa i = 0 mpaka idadi(watu) {
   wacha mtu = watu/i
   wacha jina = mtu/0
@@ -21,6 +23,8 @@ kwa i = 0 mpaka idadi(watu) {
 
 // kwa ... katika
 // andika watu walio na umri 21 au zaidi
+// loop for each item in a list
+// print everyone whose age is >= 21
 kwa mtu katika watu {
   wacha jina = mtu/0
   wacha umri = mtu/1
