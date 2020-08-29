@@ -7,7 +7,7 @@ const RTResult = require('../../runtimeResult');
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
-function somaNambari(executionContext) {
+function somaNambari(inst, executionContext) {
   let res = new RTResult();
   let swali = executionContext.symbolTable.get('swali');
   swali = swali ? swali.toString(false) : '> ';
@@ -23,6 +23,5 @@ function somaNambari(executionContext) {
 
   return res.success(new SWNumber(numInput || 0));
 }
-somaNambari = ['swali'];
 
 module.exports = { method: somaNambari, args: ['swali'] };

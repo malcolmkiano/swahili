@@ -2,7 +2,7 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to swahili speaking students.
 
-![Version 0.6.3](https://img.shields.io/badge/version-0.6.3-blue)
+![Version 0.6.4](https://img.shields.io/badge/version-0.6.4-blue)
 
 ## Get Started
 
@@ -34,7 +34,7 @@ You can pass in a file path to be executed when you run the `swahili` command in
 swahili ./examples/jambo.swh
 ```
 
-To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), follow [this guide](https://github.com/malcolmkiano/swahili-syntax/).
+To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), get [this VS Code extension](https://marketplace.visualstudio.com/items?itemName=swahili-lang.swahili-syntax).
 
 ---
 
