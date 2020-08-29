@@ -1,6 +1,7 @@
 const SWBaseFunction = require('./base-function');
 const SWNull = require('./null');
 const RTResult = require('../runtimeResult');
+const SymbolTable = require('../symbolTable');
 
 /** Function data type */
 class SWFunction extends SWBaseFunction {
@@ -31,7 +32,7 @@ class SWFunction extends SWBaseFunction {
     );
     if (res.shouldReturn()) return res;
 
-    res.register(this.interpreter.visit(this.bodyNode, executionContext));
+    res.register(this.interpreter.visit(this.bodyNode, executionContext, this));
     if (res.shouldReturn() && res.funcReturnValue === null) return res;
 
     let returnValue = res.funcReturnValue;
@@ -49,6 +50,8 @@ class SWFunction extends SWBaseFunction {
       this.argNames,
       this.interpreter
     );
+    copy.symbolTable = new SymbolTable();
+    copy.symbolTable.symbols = { ...this.symbolTable.symbols };
     copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;

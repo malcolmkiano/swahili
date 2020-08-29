@@ -26,11 +26,12 @@ class Interpreter {
    * Evaluates an AST node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    */
-  visit(node, context) {
+  visit(node, context, __caller = null) {
     let methodName = `visit${node.constructor.name}`;
     let method = this[methodName] || this.noVisitMethod;
-    return method(node, context);
+    return method(node, context, __caller);
   }
 
   /**
@@ -76,14 +77,15 @@ class Interpreter {
    * Evaluates a list node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitListNode = (node, context) => {
+  visitListNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let elements = [];
 
     for (let elementNode of node.elementNodes) {
-      elements.push(res.register(this.visit(elementNode, context)));
+      elements.push(res.register(this.visit(elementNode, context, __caller)));
       if (res.shouldReturn()) return res;
     }
 
@@ -98,12 +100,15 @@ class Interpreter {
    * Returns a variable value from the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitVarAccessNode = (node, context) => {
+  visitVarAccessNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let varName = node.varNameTok.value;
-    let value = context.symbolTable.get(varName);
+    let value =
+      context.symbolTable.get(varName) ||
+      (__caller ? __caller.symbolTable.get(`__${varName}`) : null);
 
     if (!value)
       return res.failure(
@@ -126,12 +131,13 @@ class Interpreter {
    * Updates a variable into the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitVarAssignNode = (node, context) => {
+  visitVarAssignNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let varName = node.varNameTok.value;
-    let value = res.register(this.visit(node.valueNode, context));
+    let value = res.register(this.visit(node.valueNode, context, __caller));
     if (res.shouldReturn()) return res;
 
     if (!context.symbolTable.get(varName))
@@ -162,12 +168,13 @@ class Interpreter {
    * Creates a variable into the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitVarDefNode = (node, context) => {
+  visitVarDefNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let varName = node.varNameTok.value;
-    let value = res.register(this.visit(node.valueNode, context));
+    let value = res.register(this.visit(node.valueNode, context, __caller));
     if (res.shouldReturn()) return res;
 
     if (context.symbolTable.get(varName, true))
@@ -188,14 +195,15 @@ class Interpreter {
    * Evaluates a binary operation node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitBinOpNode = (node, context) => {
+  visitBinOpNode = (node, context, __caller = null) => {
     let res = new RTResult();
-    let left = res.register(this.visit(node.leftNode, context));
+    let left = res.register(this.visit(node.leftNode, context, __caller));
     if (res.shouldReturn()) return res;
 
-    let right = res.register(this.visit(node.rightNode, context));
+    let right = res.register(this.visit(node.rightNode, context, __caller));
     if (res.shouldReturn()) return res;
 
     let result = new SWValue();
@@ -242,11 +250,12 @@ class Interpreter {
    * Evaluates a unary operation node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitUnaryOpNode = (node, context) => {
+  visitUnaryOpNode = (node, context, __caller = null) => {
     let res = new RTResult();
-    let number = res.register(this.visit(node.node, context));
+    let number = res.register(this.visit(node.node, context, __caller));
     if (res.shouldReturn()) return res;
 
     let error = null;
@@ -268,19 +277,22 @@ class Interpreter {
    * Evaluates an if node and returns the value from the case that evaluated to true
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitIfNode = (node, context) => {
+  visitIfNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let originalScope = context.symbolTable;
     context.symbolTable = new SymbolTable(context.symbolTable);
 
     for (let [condition, expr, shouldReturnNull] of node.cases) {
-      let conditionValue = res.register(this.visit(condition, context));
+      let conditionValue = res.register(
+        this.visit(condition, context, __caller)
+      );
       if (res.shouldReturn()) return res;
 
       if (conditionValue.isTrue()) {
-        let exprValue = res.register(this.visit(expr, context));
+        let exprValue = res.register(this.visit(expr, context, __caller));
         if (res.shouldReturn()) return res;
         return res.success(
           shouldReturnNull ? SWNull.NULL : exprValue.elements[0]
@@ -290,7 +302,7 @@ class Interpreter {
 
     if (node.elseCase) {
       let [expr, shouldReturnNull] = node.elseCase;
-      let elseValue = res.register(this.visit(expr, context));
+      let elseValue = res.register(this.visit(expr, context, __caller));
       if (res.shouldReturn()) return res;
       return res.success(
         shouldReturnNull ? SWNull.NULL : elseValue.elements[0]
@@ -306,22 +318,29 @@ class Interpreter {
    * Evaluates a for node and returns the value of the expression while the iterator meets given conditions
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitForNode = (node, context) => {
+  visitForNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let elements = [];
     let stepValue = new SWNumber(1);
     let condition = null;
 
-    let startValue = res.register(this.visit(node.startValueNode, context));
+    let startValue = res.register(
+      this.visit(node.startValueNode, context, __caller)
+    );
     if (res.shouldReturn()) return res;
 
-    let endValue = res.register(this.visit(node.endValueNode, context));
+    let endValue = res.register(
+      this.visit(node.endValueNode, context, __caller)
+    );
     if (res.shouldReturn()) return res;
 
     if (node.stepValueNode) {
-      stepValue = res.register(this.visit(node.stepValueNode, context));
+      stepValue = res.register(
+        this.visit(node.stepValueNode, context, __caller)
+      );
     }
 
     let calls = 0;
@@ -342,7 +361,7 @@ class Interpreter {
       context.symbolTable.set(node.varNameTok.value, new SWNumber(i), true);
       i += stepValue.value;
 
-      let value = res.register(this.visit(node.bodyNode, context));
+      let value = res.register(this.visit(node.bodyNode, context, __caller));
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
@@ -382,13 +401,16 @@ class Interpreter {
    * Evaluates a for each node and returns the value of the expression for the number of times in the result
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitForEachNode = (node, context) => {
+  visitForEachNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let elements = [];
 
-    let iteratorValue = res.register(this.visit(node.iterationNode, context));
+    let iteratorValue = res.register(
+      this.visit(node.iterationNode, context, __caller)
+    );
     if (res.shouldReturn()) return res;
 
     if (!iteratorValue instanceof SWList && !iteratorValue instanceof SWString)
@@ -424,7 +446,7 @@ class Interpreter {
       context.symbolTable = new SymbolTable(context.symbolTable);
       context.symbolTable.set(node.varNameTok.value, iterable[i], true);
 
-      let value = res.register(this.visit(node.bodyNode, context));
+      let value = res.register(this.visit(node.bodyNode, context, __caller));
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
@@ -452,21 +474,24 @@ class Interpreter {
    * Evaluates a while node and returns the value of the expression while condition is true
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitWhileNode = (node, context) => {
+  visitWhileNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let elements = [];
 
     let calls = 0;
 
     while (true) {
-      let condition = res.register(this.visit(node.conditionNode, context));
+      let condition = res.register(
+        this.visit(node.conditionNode, context, __caller)
+      );
       if (res.shouldReturn()) return res;
 
       if (!condition.isTrue()) break;
 
-      let value = res.register(this.visit(node.bodyNode, context));
+      let value = res.register(this.visit(node.bodyNode, context, __caller));
       if (res.shouldReturn() && !res.loopShouldContinue && !res.loopShouldBreak)
         return res;
 
@@ -542,18 +567,21 @@ class Interpreter {
    * Evaluates a function call node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitCallNode = (node, context) => {
+  visitCallNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let args = [];
 
-    let valueToCall = res.register(this.visit(node.nodeToCall, context));
+    let valueToCall = res.register(
+      this.visit(node.nodeToCall, context, __caller)
+    );
     if (res.shouldReturn()) return res;
     valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
 
     for (let argNode of node.argNodes) {
-      args.push(res.register(this.visit(argNode, context)));
+      args.push(res.register(this.visit(argNode, context, __caller)));
       if (res.shouldReturn()) return res;
     }
 
@@ -572,16 +600,20 @@ class Interpreter {
    * Evaluates a return node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
+   * @param {*} __caller the calling type
    * @returns {RTResult}
    */
-  visitReturnNode = (node, context) => {
+  visitReturnNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let value = SWNull.NULL;
 
     if (node.nodeToReturn) {
-      value = res.register(this.visit(node.nodeToReturn, context));
+      value = res.register(this.visit(node.nodeToReturn, context, __caller));
       if (res.shouldReturn()) return res;
     }
+
+    if (value instanceof SWFunction && __caller)
+      value.symbolTable = __caller.symbolTable;
 
     return res.successReturn(value);
   };
