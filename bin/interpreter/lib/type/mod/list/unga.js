@@ -16,8 +16,8 @@ function unga(inst, executionContext) {
   if (!orodha)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'orodha' is required`,
         executionContext
       )
@@ -26,8 +26,8 @@ function unga(inst, executionContext) {
   if (!kiungo)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'kiungo' is required`,
         executionContext
       )

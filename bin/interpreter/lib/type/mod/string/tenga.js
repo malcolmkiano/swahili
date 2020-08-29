@@ -16,8 +16,8 @@ function tenga(inst, executionContext) {
   if (!jina)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'jina' is required`,
         executionContext
       )
@@ -26,8 +26,8 @@ function tenga(inst, executionContext) {
   if (!kitengo)
     return res.failure(
       new RTError(
-        this.posStart,
-        this.posEnd,
+        inst.posStart,
+        inst.posEnd,
         `Parameter 'kitengo' is required`,
         executionContext
       )
