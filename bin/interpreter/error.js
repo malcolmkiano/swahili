@@ -22,7 +22,9 @@ class Error {
   toString() {
     let pos = this.posStart;
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `at "${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}"`;
+    result += `File "${pos.fileName}:${pos.lineNumber + 1}:${
+      pos.colNumber + 1
+    }"`;
     if (pos.fileName === '<stdin>')
       result += '\n\n' + stringWithArrows(pos.fileText, pos, this.posEnd);
     return result;
@@ -89,9 +91,9 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `at "${pos.fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}", in ${
-          ctx.displayName
-        }\n` + result;
+        `File "${pos.fileName}:${pos.lineNumber + 1}:${
+          pos.colNumber + 1
+        }", in ${ctx.displayName}\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }
