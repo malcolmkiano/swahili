@@ -25,31 +25,31 @@
             case numberType:
                 max = list[0].length
                 for i in list{
-                    i>max ? max = i : next
+                    i>max ? max = i : continue
                 }
                 break;
             case stringType:
                 max = list[0].length
                 for i in list{
-                    i.length > max ? max = i.length : next
+                    i.length > max ? max = i.length : continue
                 }
                 break;
             case listType:
                 max = list[0].length
                 for i in list{
-                    i.length > max ? max = i.length : next
+                    i.length > max ? max = i.length : continue
                 }
                 break;
             case dateType:
                 max = list[0]
                 for i in list{
-                    i> max ? max = i : next
+                    i> max ? max = i : continue
                 }
                 break;
             case booleanType: // If there are multiple true statements, this will return the first onne it encounters
                 max = list[0]
                 for i in list{
-                    i === true ? max = i.length : next
+                    i === true ? max = i.length : continue
                 }
                 break;
             

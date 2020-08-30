@@ -25,31 +25,31 @@
             case numberType:
                 min = list[0].length
                 for i in list{
-                    i<min ? min = i : next
+                    i<min ? min = i : continue
                 }
                 break;
             case stringType:
                 min = list[0].length
                 for i in list{
-                    i.length < min ? min = i.length : next
+                    i.length < min ? min = i.length : continue
                 }
                 break;
             case listType:
                 min = list[0].length
                 for i in list{
-                    i.length < min ? min = i.length : next
+                    i.length < min ? min = i.length : continue
                 }
                 break;
             case dateType:
                 min = list[0]
                 for i in list{
-                    i< min ? min = i : next
+                    i< min ? min = i : continue
                 }
                 break;
             case booleanType: // If there are multiple false statements, this will return the first onne it encounters
                 min = list[0]
                 for i in list{
-                    i === false ? min = i.length : next
+                    i === false ? min = i.length : continue
                 }
                 break;
             
