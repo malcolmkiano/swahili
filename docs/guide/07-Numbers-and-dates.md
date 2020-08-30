@@ -1,16 +1,17 @@
 # Numbers and Dates
 
 ## Numbers
+
 The Number type in Swahili supports both floats and integers and only deals with numbers in base ten, ie, `decimal number system`
 
 Examples of numeric literals are:
-  `1,100, 3.14159, 2.71828`
+`1,100, 3.14159, 2.71828`
 
-To learn more about the possible operators that can act on numbers, check it out [here](./docs/guide/05-functions.md) 
+To learn more about the possible operators that can act on numbers, check it out [here](./docs/guide/05-functions.md)
 
-##  Dates
+## Dates
 
-The Keyword to access the date time class is `Tarehe()`. Entered with no parameters the `Tarehe()` functions returns the current  Date and time. You can use the following to format the output of the Tarehe() function.
+The Keyword to access the date time class is `Tarehe()`. Entered with no parameters the `Tarehe()` functions returns the current Date and time. You can use the following to format the output of the Tarehe() function.
 
 ```
     ms => millisecond
@@ -26,22 +27,22 @@ The Keyword to access the date time class is `Tarehe()`. Entered with no paramet
     MK => year long (1930-2020)
 ```
 
-For Example:
+For Example: (assume current date & time is May 21<sup>st</sup> 2019 at 1:23pm)
+
 ```
-    // Given today's date is May 21<sup>st</sup> 2019 at 1:23pm
-    
     wacha leo = Tarehe()
     // Will print today's date & time
-    andika(leo) 
+    andika(leo)
         >> "21/5/2020 1:23"
 
-    // Formatting the output 
+    // Formatting the output
     andika(Tarehe(leo,"t s M, MK, sa:d w"))
         >> "21 Alhamisi Mei 2020, 1:23 mchana"
 ```
 
-In the english language, we segment the 12hr system day into am and pm. This maps so that midnight to midday is am and midday to midnight is pm. 
-``` 
+In the english language, we segment the 12hr system day into am and pm. This maps so that midnight to midday is am and midday to midnight is pm.
+
+```
     00.00 - 11.59 => am
     12.00 - 23.59 => pm
 ```
@@ -55,4 +56,5 @@ However in the Swahili language, time is segmented differently. We have 5 distin
     19.00-03.00 => usiku(night)
     04.00-06.00 => alfajiri(dawn)
 ```
+
 As such the suffix for the 12 hour(am/pm) time system in swahili will be one of the following `Asubuhi`,`Mchana`,`Jioni`,`Usiku`,`Alfarjiri`. For Example: `1:09:24 Mchana` or `4:20:12 Alfajiri`

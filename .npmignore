@@ -1,3 +1,4 @@
-swahili-syntax
 docs
 examples
+.eslintrc
+.prettierrc

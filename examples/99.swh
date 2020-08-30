@@ -1,0 +1,29 @@
+// 99 bottles, but in swahili
+shughuli chupa(nambari, ukutani) {
+  wacha mwisho = kama (niTupu(ukutani)) { " ukutani" } sivyo { "" }
+  kama (nambari > 1) {
+    andika("Vyupa " + Jina(nambari) + " vya pombe" + mwisho)
+  } au (nambari == 1) {
+    andika("Chupa " + Jina(nambari) + " cha pombe" + mwisho)
+  } sivyo {
+    andika("Pombe imemalizika :(")
+  }
+}
+
+shughuli ondoa() {
+  andika("Ondoa kimoja, pitisha karibu")
+}
+
+shughuli aya(nambari) {
+  kama (nambari == 0) { rudisha }
+  
+  chupa(nambari)
+  chupa(nambari, kweli)
+  ondoa()
+  chupa(nambari - 1)
+
+  andika("")
+  aya(nambari - 1)
+}
+
+aya(99)

@@ -1,6 +1,6 @@
 {
   "name": "swahili-lang",
-  "version": "0.5.2",
+  "version": "0.6.6",
   "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
   "repository": {
     "type": "git",
@@ -24,12 +24,11 @@
   "license": "ISC",
   "dependencies": {
     "colors": "^1.4.0",
-    "node-bash-title": "0.0.2",
-    "prompt-sync": "^4.2.0",
-    "yargs": "^15.4.1"
+    "prompt-sync": "^4.2.0"
   },
   "devDependencies": {
-    "eslint": "^7.7.0"
+    "eslint": "^7.7.0",
+    "prettier": "^2.1.1"
   },
   "bugs": {
     "url": "https://github.com/malcolmkiano/swahili/issues"

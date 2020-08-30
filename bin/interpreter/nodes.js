@@ -214,6 +214,26 @@ class ForNode {
   }
 }
 
+/** node representing a FOR-EACH loop */
+class ForEachNode {
+  /**
+   * instantiates a for each node
+   * @param {Token} varNameTok token containing the iterator's name
+   * @param {Node} iterationNode node containing the values to iterate over
+   * @param {Node} bodyNode node containing the expressions to be run each iteration
+   * @param {Boolean} shouldReturnNull whether the node should return null
+   */
+  constructor(varNameTok, iterationNode, bodyNode, shouldReturnNull) {
+    this.varNameTok = varNameTok;
+    this.iterationNode = iterationNode;
+    this.bodyNode = bodyNode;
+    this.shouldReturnNull = shouldReturnNull;
+
+    this.posStart = this.varNameTok.posStart;
+    this.posEnd = this.bodyNode.posEnd;
+  }
+}
+
 /** node representing a WHILE loop */
 class WhileNode {
   /**
@@ -330,6 +350,7 @@ module.exports = {
   UnaryOpNode,
   IfNode,
   ForNode,
+  ForEachNode,
   WhileNode,
   FuncDefNode,
   CallNode,

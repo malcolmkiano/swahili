@@ -1,11 +1,7 @@
 wacha mipango = [] // kutayarisha orodha tupu (declaring an empty list)
 wacha sema = soma // kutumia shughuli kwenye hifadha (using a function in a variable)
 
-/*
-  andika mipango yote kwenye skrini
-  =
-  write all the tasks to the screen
-*/
+// andika mipango yote kwenye skrini (write all the tasks to the screen)
 shughuli onyeshaMipango() {
   kwa i = 0 mpaka idadi(mipango) {
     wacha mpango = mipango/i // chagua mpango ya pahala "i" (select the task at index "i")
@@ -76,11 +72,8 @@ shughuli menyuKuu() {
     ["Ondoa mpango", ondoaMpango]
   ]
 
-  /*
-    kitanzi hiki kitakachoendelea mpaka kiondokwe kwa kutumia "rudisha" au "ondoka"
-    =
-    this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
-  */
+  // kitanzi hiki kitakachoendelea mpaka kiondokwe kwa kutumia "rudisha" au "ondoka"
+  // this loop will go on infinitely unless exited using "rudisha" (return) or "ondoka" (break)
   ambapo (kweli) {
     futa() // futa maandishi yote kwenye skrini (clears the screen)
     andika("TARIHI:")
