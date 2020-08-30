@@ -1,68 +1,93 @@
-/*
-    function min(list)
+const SWList = require('../../../../types/list');
+const SWNumber = require('../../../../types/number');
+const SWString = require('../../../../types/string');
+const SWBoolean = require('../../../../types/boolean');
+const SWDateTime = require('../../../../types/datetime');
+const RTResult = require('../../../../runtimeResult');
+const { RTError } = require('../../../../error');
 
-    // The pecking order: numbers > iterables > dates > booleans > (first item is min last is max)
-    // Will hold the resulting min value
-    let min = 0
 
-    // Check if all elements in list are of the same type
+/**
+ * Gets the smallest element in a list
+ * @param {SWBuiltInFunction} inst the instance of the built in function
+ * @param {Context} executionContext the calling context
+ */
+function ndogo(inst, executionContext) {
+    let res = new RTResult();
+    let orodha = executionContext.symbolTable.get('orodha');
+    let ndogo = null;
+    let type_list = orodha.elements[0].constructor.name
     let same_type = [true, type_list]
-    let current_element = list[1]
-    let previous_element = list[0]
-    for i in list.length-1{
-        
-        if type(current_element) === type(previous_element){
-            same_type = [true, type_list.push(type(current_element))]
-        } else {
-            same_type = [false, type_list.push(type(current_element))]
-        }
-        previous_element = current_element
-        current_element = list[i+1]
-    }
 
-    if (same_type[0] == true){  // Checks if the list is holding the same type
-        switch(same_type[0][0]) {
-            case numberType:
-                min = list[0].length
-                for i in list{
-                    i<min ? min = i : continue
-                }
-                break;
-            case stringType:
-                min = list[0].length
-                for i in list{
-                    i.length < min ? min = i.length : continue
-                }
-                break;
-            case listType:
-                min = list[0].length
-                for i in list{
-                    i.length < min ? min = i.length : continue
-                }
-                break;
-            case dateType:
-                min = list[0]
-                for i in list{
-                    i< min ? min = i : continue
-                }
-                break;
-            case booleanType: // If there are multiple false statements, this will return the first onne it encounters
-                min = list[0]
-                for i in list{
-                    i === false ? min = i.length : continue
+    //check if the passed args holds a single type 
+    if(orodha.elements.length > 1){
+        for (var i = 0; i<orodha.elements.length-1; i++){    
+            if (orodha.elements[i].constructor.name === type_list){
+                same_type[0] = true
+            } else {
+                same_type[0] = false
+            }
+        }
+    } else {
+        ndogo = orodha.elements[0]
+        return res.success(ndogo);
+    }
+    
+
+    if (same_type[0] == true){
+        switch(type_list){
+            case "SWNumber": 
+                ndogo = orodha.elements[0];
+                for(var num=0; num<orodha.elements.length; num++){
+                    if (orodha.elements[num] < ndogo){
+                        ndogo = orodha.elements[num];
+                    }
                 }
                 break;
             
+            case "SWString":
+                let currentStringVar = orodha.elements[0].value.length;
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].value.length < currentStringVar){
+                        currentStringVar = orodha.elements[i].value.length;
+                        ndogo = orodha.elements[i];
+                    }
+                }
+                break;
+
+            case "SWList":
+                currentListVar = orodha.elements[0].elements.length;
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].elements.length < currentListVar){
+                        currentListVar = orodha.elements[i].elements.length;
+                        ndogo = orodha.elements[i];
+                    }
+                }
+                break;
+            case "SWDateTime":
+                //insert implementation    
+                break;
+
+            case "SWBoolean":
+                ndogo = orodha.elements[0]
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].value === false){
+                        ndogo = orodha.elements[i]
+                    }
+                }
+                break;
+
             default:
-                // If the list is not of a single type it will return the first element.
-                min = list[0]
-            } 
+                console.log("switch default block")
+                ndogo = orodha.elements[0]
+                break;
         }
-    } else { 
-        // If the list is not of a single type it will return the first element.
-        min = list[0] 
+    } else {
+        console.log("outer else block")
+        ndogo = orodha.elements[0]
     }
+  
+    return res.success(ndogo);
+}
 
-    return min
-
-*/
+module.exports = { method: ndogo, args: ['orodha'] };
