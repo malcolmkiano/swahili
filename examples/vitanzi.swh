@@ -25,6 +25,7 @@ kwa i = 0 mpaka idadi(watu) {
 // andika watu walio na umri 21 au zaidi
 // loop for each item in a list
 // print everyone whose age is >= 21
+
 kwa mtu katika watu {
   wacha jina = mtu/0
   wacha umri = mtu/1
