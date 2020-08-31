@@ -1,0 +1,23 @@
+shughuli Mtu(jina, mji, fedha) {
+  rudisha {
+    jina: jina,
+    mji: mji,
+    salimu: shughuli salimu() {
+      andika("Jambo! Jina langu ni " + jina + " kutoka " + mji + ".")
+    },
+    anaPesaNgapi: shughuli anaPesaNgapi() {
+      andika(jina + ": 'Siwezi kuambia, lakini ni karibu na " + Jina(fedha * 20) + "'")
+    }
+  }
+}
+
+wacha wendo = Mtu("Patrick", "Nairobi, Kenya", 5000)
+wacha kiano = Mtu("Malcolm", "Boston, USA", 3000)
+
+wendo.salimu()
+kiano.salimu()
+
+andika(wendo.jina) // => "Patrick"
+andika(wendo.fedha) // => "" (hamna jibu kwa kuwa hii mali imefichwa)
+
+wendo.anaPesaNgapi() // mali iliyofichwa inatumika kwenye shughuli za kamusi

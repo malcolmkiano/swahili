@@ -334,6 +334,12 @@ class Lexer {
       } else if (LEX.rightCurly.test(this.currentChar)) {
         tokens.push(new Token(TT.RCURL, null, this.pos));
         this.advance();
+      } else if (LEX.dot.test(this.currentChar)) {
+        tokens.push(new Token(TT.DOT, null, this.pos));
+        this.advance();
+      } else if (LEX.col.test(this.currentChar)) {
+        tokens.push(new Token(TT.COL, null, this.pos));
+        this.advance();
       } else if (LEX.comma.test(this.currentChar)) {
         tokens.push(new Token(TT.COMMA, null, this.pos));
         this.advance();

@@ -6,6 +6,7 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWList = require('./types/list');
 const SWFunction = require('./types/function');
+const SWObject = require('./types/object');
 
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
@@ -74,6 +75,30 @@ class Interpreter {
   };
 
   /**
+   * Evaluates an object node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} __caller the calling type
+   * @returns {RTResult}
+   */
+  visitObjectNode = (node, context, __caller = null) => {
+    let res = new RTResult();
+    let properties = [];
+
+    for (let propNode of node.propertyNodes) {
+      propNode.varNameTok = propNode.nodeChain[0];
+      properties.push(res.register(this.visit(propNode, context, __caller)));
+      if (res.shouldReturn()) return res;
+    }
+
+    return res.success(
+      new SWObject(properties)
+        .setContext(context)
+        .setPosition(node.posStart, node.posEnd)
+    );
+  };
+
+  /**
    * Evaluates a list node
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
@@ -97,6 +122,86 @@ class Interpreter {
   };
 
   /**
+   * Returns a property value from the associated context's symbol table
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} __caller the calling type
+   * @returns {RTResult}
+   */
+  visitPropAccessNode = (node, context, __caller = null) => {
+    let res = new RTResult();
+    let value = null;
+    let propChain = [];
+
+    let currentNode = node;
+    if (node.parent === null)
+      return res.success(this.visitVarAccessNode(node, context, __caller));
+
+    while (currentNode.parent !== null) {
+      propChain.push(currentNode.varNameTok.value);
+      currentNode = currentNode.parent;
+    }
+
+    let obj = res.register(
+      this.visitVarAccessNode(currentNode, context, __caller)
+    );
+    if (res.shouldReturn()) return res;
+
+    if (!(obj instanceof SWObject))
+      return res.failure(
+        new RTError(
+          currentNode.posStart,
+          currentNode.posEnd,
+          `'${currentNode.varNameTok.value}' is not an object`,
+          context
+        )
+      );
+
+    for (let propName of propChain.reverse()) {
+      value = obj.symbolTable.get(propName);
+      if (value instanceof SWObject) {
+        obj = value;
+      }
+    }
+
+    return res.success(value || SWNull.NULL);
+  };
+
+  /**
+   * Creates a property node for an object's symbol table
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} __caller the calling type
+   * @returns {RTResult}
+   */
+  visitPropAssignNode = (node, context, __caller = null) => {
+    let res = new RTResult();
+    let value = res.register(this.visit(node.valueNode, context, __caller));
+
+    if (node.varNameTok) {
+      let name = node.varNameTok.value;
+      if (res.shouldReturn()) return res;
+      return res.success({ name, value });
+    }
+
+    let currentNode = node.nodeChain[0].value;
+    let obj = context.symbolTable.get(currentNode);
+    let valueNode;
+
+    for (let i = 1; i < node.nodeChain.length; i++) {
+      currentNode = node.nodeChain[i].value;
+      valueNode = obj.symbolTable.get(currentNode);
+
+      if (valueNode instanceof SWObject) {
+        obj = valueNode;
+      }
+    }
+
+    obj.symbolTable.set(currentNode, value);
+    return res.success(value || SWNull.NULL);
+  };
+
+  /**
    * Returns a variable value from the associated context's symbol table
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
@@ -106,6 +211,7 @@ class Interpreter {
   visitVarAccessNode = (node, context, __caller = null) => {
     let res = new RTResult();
     let varName = node.varNameTok.value;
+
     let value =
       context.symbolTable.get(varName) ||
       (__caller ? __caller.symbolTable.get(`__${varName}`) : null);
