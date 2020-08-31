@@ -1,14 +1,14 @@
 const util = require('util');
 const colors = require('colors');
 
-const SWValue = require('./value');
+const SWObject = require('./object');
 const SWNull = require('./null');
 const RTResult = require('../runtimeResult');
 const Context = require('../context');
 const SymbolTable = require('../symbolTable');
 
 /** Base function type */
-class SWBaseFunction extends SWValue {
+class SWBaseFunction extends SWObject {
   /**
    * instantiates a function
    * @param {String} name name of the function
@@ -18,7 +18,6 @@ class SWBaseFunction extends SWValue {
   constructor(name) {
     super();
     this.name = name || '<isiyotambuliwa>';
-    this.symbolTable = new SymbolTable();
   }
 
   /**
@@ -46,7 +45,7 @@ class SWBaseFunction extends SWValue {
       if (argValue) {
         argValue.setContext(executionContext);
         executionContext.symbolTable.set(argName, argValue);
-        this.symbolTable.set(`__${argName}`, argValue);
+        this.symbolTable.set(argName, argValue);
       }
     }
 

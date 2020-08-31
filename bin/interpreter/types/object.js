@@ -21,6 +21,9 @@ class SWObject extends SWValue {
    */
   populateSymbols(symbols) {
     for (let { name, value } of symbols) {
+      // add a reference to this object in all child functions
+      if (value instanceof SWObject) value.symbolTable.setConstant('hii', this);
+
       this.symbolTable.set(name, value);
     }
   }

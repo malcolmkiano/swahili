@@ -1169,6 +1169,12 @@ class Parser {
     this.advance();
     let argNameToks = [];
 
+    // skip past any new lines
+    while (this.currentTok.type === TT.NEWLINE) {
+      res.registerAdvancement();
+      this.advance();
+    }
+
     if (this.currentTok.type === TT.IDENTIFIER) {
       argNameToks.push(this.currentTok);
       res.registerAdvancement();
@@ -1177,6 +1183,12 @@ class Parser {
       while (this.currentTok.type === TT.COMMA) {
         res.registerAdvancement();
         this.advance();
+
+        // skip past any more new lines
+        while (this.currentTok.type === TT.NEWLINE) {
+          res.registerAdvancement();
+          this.advance();
+        }
 
         if (this.currentTok.type !== TT.IDENTIFIER)
           return res.failure(
