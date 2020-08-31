@@ -487,7 +487,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '${lc(TT.IDENTIFIER)}'`
+          `Expected ${lc(TT.IDENTIFIER)}`
         )
       );
 
@@ -511,7 +511,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${lc(TT.IDENTIFIER)}'`
+            `Expected ${lc(TT.IDENTIFIER)}`
           )
         );
       }
@@ -570,7 +570,7 @@ class Parser {
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected '${lc(TT.IDENTIFIER)}'`
+            `Expected ${lc(TT.IDENTIFIER)}`
           )
         );
 
@@ -610,7 +610,7 @@ class Parser {
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected '${lc(TT.IDENTIFIER)}'`
+              `Expected ${lc(TT.IDENTIFIER)}`
             )
           );
 

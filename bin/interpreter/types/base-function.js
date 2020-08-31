@@ -52,14 +52,6 @@ class SWBaseFunction extends SWObject {
     return res.success(SWNull.NULL);
   }
 
-  /**
-   * returns true
-   * @returns {Boolean}
-   */
-  isTrue() {
-    return true;
-  }
-
   [util.inspect.custom](depth, options) {
     return this.toString();
   }

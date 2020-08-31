@@ -1,6 +1,7 @@
 const util = require('util');
 
 const SWValue = require('./value');
+const SWBoolean = require('./boolean');
 const SymbolTable = require('../symbolTable');
 
 /** Object data type */
@@ -29,6 +30,22 @@ class SWObject extends SWValue {
   }
 
   /**
+   * returns true
+   * @returns {Boolean}
+   */
+  isTrue() {
+    return true;
+  }
+
+  /**
+   * returns false if instance value is falsy (this is an object, so it will always return false)
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [new SWBoolean(!this.isTrue()).setContext(this.context), null];
+  }
+
+  /**
    * creates a new instance of the object
    * @returns {SWObject}
    */
@@ -53,11 +70,13 @@ class SWObject extends SWValue {
    */
   toString(expose = true) {
     let elements = this.symbolTable.symbols;
+    let entries = Object.entries(elements);
+    let s = entries.length ? ' ' : ''; // spaces to be shown if object has values
     let output = [];
-    for (let [name, value] of Object.entries(elements)) {
+    for (let [name, value] of entries) {
       output.push(`${name}: ${value.toString()}`);
     }
-    return expose ? `{ ${output.join(', ')} }` : `[SWObject]`;
+    return expose ? `{${s}${output.join(', ')}${s}}` : `[SWObject]`;
   }
 }
 
