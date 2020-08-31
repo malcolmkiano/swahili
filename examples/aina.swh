@@ -1,0 +1,21 @@
+shughuli Mtu(jina, umri, jinsia, jlu) {
+  rudisha {
+    jina: jina,
+    umri: umri,
+    jinsia: jinsia,
+    jinaLaUtani: jlu,
+    salimu: shughuli salimu() {
+      wacha salamu = "Jambo! Jina langu ni " + hii.jina + "."
+      kama (!niTupu(hii.jinaLaUtani)) {
+        salamu = salamu + " Marafiki wangu huniita " + hii.jinaLaUtani + "."
+      }
+      andika(salamu)
+    }
+  }
+}
+
+wacha mimi = Mtu("Malcolm", 24, "m")
+mimi.salimu()
+
+wacha wewe = Mtu("Patrick", 21, "m", "Wendo")
+wewe.salimu()

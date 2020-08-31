@@ -25,7 +25,7 @@ class SWValue {
   /**
    * Sets the context in which the value node occurs
    * @param {Context} context the calling context
-   * @returns {value}
+   * @returns {SWValue}
    */
   setContext(context = null) {
     this.context = context;

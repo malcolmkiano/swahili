@@ -5,8 +5,6 @@ const Interpreter = require('./');
 const SymbolTable = require('./symbolTable');
 
 const SWBuiltInFunction = require('./types/built-in-function');
-const SWBoolean = require('./types/boolean');
-const SWNull = require('./types/null');
 const { libFunctions, libConstants } = require('./lib');
 
 /** holds all variables and their values in the global scope */
