@@ -159,7 +159,7 @@ class Interpreter {
 
     for (let propName of propChain.reverse()) {
       value = obj.symbolTable.get(propName);
-      if (value instanceof SWObject) {
+      if (value instanceof SWObject && !(value instanceof SWFunction)) {
         obj = value;
       }
     }
@@ -186,18 +186,32 @@ class Interpreter {
 
     let currentNode = node.nodeChain[0].value;
     let obj = context.symbolTable.get(currentNode);
+    if (!obj) {
+      let self = caller.symbolTable.get(currentNode);
+      if (self.name) obj = context.symbolTable.get(self.name);
+      if (!obj) obj = self;
+    }
+
     let valueNode;
 
     for (let i = 1; i < node.nodeChain.length; i++) {
-      currentNode = node.nodeChain[i].value;
-      valueNode = obj.symbolTable.get(currentNode);
-
       if (valueNode instanceof SWObject) {
         obj = valueNode;
+      }
+
+      currentNode = node.nodeChain[i].value;
+      valueNode = obj.symbolTable.get(currentNode);
+    }
+
+    if (value instanceof SWObject) {
+      value.name = currentNode;
+      if (!(value instanceof SWFunction)) {
+        value.parent = obj.symbolTable.symbols;
       }
     }
 
     obj.symbolTable.set(currentNode, value);
+    if (obj.parent) obj.parent[obj.name] = obj;
     return res.success(value || SWNull.NULL);
   };
 
@@ -256,6 +270,14 @@ class Interpreter {
         )
       );
 
+    if (value instanceof SWObject) {
+      value.name = varName;
+
+      if (!(value instanceof SWFunction)) {
+        value.parent = obj.symbolTable.symbols;
+      }
+    }
+
     let isSet = context.symbolTable.set(varName, value, true);
     if (!isSet)
       return res.failure(
@@ -292,6 +314,14 @@ class Interpreter {
           context
         )
       );
+
+    if (value instanceof SWObject) {
+      value.name = varName;
+
+      if (!(value instanceof SWFunction)) {
+        value.parent = context.symbolTable.symbols;
+      }
+    }
 
     context.symbolTable.set(varName, value);
     return res.success(value);

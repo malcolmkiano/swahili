@@ -41,6 +41,15 @@ class SWNull extends SWValue {
   }
 
   /**
+   * logically compares two values and returns true if one is truthy
+   * @param {any} other value to be compared to the current
+   * @returns {SWBoolean}
+   */
+  oredBy(other) {
+    return [other.setContext(this.context), null];
+  }
+
+  /**
    * creates a new instance of the null
    * @returns {SWNull}
    */
