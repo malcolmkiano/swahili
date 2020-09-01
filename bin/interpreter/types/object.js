@@ -14,6 +14,8 @@ class SWObject extends SWValue {
     super();
     this.symbolTable = new SymbolTable();
     this.populateSymbols(symbols);
+    this.name = null;
+    this.parent = null;
   }
 
   /**
@@ -23,7 +25,11 @@ class SWObject extends SWValue {
   populateSymbols(symbols) {
     for (let { name, value } of symbols) {
       // add a reference to this object in all child functions
-      if (value instanceof SWObject) value.symbolTable.setConstant('hii', this);
+      if (value instanceof SWObject) {
+        value.name = name;
+        value.parent = this.symbolTable.symbols;
+        value.symbolTable.setConstant('hii', this);
+      }
 
       this.symbolTable.set(name, value);
     }
@@ -54,6 +60,8 @@ class SWObject extends SWValue {
       this.symbolTable.symbols
     ).map(([name, value]) => ({ name, value }));
     let copy = new SWObject(symbolMap);
+    copy.name = this.name;
+    copy.parent = this.parent;
     copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;
@@ -69,7 +77,9 @@ class SWObject extends SWValue {
    * @returns {String}
    */
   toString(expose = true) {
-    let elements = this.symbolTable.symbols;
+    let elements = { ...this.symbolTable.symbols };
+    delete elements['hii']; // prevent endless cycle
+
     let entries = Object.entries(elements);
     let s = entries.length ? ' ' : ''; // spaces to be shown if object has values
     let output = [];

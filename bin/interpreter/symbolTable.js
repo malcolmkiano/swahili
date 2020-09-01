@@ -1,6 +1,3 @@
-const RTResult = require('./runtimeResult');
-const { RTError } = require('./error');
-
 /**
  * map to hold all variable names and values in the current scope
  * and a pointer to its parent (if any)
@@ -44,7 +41,6 @@ class SymbolTable {
    * @returns {Boolean} indicating whether value was updated
    */
   set(name, value, deep = false) {
-    let res = new RTResult();
     if (this.hasConstant(name)) return false;
 
     if (!deep) {
