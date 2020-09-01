@@ -5,7 +5,10 @@ const { InvalidSyntaxError } = require('../interpreter/error');
 const {
   NumberNode,
   StringNode,
+  ObjectNode,
   ListNode,
+  PropAccessNode,
+  PropAssignNode,
   VarAccessNode,
   VarAssignNode,
   VarDefNode,
@@ -430,9 +433,13 @@ class Parser {
         );
       }
     } else if (tok.type === TT.IDENTIFIER) {
-      res.registerAdvancement();
-      this.advance();
-      return res.success(new VarAccessNode(tok));
+      let access = res.register(this.access());
+      if (res.error) return res;
+      return res.success(access);
+    } else if (tok.type === TT.LCURL) {
+      let objExpr = res.register(this.objExpr());
+      if (res.error) return res;
+      return res.success(objExpr);
     } else if (tok.type === TT.LSQUARE) {
       let listExpr = res.register(this.listExpr());
       if (res.error) return res;
@@ -470,6 +477,192 @@ class Parser {
     );
   };
 
+  /** parse tokens to make an access token */
+  access = () => {
+    let res = new ParseResult();
+    let nodeChain = [];
+
+    if (this.currentTok.type !== TT.IDENTIFIER)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected ${lc(TT.IDENTIFIER)}`
+        )
+      );
+
+    let varNameTok = this.currentTok;
+    let currentNode = new PropAccessNode(varNameTok);
+    nodeChain.push(varNameTok);
+
+    res.registerAdvancement();
+    this.advance();
+
+    while (this.currentTok.type === TT.DOT) {
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type === TT.IDENTIFIER) {
+        varNameTok = this.currentTok;
+        currentNode = new PropAccessNode(varNameTok, currentNode);
+        nodeChain.push(varNameTok);
+      } else {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected ${lc(TT.IDENTIFIER)}`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    if (!currentNode.parent) {
+      currentNode = new VarAccessNode(varNameTok);
+    } else {
+      if (this.currentTok.type === TT.EQ) {
+        res.registerAdvancement();
+        this.advance();
+
+        let valueNode = res.register(this.expr());
+        if (res.error) return res;
+
+        currentNode = new PropAssignNode(nodeChain, valueNode);
+      }
+    }
+
+    return res.success(currentNode);
+  };
+
+  /** parse tokens to make an object node */
+  objExpr = () => {
+    let res = new ParseResult();
+    let propertyNodes = [];
+    let posStart = this.currentTok.posStart.copy();
+
+    if (this.currentTok.type !== TT.LCURL)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(TT.LCURL)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type === TT.RCURL) {
+      res.registerAdvancement();
+      this.advance();
+    } else {
+      // skip past any new lines after [
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
+      }
+
+      if (this.currentTok.type !== TT.IDENTIFIER)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected ${lc(TT.IDENTIFIER)}`
+          )
+        );
+
+      let propertyName = this.currentTok;
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type !== TT.COL)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '${lc(LEX.col.source)}'`
+          )
+        );
+
+      res.registerAdvancement();
+      this.advance();
+
+      let valueNode = res.register(this.expr());
+      if (res.error) return res;
+
+      propertyNodes.push(new PropAssignNode([propertyName], valueNode));
+
+      while (this.currentTok.type === TT.COMMA) {
+        res.registerAdvancement();
+        this.advance();
+
+        // skip past any new lines after between properties
+        while (this.currentTok.type === TT.NEWLINE) {
+          res.registerAdvancement();
+          this.advance();
+        }
+
+        if (this.currentTok.type !== TT.IDENTIFIER)
+          return res.failure(
+            new InvalidSyntaxError(
+              this.currentTok.posStart,
+              this.currentTok.posEnd,
+              `Expected ${lc(TT.IDENTIFIER)}`
+            )
+          );
+
+        propertyName = this.currentTok;
+        res.registerAdvancement();
+        this.advance();
+
+        if (this.currentTok.type !== TT.COL)
+          return res.failure(
+            new InvalidSyntaxError(
+              this.currentTok.posStart,
+              this.currentTok.posEnd,
+              `Expected '${lc(LEX.col.source)}'`
+            )
+          );
+
+        res.registerAdvancement();
+        this.advance();
+
+        valueNode = res.register(this.expr());
+        if (res.error) return res;
+
+        propertyNodes.push(new PropAssignNode([propertyName], valueNode));
+      }
+
+      // skip past any new lines
+      while (this.currentTok.type === TT.NEWLINE) {
+        res.registerAdvancement();
+        this.advance();
+      }
+
+      if (this.currentTok.type !== TT.RCURL) {
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '${lc(LEX.comma.source)}' or '${lc(
+              LEX.rightCurly.source
+            )}'`
+          )
+        );
+      }
+
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    return res.success(
+      new ObjectNode(propertyNodes, posStart, this.currentTok.posEnd.copy())
+    );
+  };
+
   /** parse tokens to make a list node */
   listExpr = () => {
     let res = new ParseResult();
@@ -481,7 +674,7 @@ class Parser {
         new InvalidSyntaxError(
           this.currentTok.posStart,
           this.currentTok.posEnd,
-          `Expected '['`
+          `Expected '${lc(TT.LSQUARE)}'`
         )
       );
 
@@ -976,6 +1169,12 @@ class Parser {
     this.advance();
     let argNameToks = [];
 
+    // skip past any new lines
+    while (this.currentTok.type === TT.NEWLINE) {
+      res.registerAdvancement();
+      this.advance();
+    }
+
     if (this.currentTok.type === TT.IDENTIFIER) {
       argNameToks.push(this.currentTok);
       res.registerAdvancement();
@@ -984,6 +1183,12 @@ class Parser {
       while (this.currentTok.type === TT.COMMA) {
         res.registerAdvancement();
         this.advance();
+
+        // skip past any more new lines
+        while (this.currentTok.type === TT.NEWLINE) {
+          res.registerAdvancement();
+          this.advance();
+        }
 
         if (this.currentTok.type !== TT.IDENTIFIER)
           return res.failure(

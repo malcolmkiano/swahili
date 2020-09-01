@@ -52,6 +52,16 @@ class StringNode {
   }
 }
 
+/** node representing an object */
+class ObjectNode {
+  constructor(propertyNodes, posStart, posEnd) {
+    this.propertyNodes = propertyNodes;
+
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 /** node representing a list */
 class ListNode {
   constructor(elementNodes, posStart, posEnd) {
@@ -59,6 +69,38 @@ class ListNode {
 
     this.posStart = posStart;
     this.posEnd = posEnd;
+  }
+}
+
+/** node representing a property access result */
+class PropAccessNode {
+  /**
+   * instantiates a property access node
+   * @param {Token} varNameTok token containing the property's name
+   * @param {PropAccessNode} parent node containing any parent properties being accessed
+   */
+  constructor(varNameTok, parent = null) {
+    this.varNameTok = varNameTok;
+    this.parent = parent;
+
+    this.posStart = this.varNameTok.posStart;
+    this.posEnd = this.varNameTok.posEnd;
+  }
+}
+
+/** node representing a property assignment */
+class PropAssignNode {
+  /**
+   * instantiates a property assignment node
+   * @param {Token[]} nodeChain list of tokens containing the property's name
+   * @param {Node} valueNode node containing the value to be assigned to the property
+   */
+  constructor(nodeChain, valueNode) {
+    this.nodeChain = nodeChain;
+    this.valueNode = valueNode;
+
+    this.posStart = this.nodeChain[0].posStart;
+    this.posEnd = this.valueNode.posEnd;
   }
 }
 
@@ -342,7 +384,10 @@ class BreakNode {
 module.exports = {
   NumberNode,
   StringNode,
+  ObjectNode,
   ListNode,
+  PropAccessNode,
+  PropAssignNode,
   VarAccessNode,
   VarAssignNode,
   VarDefNode,

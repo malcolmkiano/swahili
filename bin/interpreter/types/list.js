@@ -1,8 +1,6 @@
 const util = require('util');
-const colors = require('colors');
 const SWValue = require('./value');
 const SWBoolean = require('./boolean');
-const SWNull = require('./null');
 const SWNumber = require('./number');
 
 const { RTError } = require('../error');
@@ -131,7 +129,7 @@ class SWList extends SWValue {
   }
 
   /**
-   * string representation of the number class
+   * string representation of the list class
    * @param {Boolean} showBrackets whether to show brackets and color or not
    * @returns {String}
    */

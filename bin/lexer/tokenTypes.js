@@ -72,6 +72,12 @@ module.exports = {
   /** Greater than or equal comparison */
   GTE: 'GTE',
 
+  /** Dot */
+  DOT: 'DOT',
+
+  /** Colon */
+  COL: 'COL',
+
   /** Comma */
   COMMA: 'COMMA',
 
