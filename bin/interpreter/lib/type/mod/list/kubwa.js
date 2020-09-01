@@ -1,68 +1,85 @@
-/*
-    function max(list)
+const RTResult = require('../../../../runtimeResult');
+const { RTError } = require('../../../../error');
 
-    // The pecking order: numbers > iterables > dates > booleans > (first item is min last is max)
-    // Will hold the resulting max value
-    let max = 0
+/**
+ * Gets the smallest element in a list
+ * @param {SWBuiltInFunction} inst the instance of the built in function
+ * @param {Context} executionContext the calling context
+ */
 
-    // Check if all elements in list are of the same type
+ function kubwa(inst, executionContext) {
+    let res = new RTResult();
+    let orodha = executionContext.symbolTable.get('orodha');
+    let kubwa = null;
+    let type_list = orodha.elements[0].constructor.name
     let same_type = [true, type_list]
-    let current_element = list[1]
-    let previous_element = list[0]
-    for i in list.length-1{
-        
-        if type(current_element) === type(previous_element){
-            same_type = [true, type_list.push(type(current_element))]
-        } else {
-            same_type = [false, type_list.push(type(current_element))]
-        }
-        previous_element = current_element
-        current_element = list[i+1]
-    }
 
-    if (same_type[0] == true){  // Checks if the list is holding the same type
-        switch(same_type[0][0]) {
-            case numberType:
-                max = list[0].length
-                for i in list{
-                    i>max ? max = i : continue
-                }
-                break;
-            case stringType:
-                max = list[0].length
-                for i in list{
-                    i.length > max ? max = i.length : continue
-                }
-                break;
-            case listType:
-                max = list[0].length
-                for i in list{
-                    i.length > max ? max = i.length : continue
-                }
-                break;
-            case dateType:
-                max = list[0]
-                for i in list{
-                    i> max ? max = i : continue
-                }
-                break;
-            case booleanType: // If there are multiple true statements, this will return the first onne it encounters
-                max = list[0]
-                for i in list{
-                    i === true ? max = i.length : continue
+    //check if the passed args holds a single type 
+    if(orodha.elements.length > 1){
+        for (var i = 0; i<orodha.elements.length-1; i++){    
+            if (orodha.elements[i].constructor.name === type_list){
+                same_type[0] = true
+            } else {
+                same_type[0] = false
+            }
+        }
+    } else {
+        kubwa = orodha.elements[orodha.elements.length-1]
+        return res.success(kubwa);
+    }
+    
+
+    if (same_type[0] == true){
+        switch(type_list){
+            case "SWNumber": 
+                kubwa = orodha.elements[0];
+                for(var num=0; num<orodha.elements.length; num++){
+                    if (orodha.elements[num] > kubwa){
+                        kubwa = orodha.elements[num];
+                    }
                 }
                 break;
             
+            case "SWString":
+                let currentStringVar = orodha.elements[0].value.length;
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].value.length > currentStringVar){
+                        currentStringVar = orodha.elements[i].value.length;
+                        kubwa = orodha.elements[i];
+                    }
+                }
+                break;
+
+            case "SWList":
+                currentListVar = orodha.elements[0].elements.length;
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].elements.length > currentListVar){
+                        currentListVar = orodha.elements[i].elements.length;
+                        kubwa = orodha.elements[i];
+                    }
+                }
+                break;
+            
+            case "SWBoolean":
+                kubwa = orodha.elements[0]
+                for (var i = 0; i<orodha.elements.length; i++){
+                    if (orodha.elements[i].value === true){
+                        kubwa = orodha.elements[i]
+                    }
+                }
+                break;
+
             default:
-                // If the list is not of a single type it will return the first element.
-                max = list[last_element]
-            } 
+                console.log("switch default block")
+                kubwa = orodha.elements[orodha.elements.length-1]
+                break;
         }
-    } else { 
-        // If the list is not of a single type it will return the first element.
-        max = list[last_element] 
+    } else {
+        console.log("outer else block")
+        kubwa = orodha.elements[orodha.elements.length-1]
     }
+  
+    return res.success(kubwa);
+}
 
-    return max
-
-*/
+module.exports = { method: kubwa, args: ['orodha'] };

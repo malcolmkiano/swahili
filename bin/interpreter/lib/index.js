@@ -29,6 +29,8 @@ const Tarehe = require('./type/cast/Tarehe');
 const idadi = require('./type/mod/iterable/idadi');
 const badili = require('./type/mod/list/badili');
 const ndogo = require('./type/mod/list/ndogo')
+const kubwa = require('./type/mod/list/kubwa')
+
 
 // >>> Lists
 const unga = require('./type/mod/list/unga');
@@ -64,5 +66,6 @@ module.exports = {
     tenga,
     wamlambez,
     ndogo,
+    kubwa,
   ],
 };

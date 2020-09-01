@@ -1,18 +1,13 @@
-const SWList = require('../../../../types/list');
-const SWNumber = require('../../../../types/number');
-const SWString = require('../../../../types/string');
-const SWBoolean = require('../../../../types/boolean');
-const SWDateTime = require('../../../../types/datetime');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
-
 
 /**
  * Gets the smallest element in a list
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
-function ndogo(inst, executionContext) {
+
+ function ndogo(inst, executionContext) {
     let res = new RTResult();
     let orodha = executionContext.symbolTable.get('orodha');
     let ndogo = null;
@@ -64,10 +59,7 @@ function ndogo(inst, executionContext) {
                     }
                 }
                 break;
-            case "SWDateTime":
-                //insert implementation    
-                break;
-
+            
             case "SWBoolean":
                 ndogo = orodha.elements[0]
                 for (var i = 0; i<orodha.elements.length; i++){
