@@ -45,7 +45,7 @@ function badili(inst, executionContext) {
     );
 
   // check types
-  if (!orodha instanceof SWList)
+  if (!(orodha instanceof SWList))
     return res.failure(
       new RTError(
         orodha.posStart,
@@ -55,7 +55,7 @@ function badili(inst, executionContext) {
       )
     );
 
-  if (!pahala instanceof SWNumber || !Number.isInteger(pahala.value))
+  if (!(pahala instanceof SWNumber) || !Number.isInteger(pahala.value))
     return res.failure(
       new RTError(
         pahala.posStart,

@@ -286,7 +286,7 @@ class Interpreter {
       value.name = varName;
 
       if (!(value instanceof SWFunction)) {
-        value.parent = obj.symbolTable.symbols;
+        value.parent = context.symbolTable.symbols;
       }
     }
 

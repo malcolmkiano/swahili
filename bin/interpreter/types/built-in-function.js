@@ -1,7 +1,7 @@
 const util = require('util');
 const colors = require('colors');
 
-const { libFunctions } = require('../lib');
+const { functions } = require('../lib');
 
 const SWBaseFunction = require('./base-function');
 const RTResult = require('../runtimeResult');
@@ -16,7 +16,7 @@ class SWBuiltInFunction extends SWBaseFunction {
     super(name);
 
     // library injection
-    for (let { method, args } of libFunctions) {
+    for (let { method, args } of functions) {
       let name = method.name;
       this[`execute_${name}`] = method;
       this[name] = args;
