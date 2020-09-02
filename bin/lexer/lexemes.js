@@ -17,7 +17,6 @@ module.exports = {
   rightSquare: /\]/,
   leftCurly: /\{/,
   rightCurly: /\}/,
-  dot: /\./,
   col: /:/,
   comma: /,/,
   ampersand: /&/,

@@ -39,4 +39,4 @@ function herufiKubwa(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: herufiKubwa, args: ['neno'] };
+module.exports = { method: herufiKubwa, args: ['neno'], types: [SWString] };

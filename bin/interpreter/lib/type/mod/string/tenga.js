@@ -61,4 +61,8 @@ function tenga(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: tenga, args: ['jina', 'kitengo'] };
+module.exports = {
+  method: tenga,
+  args: ['jina', 'kitengo'],
+  types: [SWString],
+};

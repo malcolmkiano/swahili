@@ -27,7 +27,9 @@ class SWBaseFunction extends SWObject {
    */
   generateNewContext() {
     let newContext = new Context(this.name, this.context, this.posStart);
-    newContext.symbolTable = new SymbolTable(newContext.parent.symbolTable);
+    newContext.symbolTable = new SymbolTable(
+      newContext.parent ? newContext.parent.symbolTable : null
+    );
     return newContext;
   }
 
@@ -42,6 +44,7 @@ class SWBaseFunction extends SWObject {
     let res = new RTResult();
     let nullValue = nullType ? SWNull.NULL : null;
     let allArgs = [];
+    argNames = argNames || [];
     for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
       let argValue = i < args.length ? args[i] : nullValue;

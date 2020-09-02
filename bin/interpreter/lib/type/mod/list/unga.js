@@ -63,4 +63,4 @@ function unga(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: unga, args: ['orodha', 'kiungo'] };
+module.exports = { method: unga, args: ['orodha', 'kiungo'], types: [SWList] };

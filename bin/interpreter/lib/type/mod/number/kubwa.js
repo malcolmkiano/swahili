@@ -62,4 +62,4 @@ function kubwa(inst, executionContext) {
   return res.success(maxElement);
 }
 
-module.exports = { method: kubwa, args: ['orodha'] };
+module.exports = { method: kubwa, args: ['orodha'], types: [SWList] };

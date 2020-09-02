@@ -29,9 +29,11 @@ const Tarehe = require('@lib/type/cast/Tarehe');
 // > Modification & reading
 // >>> Iterables (Lists & Strings)
 const idadi = require('@lib/type/mod/iterable/idadi');
-const badili = require('@lib/type/mod/list/badili');
+const sehemu = require('@lib/type/mod/iterable/sehemu');
+const ina = require('@lib/type/mod/iterable/ina');
 
 // >>> Lists
+const badili = require('@lib/type/mod/list/badili');
 const unga = require('@lib/type/mod/list/unga');
 
 // >>> Strings
@@ -65,6 +67,8 @@ module.exports = {
     Tarehe,
     idadi,
     badili,
+    sehemu,
+    ina,
     unga,
     tenga,
     herufiNdogo,
