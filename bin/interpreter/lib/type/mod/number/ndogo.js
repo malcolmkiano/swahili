@@ -61,4 +61,4 @@ function ndogo(inst, executionContext) {
   return res.success(minElement);
 }
 
-module.exports = { method: ndogo, args: ['orodha'] };
+module.exports = { method: ndogo, args: ['orodha'], types: [SWList] };

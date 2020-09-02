@@ -38,4 +38,4 @@ function idadi(inst, executionContext) {
   }
 }
 
-module.exports = { method: idadi, args: ['kitu'] };
+module.exports = { method: idadi, args: ['kitu'], types: [SWString, SWList] };

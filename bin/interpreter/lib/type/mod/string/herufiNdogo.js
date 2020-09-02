@@ -39,4 +39,4 @@ function herufiNdogo(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: herufiNdogo, args: ['neno'] };
+module.exports = { method: herufiNdogo, args: ['neno'], types: [SWString] };

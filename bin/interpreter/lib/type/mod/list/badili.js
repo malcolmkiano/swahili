@@ -82,4 +82,8 @@ function badili(inst, executionContext) {
   return res.success(kitu);
 }
 
-module.exports = { method: badili, args: ['orodha', 'pahala', 'kitu'] };
+module.exports = {
+  method: badili,
+  args: ['orodha', 'pahala', 'kitu'],
+  types: [SWList],
+};

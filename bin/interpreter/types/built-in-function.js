@@ -16,10 +16,11 @@ class SWBuiltInFunction extends SWBaseFunction {
     super(name);
 
     // library injection
-    for (let { method, args } of functions) {
+    for (let { method, args, types = null } of functions) {
       let name = method.name;
       this[`execute_${name}`] = method;
       this[name] = args;
+      if (types) this[`${name}_types`] = types;
     }
   }
 
@@ -45,9 +46,10 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   /**
    * Occurs when no execution method is defined for the built in function
+   * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
    */
-  noExecuteMethod = (context) => {
+  noExecuteMethod = (node, context) => {
     throw new Error(`No execute_${node.constructor.name} method defined`);
   };
 

@@ -88,4 +88,8 @@ function sehemu(inst, executionContext) {
   return res.success(outputValue);
 }
 
-module.exports = { method: sehemu, args: ['kitu', 'mwanzo', 'mwisho'] };
+module.exports = {
+  method: sehemu,
+  args: ['kitu', 'mwanzo', 'mwisho'],
+  types: [SWString, SWList],
+};

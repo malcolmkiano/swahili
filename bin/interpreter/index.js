@@ -5,6 +5,7 @@ const SWNull = require('@types/null');
 const SWNumber = require('@types/number');
 const SWString = require('@types/string');
 const SWList = require('@types/list');
+const SWBaseFunction = require('@types/base-function');
 const SWFunction = require('@types/function');
 const SWObject = require('@types/object');
 
@@ -147,34 +148,86 @@ class Interpreter {
     );
     if (res.shouldReturn()) return res;
 
-    if (!(obj instanceof SWObject))
-      return res.failure(
-        new RTError(
-          currentNode.posStart,
-          currentNode.posEnd,
-          `'${currentNode.varNameTok.value}' is not an object`,
-          context
-        )
-      );
+    // if not an object, see if any typed methods support this value
+    if (!(obj instanceof SWObject)) {
+      try {
+        if (propChain.length > 1) throw 0;
+
+        let methodName = propChain[0];
+        let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
+        if (!typeMethod) throw 0;
+
+        let supportedTypes = typeMethod[`${methodName}_types`];
+        for (let i = 0; i < supportedTypes.length; i++) {
+          let type = supportedTypes[i];
+          if (obj instanceof type) {
+            return res.success([typeMethod, obj]);
+          }
+        }
+
+        return res.failure(
+          new RTError(
+            currentNode.posStart,
+            currentNode.posEnd,
+            `'${methodName}' not supported on type '${obj.typeName}'`,
+            context
+          )
+        );
+      } catch (err) {
+        return res.failure(
+          new RTError(
+            currentNode.posStart,
+            currentNode.posEnd,
+            `'${currentNode.varNameTok.value}' is not an object`,
+            context
+          )
+        );
+      }
+    }
 
     let chainLength = propChain.length;
-    for (let propName of propChain.reverse()) {
-      value = obj.symbolTable.get(propName);
+    let props = propChain.reverse();
+    for (let propName of props) {
+      value = obj.symbolTable.get(propName) || value;
       if (value instanceof SWObject && !(value instanceof SWFunction)) {
         obj = value;
         chainLength--;
       }
     }
 
-    if (chainLength > 1)
-      return res.failure(
-        new RTError(
-          node.posStart,
-          node.posEnd,
-          `Cannot get property '${propChain[chainLength - 1]}' of undefined`,
-          context
-        )
-      );
+    if (chainLength > 1) {
+      try {
+        let methodName = propChain[chainLength - 1];
+        let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
+        if (!typeMethod) throw 0;
+
+        let supportedTypes = typeMethod[`${methodName}_types`];
+        for (let i = 0; i < supportedTypes.length; i++) {
+          let type = supportedTypes[i];
+          if (value instanceof type) {
+            return res.success([typeMethod, value]);
+          }
+        }
+
+        return res.failure(
+          new RTError(
+            currentNode.posStart,
+            currentNode.posEnd,
+            `'${methodName}' not supported on type '${value.typeName}'`,
+            context
+          )
+        );
+      } catch (err) {
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot get property '${propChain[chainLength - 1]}' of undefined`,
+            context
+          )
+        );
+      }
+    }
 
     return res.success(value || SWNull.NULL);
   };
@@ -720,7 +773,23 @@ class Interpreter {
       this.visit(node.nodeToCall, context, caller)
     );
     if (res.shouldReturn()) return res;
+    if (Array.isArray(valueToCall)) {
+      args.push(valueToCall[1]);
+      valueToCall = valueToCall[0];
+    }
+
+    if (!(valueToCall instanceof SWBaseFunction))
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `'${valueToCall}' is not a method`,
+          context
+        )
+      );
+
     valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
+    valueToCall.name = valueToCall.name.replace('$', ''); // remove $ used to hide methods
 
     for (let argNode of node.argNodes) {
       args.push(res.register(this.visit(argNode, context, caller)));
