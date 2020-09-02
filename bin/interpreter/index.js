@@ -114,7 +114,6 @@ class Interpreter {
       let el = res.register(this.visit(elementNode, context, caller));
       if (Array.isArray(el)) {
         el = el[0];
-        el.name = el.name.replace('$', '');
       }
       elements.push(el);
       if (res.shouldReturn()) return res;

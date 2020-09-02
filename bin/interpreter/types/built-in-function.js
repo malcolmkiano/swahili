@@ -32,10 +32,9 @@ class SWBuiltInFunction extends SWBaseFunction {
     let res = new RTResult();
     let executionContext = this.generateNewContext();
 
-    const escapedName = this.name.replace('$', '');
-    let methodName = `execute_${escapedName}`;
+    let methodName = `execute_${this.name}`;
     let method = this[methodName] || this.noExecuteMethod;
-    let argNames = this[escapedName];
+    let argNames = this[this.name];
 
     res.register(this.populateArgs(argNames, args, executionContext));
     if (res.shouldReturn()) return res;

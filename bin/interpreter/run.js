@@ -18,7 +18,10 @@ for (let [libConst, value] of Object.entries(constants)) {
 for (let fn of functions) {
   let types = fn.types ? '$' : '';
   let libFn = types + fn.method.name;
-  globalSymbolTable.setConstant(libFn, new SWBuiltInFunction(libFn));
+  globalSymbolTable.setConstant(
+    libFn,
+    new SWBuiltInFunction(libFn.replace('$', ''))
+  );
 }
 
 /**
