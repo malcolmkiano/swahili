@@ -32,7 +32,7 @@ function herufiNdogo(inst, executionContext) {
       )
     );
 
-  // convert to uppercase
+  // convert to lowercase
   let str = neno.value;
   let result = new SWString(str.toLowerCase());
 
