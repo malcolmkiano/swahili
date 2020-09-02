@@ -157,12 +157,24 @@ class Interpreter {
         )
       );
 
+    let chainLength = propChain.length;
     for (let propName of propChain.reverse()) {
       value = obj.symbolTable.get(propName);
       if (value instanceof SWObject && !(value instanceof SWFunction)) {
         obj = value;
+        chainLength--;
       }
     }
+
+    if (chainLength > 1)
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `Cannot get property '${propChain[chainLength - 1]}' of undefined`,
+          context
+        )
+      );
 
     return res.success(value || SWNull.NULL);
   };
