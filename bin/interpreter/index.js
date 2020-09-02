@@ -111,7 +111,12 @@ class Interpreter {
     let elements = [];
 
     for (let elementNode of node.elementNodes) {
-      elements.push(res.register(this.visit(elementNode, context, caller)));
+      let el = res.register(this.visit(elementNode, context, caller));
+      if (Array.isArray(el)) {
+        el = el[0];
+        el.name = el.name.replace('$', '');
+      }
+      elements.push(el);
       if (res.shouldReturn()) return res;
     }
 
@@ -789,10 +794,11 @@ class Interpreter {
       );
 
     valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
-    valueToCall.name = valueToCall.name.replace('$', ''); // remove $ used to hide methods
 
     for (let argNode of node.argNodes) {
-      args.push(res.register(this.visit(argNode, context, caller)));
+      let val = res.register(this.visit(argNode, context, caller));
+      if (Array.isArray(val)) val = val[0];
+      args.push(val);
       if (res.shouldReturn()) return res;
     }
 
