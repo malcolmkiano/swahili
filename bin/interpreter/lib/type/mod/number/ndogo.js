@@ -1,4 +1,5 @@
 const SWNumber = require('../../../../types/number');
+const SWList = require('../../../../types/list');
 
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
@@ -10,6 +11,7 @@ const { RTError } = require('../../../../error');
 function ndogo(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
+  let args = executionContext.symbolTable.get('__hoja'); // helper variable holding a list of all args
 
   // ensure param was provided
   if (!orodha)
@@ -22,14 +24,19 @@ function ndogo(inst, executionContext) {
       )
     );
 
-  // at least one element in the list
-  let list = orodha.elements;
+  // default to the args list
+  let list = args.elements;
+
+  // if 'orodha' is a list, use its elements
+  if (orodha instanceof SWList) list = orodha.elements;
+
+  // ensure at least one element in the list
   if (!list.length)
     return res.failure(
       new RTError(
         orodha.posStart,
         orodha.posEnd,
-        `'orodha' must have at least one element'`,
+        `'orodha' must have at least one element`,
         executionContext
       )
     );

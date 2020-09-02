@@ -12,6 +12,7 @@ const { RTError } = require('../../../../error');
 function kubwa(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
+  let args = executionContext.symbolTable.get('__hoja'); // helper variable holding a list of all args
 
   // ensure param was provided
   if (!orodha)
@@ -24,19 +25,13 @@ function kubwa(inst, executionContext) {
       )
     );
 
-  // ensure 'orodha' is a list
-  if (!(orodha instanceof SWList))
-    return res.failure(
-      new RTError(
-        orodha.posStart,
-        orodha.posEnd,
-        `'orodha' must be a list`,
-        executionContext
-      )
-    );
+  // default to the args list
+  let list = args.elements;
 
-  // at least one element in the list
-  let list = orodha.elements;
+  // if 'orodha' is a list, use its elements
+  if (orodha instanceof SWList) list = orodha.elements;
+
+  // ensure at least one element in the list
   if (!list.length)
     return res.failure(
       new RTError(
