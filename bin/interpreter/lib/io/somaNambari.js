@@ -1,6 +1,6 @@
 const prompt = require('prompt-sync')();
-const SWNumber = require('../../types/number');
-const RTResult = require('../../runtimeResult');
+const SWNumber = require('@types/number');
+const RTResult = require('@int/runtimeResult');
 
 /**
  * Gets numeric input from STDIN

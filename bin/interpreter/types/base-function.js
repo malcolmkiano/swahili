@@ -1,12 +1,12 @@
 const util = require('util');
 const colors = require('colors');
 
-const SWList = require('./list');
-const SWObject = require('./object');
-const SWNull = require('./null');
-const RTResult = require('../runtimeResult');
-const Context = require('../context');
-const SymbolTable = require('../symbolTable');
+const SWList = require('@types/list');
+const SWObject = require('@types/object');
+const SWNull = require('@types/null');
+const RTResult = require('@int/runtimeResult');
+const Context = require('@int/context');
+const SymbolTable = require('@int/symbolTable');
 
 /** Base function type */
 class SWBaseFunction extends SWObject {

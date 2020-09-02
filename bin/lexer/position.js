@@ -1,4 +1,4 @@
-const LEX = require('./lexemes');
+const LEX = require('@lex/lexemes');
 
 /**
  * represents the exact line/colNumber/file position for the lexer, parser and interpreter

@@ -1,7 +1,7 @@
-const print = require('../../../utils/print');
-const SWNull = require('../../types/null');
-const RTResult = require('../../runtimeResult');
-const { RTError } = require('../../error');
+const print = require('@utils/print');
+const SWNull = require('@types/null');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Print a value to the screen

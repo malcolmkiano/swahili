@@ -1,8 +1,8 @@
-const SWNumber = require('../../../../types/number');
-const SWList = require('../../../../types/list');
+const SWNumber = require('@types/number');
+const SWList = require('@types/list');
 
-const RTResult = require('../../../../runtimeResult');
-const { RTError } = require('../../../../error');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 /**
  * Gets the lowest number in a list
  * @param {SWBuiltInFunction} inst the instance of the built in function

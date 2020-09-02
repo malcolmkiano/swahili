@@ -1,4 +1,4 @@
-const stringWithArrows = require('../utils/stringWithArrows');
+const stringWithArrows = require('@utils/stringWithArrows');
 
 class Error {
   /**

@@ -1,9 +1,9 @@
 const util = require('util');
 const colors = require('colors');
-const SWValue = require('./value');
-const SWNumber = require('./number');
-const SWBoolean = require('./boolean');
-const { RTError } = require('../error');
+const SWValue = require('@types/value');
+const SWNumber = require('@types/number');
+const SWBoolean = require('@types/boolean');
+const { RTError } = require('@int/error');
 
 /**  String data type */
 class SWString extends SWValue {

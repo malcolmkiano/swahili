@@ -1,7 +1,6 @@
-const SWString = require('../../../types/string');
-
-const RTResult = require('../../../runtimeResult');
-const { RTError } = require('../../../error');
+const SWString = require('@types/string');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Returns the type of a value
