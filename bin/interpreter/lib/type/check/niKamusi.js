@@ -1,8 +1,8 @@
-const SWBoolean = require('@types/boolean');
-const SWObject = require('@types/object');
-const SWBaseFunction = require('@types/base-function');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SWObject = include('bin/interpreter/types/object');
+const SWBaseFunction = include('bin/interpreter/types/base-function');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Checks if a value is an object

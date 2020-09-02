@@ -1,7 +1,7 @@
-const SWBoolean = require('@types/boolean');
-const SWString = require('@types/string');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SWString = include('bin/interpreter/types/string');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Checks if a value is a string

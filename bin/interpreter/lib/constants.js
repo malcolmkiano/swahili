@@ -1,6 +1,6 @@
-const SWBoolean = require('@types/boolean');
-const SWString = require('@types/string');
-const SWNull = require('@types/null');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SWString = include('bin/interpreter/types/string');
+const SWNull = include('bin/interpreter/types/null');
 
 // instantiate global constants
 module.exports = {

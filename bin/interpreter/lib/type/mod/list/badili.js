@@ -1,7 +1,7 @@
-const SWList = require('@types/list');
-const SWNumber = require('@types/number');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWList = include('bin/interpreter/types/list');
+const SWNumber = include('bin/interpreter/types/number');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Alters the element at the given index of a list

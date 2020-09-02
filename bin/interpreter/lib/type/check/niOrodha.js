@@ -1,7 +1,7 @@
-const SWBoolean = require('@types/boolean');
-const SWList = require('@types/list');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SWList = include('bin/interpreter/types/list');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Checks if a value is a list

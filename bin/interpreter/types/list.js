@@ -1,9 +1,9 @@
 const util = require('util');
-const SWValue = require('@types/value');
-const SWBoolean = require('@types/boolean');
-const SWNumber = require('@types/number');
+const SWValue = include('bin/interpreter/types/value');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SWNumber = include('bin/interpreter/types/number');
 
-const { RTError } = require('@int/error');
+const { RTError } = include('bin/interpreter/error');
 
 /**  List data type */
 class SWList extends SWValue {

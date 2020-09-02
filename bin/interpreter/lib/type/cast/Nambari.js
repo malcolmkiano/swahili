@@ -1,8 +1,8 @@
-const SWString = require('@types/string');
-const SWNumber = require('@types/number');
-const SWBoolean = require('@types/boolean');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWString = include('bin/interpreter/types/string');
+const SWNumber = include('bin/interpreter/types/number');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Casts a value to a SWNumber

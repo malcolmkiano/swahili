@@ -1,11 +1,11 @@
-const Lexer = require('@lex');
-const Parser = require('@parse');
-const Context = require('@int/context');
-const Interpreter = require('@int');
-const SymbolTable = require('@int/symbolTable');
+const Lexer = include('bin/lexer');
+const Parser = include('bin/parser');
+const Context = include('bin/interpreter/context');
+const Interpreter = include('bin/interpreter');
+const SymbolTable = include('bin/interpreter/symbolTable');
 
-const SWBuiltInFunction = require('@types/built-in-function');
-const { functions, constants } = require('@lib');
+const SWBuiltInFunction = include('bin/interpreter/types/built-in-function');
+const { functions, constants } = include('bin/interpreter/lib');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();

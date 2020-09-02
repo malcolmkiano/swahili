@@ -1,4 +1,4 @@
-const stringWithArrows = require('@utils/stringWithArrows');
+const stringWithArrows = include('bin/utils/stringWithArrows');
 
 class Error {
   /**

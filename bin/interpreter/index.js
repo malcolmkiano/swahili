@@ -1,18 +1,18 @@
-const TT = require('@lex/tokenTypes');
+const TT = include('bin/lexer/tokenTypes');
 
-const SWValue = require('@types/value');
-const SWNull = require('@types/null');
-const SWNumber = require('@types/number');
-const SWString = require('@types/string');
-const SWList = require('@types/list');
-const SWBaseFunction = require('@types/base-function');
-const SWFunction = require('@types/function');
-const SWObject = require('@types/object');
+const SWValue = include('bin/interpreter/types/value');
+const SWNull = include('bin/interpreter/types/null');
+const SWNumber = include('bin/interpreter/types/number');
+const SWString = include('bin/interpreter/types/string');
+const SWList = include('bin/interpreter/types/list');
+const SWBaseFunction = include('bin/interpreter/types/base-function');
+const SWFunction = include('bin/interpreter/types/function');
+const SWObject = include('bin/interpreter/types/object');
 
-const Context = require('@int/context');
-const SymbolTable = require('@int/symbolTable');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const Context = include('bin/interpreter/context');
+const SymbolTable = include('bin/interpreter/symbolTable');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
