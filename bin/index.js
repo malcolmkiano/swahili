@@ -1,13 +1,14 @@
 #!/usr/bin/env node
+require('module-alias/register');
 
 const args = process.argv.slice(2);
 const fs = require('fs');
-
 const colors = require('colors');
 const readline = require('readline');
 
-const print = require('./utils/print');
-const run = require('./interpreter/run');
+const info = require('@root/package.json');
+const print = require('@utils/print');
+const run = require('@int/run');
 
 /** set up terminal interface */
 const rl = readline.createInterface({
@@ -55,11 +56,44 @@ rl.on('SIGINT', () => {
   process.exit(0);
 });
 
+// help info
+const printHelp = () => {
+  print('Usage: swahili <option> <filename>', true);
+  print('where <option> is one of:');
+  print('-h, --help');
+  print('  Print this help', true);
+  print('-l, --load');
+  print('  Load a script at <filename> and run Swahili REPL', true);
+
+  print(
+    'swahili <filename>\tScript at <filename> will be executed and the program will exit'
+  );
+  print('swahili\t\t\tRun Swahili REPL');
+};
+
+let fileName;
+let load = false;
+
 if (args.length) {
-  let fileName = args[0];
+  fileName = args[0];
   let script = null;
 
+  if (['-v', '--version'].includes(args[0])) {
+    print(colors.brightMagenta(`Swahili v${info.version}`));
+    process.exit(0);
+  } else if (['-h', '--help'].includes(args[0])) {
+    printHelp();
+    process.exit(0);
+  } else if (['-l', '--load'].includes(args[0])) {
+    load = true;
+  } else if (args[0].startsWith('-')) {
+    print(colors.red(`${args[0]} is not a valid option`), true);
+    printHelp();
+    process.exit(1);
+  }
+
   try {
+    if (load) fileName = args[1];
     if (fs.lstatSync(fileName).isDirectory()) {
       fileName = fileName.replace(/\/|\\/g, '/');
       fileName = fileName.split('/').filter(Boolean); // remove all falsy values
@@ -79,11 +113,16 @@ if (args.length) {
   }
 
   // process the file
-  const [result, error] = run(fileName, script, true);
+  const [result, error] = run(fileName, script, !load);
   handleOutput(result, error);
-  process.exit(0);
-} else {
-  // begin the repl
-  console.clear();
-  getInput();
+  if (!load) process.exit(0);
 }
+
+// begin the repl
+console.clear();
+if (load)
+  print(
+    `Script ${colors.green('"' + fileName + '"')} was successfully loaded.`,
+    true
+  );
+getInput();

@@ -1,7 +1,7 @@
 const util = require('util');
 const colors = require('colors');
-const SWValue = require('./value');
-const SWString = require('./string');
+const SWValue = require('@types/value');
+const SWString = require('@types/string');
 
 /**  DateTime data type */
 class SWDateTime extends SWValue {

@@ -1,8 +1,8 @@
-const SWNumber = require('../../../../types/number');
-const SWList = require('../../../../types/list');
+const SWNumber = require('@types/number');
+const SWList = require('@types/list');
 
-const RTResult = require('../../../../runtimeResult');
-const { RTError } = require('../../../../error');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Gets the highest number in a list

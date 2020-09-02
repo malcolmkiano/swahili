@@ -1,7 +1,7 @@
-const SWList = require('../../../../types/list');
-const SWNumber = require('../../../../types/number');
-const RTResult = require('../../../../runtimeResult');
-const { RTError } = require('../../../../error');
+const SWList = require('@types/list');
+const SWNumber = require('@types/number');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Alters the element at the given index of a list

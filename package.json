@@ -1,6 +1,6 @@
 {
   "name": "swahili-lang",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
   "repository": {
     "type": "git",
@@ -17,6 +17,15 @@
   "bin": {
     "swahili": "bin/index.js"
   },
+  "_moduleAliases": {
+    "@lib": "bin/interpreter/lib",
+    "@types": "bin/interpreter/types",
+    "@int": "bin/interpreter",
+    "@parse": "bin/parser",
+    "@lex": "bin/lexer",
+    "@utils": "bin/utils",
+    "@root": ""
+  },
   "keywords": [
     "swahili",
     "programming-language"
@@ -32,6 +41,7 @@
   },
   "devDependencies": {
     "eslint": "^7.7.0",
+    "module-alias": "^2.2.2",
     "pre-commit": "^1.2.2",
     "prettier": "^2.1.1"
   },

@@ -1,6 +1,6 @@
 const prompt = require('prompt-sync')();
-const SWString = require('../../types/string');
-const RTResult = require('../../runtimeResult');
+const SWString = require('@types/string');
+const RTResult = require('@int/runtimeResult');
 
 /**
  * Gets input from STDIN

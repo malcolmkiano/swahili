@@ -1,9 +1,9 @@
-const TT = require('./tokenTypes');
-const LEX = require('./lexemes');
+const TT = require('@lex/tokenTypes');
+const LEX = require('@lex/lexemes');
 
-const Token = require('./token');
-const Position = require('./position');
-const { IllegalCharError, ExpectedCharError } = require('../interpreter/error');
+const Token = require('@lex/token');
+const Position = require('@lex/position');
+const { IllegalCharError, ExpectedCharError } = require('@int/error');
 
 /**
  * Performs a lexical analysis to ensure correct syntax of the programming language

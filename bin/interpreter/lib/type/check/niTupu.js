@@ -1,6 +1,6 @@
-const SWBoolean = require('../../../types/boolean');
-const RTResult = require('../../../runtimeResult');
-const { RTError } = require('../../../error');
+const SWBoolean = require('@types/boolean');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Checks if a value is empty

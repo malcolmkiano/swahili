@@ -1,7 +1,7 @@
-const SWString = require('../../../types/string');
-const SWDateTime = require('../../../types/datetime');
-const RTResult = require('../../../runtimeResult');
-const { RTError } = require('../../../error');
+const SWString = require('@types/string');
+const SWDateTime = require('@types/datetime');
+const RTResult = require('@int/runtimeResult');
+const { RTError } = require('@int/error');
 
 /**
  * Creates a new SWDateTime value, or formats one as a SWString

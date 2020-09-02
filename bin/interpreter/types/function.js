@@ -1,7 +1,7 @@
-const SWBaseFunction = require('./base-function');
-const SWNull = require('./null');
-const RTResult = require('../runtimeResult');
-const SymbolTable = require('../symbolTable');
+const SWBaseFunction = require('@types/base-function');
+const SWNull = require('@types/null');
+const RTResult = require('@int/runtimeResult');
+const SymbolTable = require('@int/symbolTable');
 
 /** Function data type */
 class SWFunction extends SWBaseFunction {

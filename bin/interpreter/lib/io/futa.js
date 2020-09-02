@@ -1,5 +1,5 @@
-const SWNull = require('../../types/null');
-const RTResult = require('../../runtimeResult');
+const SWNull = require('@types/null');
+const RTResult = require('@int/runtimeResult');
 
 /**
  * Clears the terminal
