@@ -3,7 +3,7 @@ const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
 /**
- * Converts a string to uppercase
+ * Converts a string to lowercase
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */

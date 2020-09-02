@@ -38,11 +38,11 @@ These are operators that take numerical values as their operands and return a si
 
 Logical operators are typically used with Boolean (logical) values. When they are used, they return a boolean value.
 
-| Operator          | Usage          | Description                                                                                                                                                                                                           |
-| ----------------- | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Logical AND(`&&`) | expr1 && expr2 | When used with Boolean values, it returns `true` if both operands are `true`, otherwise it returns `false`. When used with Strings, it will return the latter (`expr2` in this case) if `expr1` is truthy             |
-| Logical OR(`      |                | `)                                                                                                                                                                                                                    | expr1 |  | expr2 | When used with Boolean values, it returns `true` if either operand is `true`, otherwise it returns `false` when both operands are `false`. When used with Strings, it will return the first truthy value it encounters. |
-| Logical NOT(`!`)  | !expr1         | Returns `false` if it applied on a single operator that can be converted to `true`, otherwise, returns `false`. When used on lists, (`!orodha`), it returns `true` if the list is empty, otherwise it returns `false` |
+| Operator           | Usage          | Description                                                                                                                                                                                                           |
+| ------------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Logical AND(`&&`)  | expr1 && expr2 | When used with Boolean values, it returns `true` if both operands are `true`, otherwise it returns `false`. When used with Strings, it will return the latter (`expr2` in this case) if `expr1` is truthy             |
+| Logical OR(`\|\|`) | expr1          |                                                                                                                                                                                                                       | expr2 | When used with Boolean values, it returns `true` if either operand is `true`, otherwise it returns `false` when both operands are `false`. When used with Strings, it will return the first truthy value it encounters. |
+| Logical NOT(`!`)   | !expr1         | Returns `false` if it applied on a single operator that can be converted to `true`, otherwise, returns `false`. When used on lists, (`!orodha`), it returns `true` if the list is empty, otherwise it returns `false` |
 
 ## String Operators
 
