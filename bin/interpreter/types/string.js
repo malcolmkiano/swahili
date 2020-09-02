@@ -14,6 +14,7 @@ class SWString extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Jina';
   }
 
   /**

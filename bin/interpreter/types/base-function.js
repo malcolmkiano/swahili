@@ -19,6 +19,7 @@ class SWBaseFunction extends SWObject {
   constructor(name) {
     super();
     this.name = name || '<isiyotambuliwa>';
+    this.typeName = 'Shughuli';
   }
 
   /**

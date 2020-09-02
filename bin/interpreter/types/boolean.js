@@ -11,6 +11,7 @@ class SWBoolean extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Hali';
   }
 
   /** generator function for true values */

@@ -19,6 +19,7 @@ const niShughuli = require('./type/check/niShughuli');
 const niTupu = require('./type/check/niTupu');
 const niTarehe = require('./type/check/niTarehe');
 const niKamusi = require('./type/check/niKamusi');
+const aina = require('./type/check/aina');
 
 // > Casting
 const Nambari = require('./type/cast/Nambari');
@@ -58,6 +59,7 @@ module.exports = {
     niTupu,
     niTarehe,
     niKamusi,
+    aina,
     Nambari,
     Jina,
     Tarehe,

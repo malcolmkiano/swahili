@@ -8,6 +8,7 @@ class SWValue {
   constructor() {
     this.setPosition();
     this.setContext();
+    this.typeName = 'Kitu';
   }
 
   /**

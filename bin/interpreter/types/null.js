@@ -11,6 +11,7 @@ class SWNull extends SWValue {
   constructor() {
     super();
     this.value = null;
+    this.typeName = 'tupu';
   }
 
   /** generator function for null values */
