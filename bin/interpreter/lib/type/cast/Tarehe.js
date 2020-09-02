@@ -1,6 +1,5 @@
 const SWString = require('../../../types/string');
 const SWDateTime = require('../../../types/datetime');
-const SWNull = require('../../../types/null');
 const RTResult = require('../../../runtimeResult');
 const { RTError } = require('../../../error');
 
@@ -19,7 +18,7 @@ function Tarehe(inst, executionContext) {
       let dateString = tarehe.value;
       val = new Date(dateString);
       if (val.toString() === 'Invalid Date') throw new Error('Invalid date');
-    } else if (tarehe instanceof SWNull) {
+    } else if (!tarehe) {
       val = new Date();
     } else {
       throw new Error('Invalid date');

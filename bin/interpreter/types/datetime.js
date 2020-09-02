@@ -12,6 +12,7 @@ class SWDateTime extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Tarehe';
   }
 
   /** dictionary for Swahili day names */

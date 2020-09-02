@@ -16,6 +16,7 @@ class SWObject extends SWValue {
     this.populateSymbols(symbols);
     this.name = null;
     this.parent = null;
+    this.typeName = 'Kamusi';
   }
 
   /**

@@ -34,7 +34,7 @@ function tenga(inst, executionContext) {
     );
 
   // check types
-  if (!jina instanceof SWString)
+  if (!(jina instanceof SWString))
     return res.failure(
       new RTError(
         jina.posStart,
@@ -44,7 +44,7 @@ function tenga(inst, executionContext) {
       )
     );
 
-  if (!kitengo instanceof SWString)
+  if (!(kitengo instanceof SWString))
     return res.failure(
       new RTError(
         pahala.posStart,

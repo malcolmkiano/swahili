@@ -34,7 +34,7 @@ function unga(inst, executionContext) {
     );
 
   // check types
-  if (!orodha instanceof SWList)
+  if (!(orodha instanceof SWList))
     return res.failure(
       new RTError(
         orodha.posStart,
@@ -44,7 +44,7 @@ function unga(inst, executionContext) {
       )
     );
 
-  if (!kiungo instanceof SWString)
+  if (!(kiungo instanceof SWString))
     return res.failure(
       new RTError(
         pahala.posStart,

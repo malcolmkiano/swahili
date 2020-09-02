@@ -1,6 +1,6 @@
 {
   "name": "swahili-lang",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
   "repository": {
     "type": "git",
@@ -8,8 +8,12 @@
   },
   "main": "bin/index.js",
   "scripts": {
+    "format": "prettier --write . && git add .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "pre-commit": [
+    "format"
+  ],
   "bin": {
     "swahili": "bin/index.js"
   },
@@ -19,7 +23,7 @@
   ],
   "contributors": [
     "Malcolm Kiano <hello@malcolmkiano.com> (https://malcolmkiano.com)",
-    "Wendo Nyang <wendonyang@gmail.com>"
+    "Patrick Wendo <wendonyang@gmail.com> (https://github.com/w3ndo)"
   ],
   "license": "ISC",
   "dependencies": {
@@ -28,6 +32,7 @@
   },
   "devDependencies": {
     "eslint": "^7.7.0",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.1.1"
   },
   "bugs": {

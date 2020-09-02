@@ -14,6 +14,7 @@ class SWList extends SWValue {
   constructor(elements) {
     super();
     this.elements = elements;
+    this.typeName = 'Orodha';
   }
 
   /**

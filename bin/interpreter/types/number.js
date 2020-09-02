@@ -13,6 +13,7 @@ class SWNumber extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Nambari';
   }
 
   /**

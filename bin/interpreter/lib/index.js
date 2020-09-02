@@ -1,6 +1,6 @@
 // =====================================================
 // Constants
-const libConstants = require('./constants');
+const constants = require('./constants');
 
 // =====================================================
 // I/O methods
@@ -18,6 +18,8 @@ const niOrodha = require('./type/check/niOrodha');
 const niShughuli = require('./type/check/niShughuli');
 const niTupu = require('./type/check/niTupu');
 const niTarehe = require('./type/check/niTarehe');
+const niKamusi = require('./type/check/niKamusi');
+const aina = require('./type/check/aina');
 
 // > Casting
 const Nambari = require('./type/cast/Nambari');
@@ -34,20 +36,18 @@ const unga = require('./type/mod/list/unga');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
+const herufiNdogo = require('./type/mod/string/herufiNdogo');
+const herufiKubwa = require('./type/mod/string/herufiKubwa');
 
 // >>> Numbers
 const ndogo = require('./type/mod/number/ndogo');
 const kubwa = require('./type/mod/number/kubwa');
 
 // =====================================================
-// Misc methods
-const wamlambez = require('./misc/wamlambez');
-
-// =====================================================
 // Exports
 module.exports = {
-  libConstants,
-  libFunctions: [
+  constants,
+  functions: [
     andika,
     soma,
     somaNambari,
@@ -58,6 +58,8 @@ module.exports = {
     niShughuli,
     niTupu,
     niTarehe,
+    niKamusi,
+    aina,
     Nambari,
     Jina,
     Tarehe,
@@ -65,8 +67,9 @@ module.exports = {
     badili,
     unga,
     tenga,
+    herufiNdogo,
+    herufiKubwa,
     ndogo,
     kubwa,
-    wamlambez,
   ],
 };
