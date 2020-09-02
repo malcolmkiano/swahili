@@ -1,6 +1,6 @@
-const SWString = require('@types/string');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWString = include('bin/interpreter/types/string');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Returns the type of a value

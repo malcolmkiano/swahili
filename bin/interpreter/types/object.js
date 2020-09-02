@@ -1,8 +1,8 @@
 const util = require('util');
 
-const SWValue = require('@types/value');
-const SWBoolean = require('@types/boolean');
-const SymbolTable = require('@int/symbolTable');
+const SWValue = include('bin/interpreter/types/value');
+const SWBoolean = include('bin/interpreter/types/boolean');
+const SymbolTable = include('bin/interpreter/symbolTable');
 
 /** Object data type */
 class SWObject extends SWValue {

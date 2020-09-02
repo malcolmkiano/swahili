@@ -1,8 +1,8 @@
-const SWString = require('@types/string');
-const SWList = require('@types/list');
-const SWNumber = require('@types/number');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWString = include('bin/interpreter/types/string');
+const SWList = include('bin/interpreter/types/list');
+const SWNumber = include('bin/interpreter/types/number');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Returns the length of a list/string

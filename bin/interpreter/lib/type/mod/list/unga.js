@@ -1,7 +1,7 @@
-const SWList = require('@types/list');
-const SWString = require('@types/string');
-const RTResult = require('@int/runtimeResult');
-const { RTError } = require('@int/error');
+const SWList = include('bin/interpreter/types/list');
+const SWString = include('bin/interpreter/types/string');
+const RTResult = include('bin/interpreter/runtimeResult');
+const { RTError } = include('bin/interpreter/error');
 
 /**
  * Joins a list using a given join character

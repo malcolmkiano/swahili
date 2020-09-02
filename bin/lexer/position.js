@@ -1,4 +1,4 @@
-const LEX = require('@lex/lexemes');
+const LEX = include('bin/lexer/lexemes');
 
 /**
  * represents the exact line/colNumber/file position for the lexer, parser and interpreter

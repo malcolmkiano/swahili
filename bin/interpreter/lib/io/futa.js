@@ -1,5 +1,5 @@
-const SWNull = require('@types/null');
-const RTResult = require('@int/runtimeResult');
+const SWNull = include('bin/interpreter/types/null');
+const RTResult = include('bin/interpreter/runtimeResult');
 
 /**
  * Clears the terminal
