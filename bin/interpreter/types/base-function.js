@@ -1,6 +1,7 @@
 const util = require('util');
 const colors = require('colors');
 
+const SWList = require('./list');
 const SWObject = require('./object');
 const SWNull = require('./null');
 const RTResult = require('../runtimeResult');
@@ -39,6 +40,7 @@ class SWBaseFunction extends SWObject {
   populateArgs(argNames, args, executionContext, nullType = false) {
     let res = new RTResult();
     let nullValue = nullType ? SWNull.NULL : null;
+    let allArgs = [];
     for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
       let argValue = i < args.length ? args[i] : nullValue;
@@ -46,8 +48,22 @@ class SWBaseFunction extends SWObject {
         argValue.setContext(executionContext);
         executionContext.symbolTable.set(argName, argValue);
         this.symbolTable.set(argName, argValue);
+        if (args[i]) allArgs.push(argValue);
       }
     }
+
+    // add all given args to the allArgs list
+    for (let i = allArgs.length; i < args.length; i++) {
+      let argValue = i < args.length ? args[i] : null;
+      if (argValue) {
+        allArgs.push(argValue);
+      }
+    }
+
+    // pass the list in a hidden param
+    let __hoja = new SWList(allArgs);
+    executionContext.symbolTable.set('__hoja', __hoja);
+    this.symbolTable.set('__hoja', __hoja);
 
     return res.success(SWNull.NULL);
   }
