@@ -1,8 +1,9 @@
 const util = require('util');
 const colors = require('colors');
-const SWValue = include('bin/interpreter/types/value');
-const SWBoolean = include('bin/interpreter/types/boolean');
-const { RTError } = include('bin/interpreter/error');
+
+const SWValue = require('./value');
+const SWBoolean = require('./boolean');
+const { RTError } = require('../error');
 
 /**  Number data type */
 class SWNumber extends SWValue {

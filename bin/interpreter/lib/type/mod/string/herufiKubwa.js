@@ -1,6 +1,6 @@
-const SWString = include('bin/interpreter/types/string');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWString = require('../../../../types/string');
+const RTResult = require('../../../../runtimeResult');
+const { RTError } = require('../../../../error');
 
 /**
  * Converts a string to uppercase

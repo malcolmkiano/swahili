@@ -1,7 +1,7 @@
-const SWBoolean = include('bin/interpreter/types/boolean');
-const SWDateTime = include('bin/interpreter/types/datetime');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWBoolean = require('../../../types/boolean');
+const SWDateTime = require('../../../types/datetime');
+const RTResult = require('../../../runtimeResult');
+const { RTError } = require('../../../error');
 
 /**
  * Checks if a value is a date

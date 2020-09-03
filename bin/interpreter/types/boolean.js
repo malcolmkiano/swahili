@@ -1,6 +1,7 @@
 const util = require('util');
 const colors = require('colors');
-const SWValue = include('bin/interpreter/types/value');
+
+const SWValue = require('./value');
 
 /**  Boolean data type */
 class SWBoolean extends SWValue {

@@ -1,8 +1,8 @@
-const SWString = include('bin/interpreter/types/string');
-const SWList = include('bin/interpreter/types/list');
-const SWBoolean = include('bin/interpreter/types/boolean');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWString = require('../../../../types/string');
+const SWList = require('../../../../types/list');
+const SWBoolean = require('../../../../types/boolean');
+const RTResult = require('../../../../runtimeResult');
+const { RTError } = require('../../../../error');
 
 /**
  * Returns a boolean indicating whether an iterable contains a value

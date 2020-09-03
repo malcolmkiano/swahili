@@ -1,7 +1,7 @@
-const SWBoolean = include('bin/interpreter/types/boolean');
-const SWBaseFunction = include('bin/interpreter/types/base-function');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWBoolean = require('../../../types/boolean');
+const SWBaseFunction = require('../../../types/base-function');
+const RTResult = require('../../../runtimeResult');
+const { RTError } = require('../../../error');
 
 /**
  * Checks if a value is a function

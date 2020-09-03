@@ -1,10 +1,9 @@
 const util = require('util');
 const colors = require('colors');
 
-const { functions } = include('bin/interpreter/lib');
-
-const SWBaseFunction = include('bin/interpreter/types/base-function');
-const RTResult = include('bin/interpreter/runtimeResult');
+const SWBaseFunction = require('./base-function');
+const RTResult = require('../runtimeResult');
+const { functions } = require('../lib');
 
 /** Built in function data type */
 class SWBuiltInFunction extends SWBaseFunction {

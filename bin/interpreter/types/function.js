@@ -1,7 +1,7 @@
-const SWBaseFunction = include('bin/interpreter/types/base-function');
-const SWNull = include('bin/interpreter/types/null');
-const RTResult = include('bin/interpreter/runtimeResult');
-const SymbolTable = include('bin/interpreter/symbolTable');
+const SWBaseFunction = require('./base-function');
+const SWNull = require('./null');
+const RTResult = require('../runtimeResult');
+const SymbolTable = require('../symbolTable');
 
 /** Function data type */
 class SWFunction extends SWBaseFunction {

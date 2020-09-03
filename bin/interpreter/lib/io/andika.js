@@ -1,7 +1,7 @@
-const print = include('bin/utils/print');
-const SWNull = include('bin/interpreter/types/null');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const print = require('../../../utils/print');
+const SWNull = require('../../types/null');
+const RTResult = require('../../runtimeResult');
+const { RTError } = require('../../error');
 
 /**
  * Print a value to the screen
