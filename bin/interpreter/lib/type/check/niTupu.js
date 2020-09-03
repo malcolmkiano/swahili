@@ -1,6 +1,6 @@
-const SWBoolean = include('bin/interpreter/types/boolean');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWBoolean = require('../../../types/boolean');
+const RTResult = require('../../../runtimeResult');
+const { RTError } = require('../../../error');
 
 /**
  * Checks if a value is empty

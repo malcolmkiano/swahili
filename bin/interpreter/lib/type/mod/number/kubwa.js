@@ -1,8 +1,7 @@
-const SWNumber = include('bin/interpreter/types/number');
-const SWList = include('bin/interpreter/types/list');
-
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWList = require('../../../../types/list');
+const SWNumber = require('../../../../types/number');
+const RTResult = require('../../../../runtimeResult');
+const { RTError } = require('../../../../error');
 
 /**
  * Gets the highest number in a list

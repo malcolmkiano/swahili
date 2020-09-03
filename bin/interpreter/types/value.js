@@ -1,7 +1,5 @@
-const util = require('util');
-const colors = require('colors');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const RTResult = require('../runtimeResult');
+const { RTError } = require('../error');
 
 /**  Value base type */
 class SWValue {

@@ -1,7 +1,7 @@
-const TT = include('bin/lexer/tokenTypes');
-const LEX = include('bin/lexer/lexemes');
-const ParseResult = include('bin/parser/parseResult');
-const { InvalidSyntaxError } = include('bin/interpreter/error');
+const TT = require('../lexer/tokenTypes');
+const LEX = require('../lexer/lexemes');
+const ParseResult = require('./parseResult');
+const { InvalidSyntaxError } = require('../interpreter/error');
 const {
   NumberNode,
   StringNode,
@@ -23,7 +23,7 @@ const {
   ReturnNode,
   ContinueNode,
   BreakNode,
-} = include('bin/interpreter/nodes');
+} = require('../interpreter/nodes');
 
 // abstraction to make code shorter
 const lc = (str) => str.replace('\\', '').toLowerCase();

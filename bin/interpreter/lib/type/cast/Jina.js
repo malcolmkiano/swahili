@@ -1,7 +1,7 @@
-const SWString = include('bin/interpreter/types/string');
-const SWBaseFunction = include('bin/interpreter/types/base-function');
-const RTResult = include('bin/interpreter/runtimeResult');
-const { RTError } = include('bin/interpreter/error');
+const SWString = require('../../../types/string');
+const SWBaseFunction = require('../../../types/base-function');
+const RTResult = require('../../../runtimeResult');
+const { RTError } = require('../../../error');
 
 /**
  * Casts a value to a SWString

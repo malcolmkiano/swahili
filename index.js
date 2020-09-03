@@ -1,16 +1,12 @@
 #!/usr/bin/env node
-global.base_dir = __dirname;
-global.abs_path = (path) => base_dir + path;
-global.include = (file) => require(abs_path('/' + file));
-
 const args = process.argv.slice(2);
 const fs = require('fs');
 const colors = require('colors');
 const readline = require('readline');
 
-const info = include('package.json');
-const print = include('bin/utils/print');
-const run = include('bin/interpreter/run');
+const info = require('./package.json');
+const print = require('./bin/utils/print');
+const run = require('./bin/interpreter/run');
 
 /** set up terminal interface */
 const rl = readline.createInterface({
