@@ -4,9 +4,9 @@ const fs = require('fs');
 const colors = require('colors');
 const readline = require('readline');
 
-const info = require('./package.json');
-const print = require('./bin/utils/print');
-const run = require('./bin/interpreter/run');
+const info = require('../package.json');
+const print = require('./utils/print');
+const run = require('./interpreter/run');
 
 /** set up terminal interface */
 const rl = readline.createInterface({

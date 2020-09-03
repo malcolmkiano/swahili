@@ -15,7 +15,7 @@
     "format"
   ],
   "bin": {
-    "swahili": "./index.js"
+    "swahili": "node ./bin"
   },
   "keywords": [
     "swahili",
