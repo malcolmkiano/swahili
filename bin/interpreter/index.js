@@ -280,6 +280,7 @@ class Interpreter {
     }
 
     obj.symbolTable.set(currentNode, value);
+    if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
     return res.success(value || SWNull.NULL);
   };
