@@ -6,6 +6,7 @@ const SWNumber = require('./types/number');
 const SWString = require('./types/string');
 const SWList = require('./types/list');
 const SWBaseFunction = require('./types/base-function');
+const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
 
@@ -272,7 +273,7 @@ class Interpreter {
       valueNode = obj.symbolTable.get(currentNode);
     }
 
-    if (value instanceof SWObject) {
+    if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       value.name = currentNode;
       if (!(value instanceof SWFunction)) {
         value.parent = obj.symbolTable.symbols;
@@ -340,7 +341,7 @@ class Interpreter {
         )
       );
 
-    if (value instanceof SWObject) {
+    if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       value.name = varName;
 
       if (!(value instanceof SWFunction)) {
@@ -385,7 +386,7 @@ class Interpreter {
         )
       );
 
-    if (value instanceof SWObject) {
+    if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       value.name = varName;
 
       if (!(value instanceof SWFunction)) {

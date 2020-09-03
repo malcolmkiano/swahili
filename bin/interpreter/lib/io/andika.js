@@ -10,8 +10,8 @@ const { RTError } = require('../../error');
  */
 function andika(inst, executionContext) {
   let res = new RTResult();
-  let ujumbe = executionContext.symbolTable.get('ujumbe');
-  if (!ujumbe)
+  let args = executionContext.symbolTable.get('__hoja');
+  if (!args.elements.length)
     return res.failure(
       new RTError(
         inst.posStart,
@@ -21,8 +21,11 @@ function andika(inst, executionContext) {
       )
     );
 
-  ujumbe = ujumbe.toString(false);
-  print(ujumbe);
+  let output = '';
+  for (let arg of args.elements) {
+    output += arg.toString(false) + ' ';
+  }
+  print(output);
   return res.success(SWNull.NULL);
 }
 

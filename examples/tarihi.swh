@@ -24,7 +24,7 @@ shughuli mpangoMpya() {
   kama (!!jibu) {
     mipango = mipango + [uwongo, jibu] // ongeza mpango kama jibu liliandikwa (only add the item if the user entered a response)
   } sivyo {
-    sema("-> Mpango mpya haukuongezwa\n")
+    sema("-> Mpango mpya haukuongezwa. Bonyeza [ENTER] kuendelea\n")
   }
 }
 
@@ -43,9 +43,9 @@ shughuli badiliMpango() {
     wacha ujumbe = mpango/1
 
     wacha mpangoMpya = [!hali, ujumbe]
-    mipango.badili(pahala, mpangoMpya) // namna ya kubadili kitu kwenye orodha (method to change an item in a list)
+    mipango.weka(pahala, mpangoMpya) // namna ya kubadili kitu kwenye orodha (method to change an item in a list)
   } sivyo {
-    sema("-> Mpango haukubadilishwa\n")
+    sema("-> Mpango haukubadilishwa. Bonyeza [ENTER] kuendelea\n")
   }
 }
 
@@ -60,7 +60,7 @@ shughuli ondoaMpango() {
   kama (pahala >= 0 && pahala < mipango.idadi()) {
     mipango = mipango - pahala
   } sivyo {
-    sema("-> Mpango haukuondolewa\n")
+    sema("-> Mpango haukuondolewa. Bonyeza [ENTER] kuendelea\n")
   }
 }
 
