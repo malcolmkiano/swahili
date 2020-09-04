@@ -19,11 +19,12 @@ class Lexer {
     this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
 
-    // treat semicolons as line endings if input is received from stdin
-    if (fileName === '<stdin>') text = text.replace(/;/g, '\n');
+    // treat semicolons as line endings if input is received from <stdin>
+    // semicolons are otherwise ILLEGAL CHARACTERS!
+    if (fileName === '<stdin>') text = text.replace(LEX.semi, '\n');
 
     // convert all line endings to a % sign for consistent lexing
-    this.text = text.replace(/\r?\n/g, '%');
+    this.text = text.replace(LEX.line, '@');
 
     this.advance();
   }

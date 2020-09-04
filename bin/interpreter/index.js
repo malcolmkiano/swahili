@@ -17,14 +17,6 @@ const { RTError } = require('./error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
-  constructor() {
-    /**
-     * The maximum number of calls to a while loop that will run before
-     * being forcefully terminated
-     */
-    this.maxCallStackSize = 100000;
-  }
-
   /**
    * Evaluates an AST node
    * @param {Node} node the AST node to visit
@@ -573,18 +565,6 @@ class Interpreter {
 
       // restore original context
       context.symbolTable = blockScope;
-
-      // prevent infinite loops
-      calls++;
-      if (calls === this.maxCallStackSize)
-        return res.failure(
-          new RTError(
-            node.posStart,
-            node.posEnd,
-            `Max call stack size exceeded`,
-            context
-          )
-        );
     }
 
     context.symbolTable = originalScope;
@@ -688,18 +668,6 @@ class Interpreter {
       if (res.loopShouldBreak) break;
 
       elements.push(value);
-
-      // prevent infinite loops
-      calls++;
-      if (calls === this.maxCallStackSize)
-        return res.failure(
-          new RTError(
-            node.posStart,
-            node.posEnd,
-            `Max call stack size exceeded`,
-            context
-          )
-        );
     }
 
     return res.success(null);
