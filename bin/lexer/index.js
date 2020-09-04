@@ -78,20 +78,19 @@ class Lexer {
     let escapeCharacter = false;
     this.advance();
 
-    const ESCAPECHARACTERS = {
-      n: '\n',
-      t: '\t',
-    };
-
     while (
       this.currentChar !== null &&
-      (this.currentChar !== '"' || escapeCharacter)
+      (!LEX.doubleQuotes.test(this.currentChar) || escapeCharacter)
     ) {
       if (escapeCharacter) {
-        string += ESCAPECHARACTERS[this.currentChar] || this.currentChar;
+        if (LEX.doubleQuotes.test(this.currentChar)) {
+          string += this.currentChar;
+        } else {
+          string += '\\' + this.currentChar;
+        }
         escapeCharacter = false;
       } else {
-        if (this.currentChar === '\\') {
+        if (LEX.backSlash.test(this.currentChar)) {
           escapeCharacter = true;
         } else {
           string += this.currentChar;

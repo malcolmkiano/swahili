@@ -157,7 +157,20 @@ class SWString extends SWValue {
    * @returns {String}
    */
   toString(showQuotes = true) {
-    return showQuotes ? colors.green(`"${this.value}"`) : this.value;
+    const escapes = {
+      '\\n': '\n',
+      '\\t': '\t',
+    };
+
+    // this allows string objects to contain raw escapes in their value,
+    // so they can be used to create RegEx patterns
+    // they clean themselves (parse any special escape chars) when printed out
+    let escapedValue = this.value;
+    for (let [esc, val] of Object.entries(escapes)) {
+      let reg = new RegExp('\\' + esc, 'g');
+      escapedValue = escapedValue.replace(reg, val);
+    }
+    return showQuotes ? colors.green(`"${escapedValue}"`) : escapedValue;
   }
 }
 
