@@ -47,8 +47,8 @@ function unga(inst, executionContext) {
   if (!(kiungo instanceof SWString))
     return res.failure(
       new RTError(
-        pahala.posStart,
-        pahala.posEnd,
+        kiungo.posStart,
+        kiungo.posEnd,
         `'kiungo' must be a string`,
         executionContext
       )

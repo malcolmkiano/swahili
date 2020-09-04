@@ -39,7 +39,7 @@ function tenga(inst, executionContext) {
       new RTError(
         jina.posStart,
         jina.posEnd,
-        `'jina' must be a list`,
+        `'jina' must be a string`,
         executionContext
       )
     );
@@ -47,8 +47,8 @@ function tenga(inst, executionContext) {
   if (!(kitengo instanceof SWString))
     return res.failure(
       new RTError(
-        pahala.posStart,
-        pahala.posEnd,
+        kitengo.posStart,
+        kitengo.posEnd,
         `'kitengo' must be a string`,
         executionContext
       )

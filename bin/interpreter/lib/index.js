@@ -33,11 +33,12 @@ const sehemu = require('./type/mod/iterable/sehemu');
 const ina = require('./type/mod/iterable/ina');
 
 // >>> Lists
-const badili = require('./type/mod/list/badili');
+const weka = require('./type/mod/list/weka');
 const unga = require('./type/mod/list/unga');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
+const badili = require('./type/mod/string/badili');
 const herufiNdogo = require('./type/mod/string/herufiNdogo');
 const herufiKubwa = require('./type/mod/string/herufiKubwa');
 
@@ -66,11 +67,12 @@ module.exports = {
     Jina,
     Tarehe,
     idadi,
-    badili,
+    weka,
     sehemu,
     ina,
     unga,
     tenga,
+    badili,
     herufiNdogo,
     herufiKubwa,
     ndogo,

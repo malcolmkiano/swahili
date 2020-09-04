@@ -1,14 +1,15 @@
 const SWList = require('../../../../types/list');
 const SWNumber = require('../../../../types/number');
+const SWBoolean = require('../../../../types/boolean');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
 /**
- * Alters the element at the given index of a list
+ * Puts an element at the given index of a list
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
-function badili(inst, executionContext) {
+function weka(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
   let pahala = executionContext.symbolTable.get('pahala');
@@ -78,12 +79,11 @@ function badili(inst, executionContext) {
 
   // replace value in list
   orodha.elements[pahala.value] = kitu;
-
   return res.success(kitu);
 }
 
 module.exports = {
-  method: badili,
+  method: weka,
   args: ['orodha', 'pahala', 'kitu'],
   types: [SWList],
 };
