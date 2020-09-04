@@ -167,12 +167,10 @@ class SWDateTime extends SWValue {
    */
   toString(showColor = true) {
     let dateParts = SWDateTime.getParts(this);
-    let hour = dateParts.sa;
-    let min = dateParts.d;
     let date = dateParts.t;
     let month = dateParts.m;
     let year = dateParts.MK;
-    let fullDate = `${date}/${month}/${year} ${hour}:${min}`;
+    let fullDate = `${date}/${month}/${year}`;
     let output = (str) => (showColor ? colors.magenta(str) : str);
     return output(fullDate);
   }
