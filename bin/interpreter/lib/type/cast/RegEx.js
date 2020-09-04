@@ -4,7 +4,7 @@ const RTResult = require('../../../runtimeResult');
 const { RTError } = require('../../../error');
 
 /**
- * Casts a value to a SWNumber
+ * Casts a value to a SWRegEx
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
