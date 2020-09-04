@@ -1,5 +1,6 @@
 const util = require('util');
 const colors = require('colors');
+
 const SWValue = require('./value');
 const SWString = require('./string');
 
@@ -12,6 +13,7 @@ class SWDateTime extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Tarehe';
   }
 
   /** dictionary for Swahili day names */

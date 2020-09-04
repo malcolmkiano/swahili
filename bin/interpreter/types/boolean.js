@@ -1,5 +1,6 @@
 const util = require('util');
 const colors = require('colors');
+
 const SWValue = require('./value');
 
 /**  Boolean data type */
@@ -11,6 +12,7 @@ class SWBoolean extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Hali';
   }
 
   /** generator function for true values */
@@ -45,34 +47,33 @@ class SWBoolean extends SWValue {
 
   /**
    * logically compares two booleans and returns true if the booleans are truthy
-   * @param {SWBoolean} other boolean to be compared to the current
-   * @returns {SWBoolean}
+   * @param {any} other value to be compared to the current
+   * @returns {any}
    */
   andedBy(other) {
-    if (other instanceof SWBoolean) {
-      return [
-        new SWBoolean(this.value && other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      (this.isTrue() && other.isTrue() ? other : SWBoolean.FALSE).setContext(
+        this.context
+      ),
+      null,
+    ];
   }
 
   /**
-   * logically compares two booleans and returns true if one of the booleans is truthy
-   * @param {SWBoolean} other boolean to be compared to the current
-   * @returns {SWBoolean}
+   * logically compares two values and returns true if one of the booleans is truthy
+   * @param {any} other boolean to be compared to the current
+   * @returns {any}
    */
   oredBy(other) {
-    if (other instanceof SWBoolean) {
-      return [
-        new SWBoolean(this.value || other.value).setContext(this.context),
-        null,
-      ];
-    } else {
-      return [null, super.illegalOperation(other)];
-    }
+    return [
+      (this.isTrue()
+        ? this
+        : other.isTrue()
+        ? other
+        : SWBoolean.FALSE
+      ).setContext(this.context),
+      null,
+    ];
   }
 
   /**

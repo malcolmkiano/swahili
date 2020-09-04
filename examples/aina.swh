@@ -1,21 +1,21 @@
-shughuli Mtu(jina, umri, jinsia, jlu) {
+// load this script with 'swahili -l ./examples/aina.swh'
+// anzisha programu hii kutumia 'swahili -l ./examples/aina.swh'
+
+shughuli Mtu(jina, umri, jlu) {
   rudisha {
     jina: jina,
     umri: umri,
-    jinsia: jinsia,
     jinaLaUtani: jlu,
-    salimu: shughuli salimu() {
+    salimu: shughuli () {
       wacha salamu = "Jambo! Jina langu ni " + hii.jina + "."
       kama (!niTupu(hii.jinaLaUtani)) {
         salamu = salamu + " Marafiki wangu huniita " + hii.jinaLaUtani + "."
       }
       andika(salamu)
+    },
+    zeeka: shughuli () {
+      hii.umri = hii.umri + 1
+      rudisha hii.umri
     }
   }
 }
-
-wacha mimi = Mtu("Malcolm", 24, "m")
-mimi.salimu()
-
-wacha wewe = Mtu("Patrick", 21, "m", "Wendo")
-wewe.salimu()

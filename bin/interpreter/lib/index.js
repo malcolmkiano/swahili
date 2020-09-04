@@ -1,6 +1,6 @@
 // =====================================================
 // Constants
-const libConstants = require('./constants');
+const constants = require('./constants');
 
 // =====================================================
 // I/O methods
@@ -18,6 +18,8 @@ const niOrodha = require('./type/check/niOrodha');
 const niShughuli = require('./type/check/niShughuli');
 const niTupu = require('./type/check/niTupu');
 const niTarehe = require('./type/check/niTarehe');
+const niKamusi = require('./type/check/niKamusi');
+const aina = require('./type/check/aina');
 
 // > Casting
 const Nambari = require('./type/cast/Nambari');
@@ -27,25 +29,28 @@ const Tarehe = require('./type/cast/Tarehe');
 // > Modification & reading
 // >>> Iterables (Lists & Strings)
 const idadi = require('./type/mod/iterable/idadi');
-const badili = require('./type/mod/list/badili');
-const ndogo = require('./type/mod/list/ndogo')
-const kubwa = require('./type/mod/list/kubwa')
+const sehemu = require('./type/mod/iterable/sehemu');
+const ina = require('./type/mod/iterable/ina');
 
 // >>> Lists
+const weka = require('./type/mod/list/weka');
 const unga = require('./type/mod/list/unga');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
+const badili = require('./type/mod/string/badili');
+const herufiNdogo = require('./type/mod/string/herufiNdogo');
+const herufiKubwa = require('./type/mod/string/herufiKubwa');
 
-// =====================================================
-// Misc methods
-const wamlambez = require('./misc/wamlambez');
+// >>> Numbers
+const ndogo = require('./type/mod/number/ndogo');
+const kubwa = require('./type/mod/number/kubwa');
 
 // =====================================================
 // Exports
 module.exports = {
-  libConstants,
-  libFunctions: [
+  constants,
+  functions: [
     andika,
     soma,
     somaNambari,
@@ -56,14 +61,20 @@ module.exports = {
     niShughuli,
     niTupu,
     niTarehe,
+    niKamusi,
+    aina,
     Nambari,
     Jina,
     Tarehe,
     idadi,
-    badili,
+    weka,
+    sehemu,
+    ina,
     unga,
     tenga,
-    wamlambez,
+    badili,
+    herufiNdogo,
+    herufiKubwa,
     ndogo,
     kubwa,
   ],

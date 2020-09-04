@@ -34,21 +34,21 @@ function tenga(inst, executionContext) {
     );
 
   // check types
-  if (!jina instanceof SWString)
+  if (!(jina instanceof SWString))
     return res.failure(
       new RTError(
         jina.posStart,
         jina.posEnd,
-        `'jina' must be a list`,
+        `'jina' must be a string`,
         executionContext
       )
     );
 
-  if (!kitengo instanceof SWString)
+  if (!(kitengo instanceof SWString))
     return res.failure(
       new RTError(
-        pahala.posStart,
-        pahala.posEnd,
+        kitengo.posStart,
+        kitengo.posEnd,
         `'kitengo' must be a string`,
         executionContext
       )
@@ -61,4 +61,8 @@ function tenga(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: tenga, args: ['jina', 'kitengo'] };
+module.exports = {
+  method: tenga,
+  args: ['jina', 'kitengo'],
+  types: [SWString],
+};

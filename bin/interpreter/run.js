@@ -1,23 +1,27 @@
 const Lexer = require('../lexer');
 const Parser = require('../parser');
 const Context = require('./context');
-const Interpreter = require('./');
+const Interpreter = require('.');
 const SymbolTable = require('./symbolTable');
 
 const SWBuiltInFunction = require('./types/built-in-function');
-const { libFunctions, libConstants } = require('./lib');
+const { functions, constants } = require('./lib');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();
 
 // library injection
-for (let [libConst, value] of Object.entries(libConstants)) {
+for (let [libConst, value] of Object.entries(constants)) {
   globalSymbolTable.setConstant(libConst, value);
 }
 
-for (let fn of libFunctions) {
-  let libFn = fn.method.name;
-  globalSymbolTable.setConstant(libFn, new SWBuiltInFunction(libFn));
+for (let fn of functions) {
+  let types = fn.types ? '$' : '';
+  let libFn = types + fn.method.name;
+  globalSymbolTable.setConstant(
+    libFn,
+    new SWBuiltInFunction(libFn.replace('$', ''))
+  );
 }
 
 /**

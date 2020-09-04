@@ -1,17 +1,18 @@
 const SWString = require('../../../../types/string');
 const SWList = require('../../../../types/list');
-const SWNumber = require('../../../../types/number');
+const SWBoolean = require('../../../../types/boolean');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
 /**
- * Returns the length of a list/string
+ * Returns a boolean indicating whether an iterable contains a value
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
-function idadi(inst, executionContext) {
+function ina(inst, executionContext) {
   let res = new RTResult();
   let kitu = executionContext.symbolTable.get('kitu');
+  let kitafuto = executionContext.symbolTable.get('kitafuto');
   if (!kitu)
     return res.failure(
       new RTError(
@@ -22,20 +23,40 @@ function idadi(inst, executionContext) {
       )
     );
 
+  if (!kitafuto)
+    return res.failure(
+      new RTError(
+        kitu.posStart,
+        kitu.posEnd,
+        `Parameter 'kitafuto' is required`,
+        executionContext
+      )
+    );
+
   if (kitu instanceof SWString || kitu instanceof SWList) {
     return res.success(
-      new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
+      new SWBoolean(
+        kitu.elements
+          ? kitu.elements
+              .map((el) => el.toString())
+              .includes(kitafuto.toString())
+          : kitu.toString().includes(kitafuto.toString())
+      )
     );
   } else {
     return res.failure(
       new RTError(
         kitu.posStart,
         kitu.posEnd,
-        `Cannot find length of non-iterable value`,
+        `Cannot check non-iterable value for elements`,
         executionContext
       )
     );
   }
 }
 
-module.exports = { method: idadi, args: ['kitu'], types: [SWString, SWList] };
+module.exports = {
+  method: ina,
+  args: ['kitu', 'kitafuto'],
+  types: [SWString, SWList],
+};

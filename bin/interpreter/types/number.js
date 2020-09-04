@@ -1,5 +1,6 @@
 const util = require('util');
 const colors = require('colors');
+
 const SWValue = require('./value');
 const SWBoolean = require('./boolean');
 const { RTError } = require('../error');
@@ -13,6 +14,7 @@ class SWNumber extends SWValue {
   constructor(value) {
     super();
     this.value = value;
+    this.typeName = 'Nambari';
   }
 
   /**

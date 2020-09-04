@@ -1,10 +1,9 @@
 const util = require('util');
 const colors = require('colors');
 
-const { libFunctions } = require('../lib');
-
 const SWBaseFunction = require('./base-function');
 const RTResult = require('../runtimeResult');
+const { functions } = require('../lib');
 
 /** Built in function data type */
 class SWBuiltInFunction extends SWBaseFunction {
@@ -16,10 +15,11 @@ class SWBuiltInFunction extends SWBaseFunction {
     super(name);
 
     // library injection
-    for (let { method, args } of libFunctions) {
+    for (let { method, args, types = null } of functions) {
       let name = method.name;
       this[`execute_${name}`] = method;
       this[name] = args;
+      if (types) this[`${name}_types`] = types;
     }
   }
 
@@ -45,9 +45,10 @@ class SWBuiltInFunction extends SWBaseFunction {
 
   /**
    * Occurs when no execution method is defined for the built in function
+   * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
    */
-  noExecuteMethod = (context) => {
+  noExecuteMethod = (node, context) => {
     throw new Error(`No execute_${node.constructor.name} method defined`);
   };
 

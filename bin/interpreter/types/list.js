@@ -1,8 +1,8 @@
 const util = require('util');
+
 const SWValue = require('./value');
 const SWBoolean = require('./boolean');
 const SWNumber = require('./number');
-
 const { RTError } = require('../error');
 
 /**  List data type */
@@ -14,6 +14,7 @@ class SWList extends SWValue {
   constructor(elements) {
     super();
     this.elements = elements;
+    this.typeName = 'Orodha';
   }
 
   /**

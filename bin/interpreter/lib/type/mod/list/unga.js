@@ -1,5 +1,5 @@
-const SWList = require('../../../../types/list');
 const SWString = require('../../../../types/string');
+const SWList = require('../../../../types/list');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
@@ -34,7 +34,7 @@ function unga(inst, executionContext) {
     );
 
   // check types
-  if (!orodha instanceof SWList)
+  if (!(orodha instanceof SWList))
     return res.failure(
       new RTError(
         orodha.posStart,
@@ -44,11 +44,11 @@ function unga(inst, executionContext) {
       )
     );
 
-  if (!kiungo instanceof SWString)
+  if (!(kiungo instanceof SWString))
     return res.failure(
       new RTError(
-        pahala.posStart,
-        pahala.posEnd,
+        kiungo.posStart,
+        kiungo.posEnd,
         `'kiungo' must be a string`,
         executionContext
       )
@@ -63,4 +63,4 @@ function unga(inst, executionContext) {
   return res.success(result);
 }
 
-module.exports = { method: unga, args: ['orodha', 'kiungo'] };
+module.exports = { method: unga, args: ['orodha', 'kiungo'], types: [SWList] };

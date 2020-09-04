@@ -168,7 +168,7 @@ idadi(vinywaji)
 
 ## Special Characters
 
-- In addition to ordinary characters you can also include special characters in strings.
+- In addition to ordinary characters you can also require special characters in strings.
 - For Example
 
 ```

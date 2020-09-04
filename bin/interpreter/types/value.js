@@ -1,5 +1,3 @@
-const util = require('util');
-const colors = require('colors');
 const RTResult = require('../runtimeResult');
 const { RTError } = require('../error');
 
@@ -8,6 +6,7 @@ class SWValue {
   constructor() {
     this.setPosition();
     this.setContext();
+    this.typeName = 'Kitu';
   }
 
   /**
