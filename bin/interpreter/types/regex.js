@@ -1,5 +1,7 @@
+const util = require('util');
+const colors = require('colors');
+
 const SWValue = require('./value');
-const RTResult = require('../runtimeResult');
 
 /** RegEx data type */
 class SWRegEx extends SWValue {
@@ -25,6 +27,21 @@ class SWRegEx extends SWValue {
     copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;
+  }
+
+  [util.inspect.custom](depth, options) {
+    return this.toString();
+  }
+
+  /**
+   * string representation of the RegEx class
+   * @param {Boolean} format whether to format the name or not
+   * @returns {String}
+   */
+  toString(format = true) {
+    return format
+      ? colors.blue(`RegEx: /${this._value}/${this._flags}`)
+      : `/${this._value}/${this._flags}`;
   }
 }
 

@@ -25,6 +25,7 @@ const aina = require('./type/check/aina');
 const Nambari = require('./type/cast/Nambari');
 const Jina = require('./type/cast/Jina');
 const Tarehe = require('./type/cast/Tarehe');
+const RegEx = require('./type/cast/RegEx');
 
 // > Modification & reading
 // >>> Iterables (Lists & Strings)
@@ -69,6 +70,7 @@ module.exports = {
     Nambari,
     Jina,
     Tarehe,
+    RegEx,
     idadi,
     weka,
     sehemu,
