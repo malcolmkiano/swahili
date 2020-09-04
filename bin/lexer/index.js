@@ -23,7 +23,7 @@ class Lexer {
     // semicolons are otherwise ILLEGAL CHARACTERS!
     if (fileName === '<stdin>') text = text.replace(LEX.semi, '\n');
 
-    // convert all line endings to a % sign for consistent lexing
+    // convert all line endings to an @ sign for consistent lexing
     this.text = text.replace(LEX.line, '@');
 
     this.advance();
