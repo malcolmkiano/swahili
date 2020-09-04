@@ -61,7 +61,7 @@ function badili(inst, executionContext) {
       new RTError(
         kitafuto.posStart,
         kitafuto.posEnd,
-        `'kitafuto' must be a string`,
+        `'kitafuto' must be a string or regular expression`,
         executionContext
       )
     );
