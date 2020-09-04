@@ -116,12 +116,12 @@ class Interpreter {
       if (Array.isArray(el)) {
         el = el[0];
       }
-      elements.push(el);
+      if (el) elements.push(el);
       if (res.shouldReturn()) return res;
     }
 
     return res.success(
-      new SWList(elements)
+      new SWList(elements.length ? elements : [SWNull.NULL])
         .setContext(context)
         .setPosition(node.posStart, node.posEnd)
     );
@@ -283,7 +283,7 @@ class Interpreter {
     obj.symbolTable.set(currentNode, value);
     if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
-    return res.success(value || SWNull.NULL);
+    return res.success(null);
   };
 
   /**
@@ -360,7 +360,7 @@ class Interpreter {
         )
       );
 
-    return res.success(value);
+    return res.success(null);
   };
 
   /**
@@ -395,7 +395,7 @@ class Interpreter {
     }
 
     context.symbolTable.set(varName, value);
-    return res.success(value);
+    return res.success(null);
   };
 
   /**
@@ -589,13 +589,7 @@ class Interpreter {
 
     context.symbolTable = originalScope;
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -662,13 +656,7 @@ class Interpreter {
 
     context.symbolTable = originalScope;
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -714,13 +702,7 @@ class Interpreter {
         );
     }
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -761,7 +743,7 @@ class Interpreter {
         );
     }
 
-    return res.success(funcValue);
+    return res.success(null);
   };
 
   /**

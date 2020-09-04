@@ -16,9 +16,15 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text.replace(/\r/g, '').replace(/\n/g, ';');
     this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
+
+    // treat semicolons as line endings if input is received from stdin
+    if (fileName === '<stdin>') text = text.replace(/;/g, '\n');
+
+    // convert all line endings to a % sign for consistent lexing
+    this.text = text.replace(/\r?\n/g, '%');
+
     this.advance();
   }
 
