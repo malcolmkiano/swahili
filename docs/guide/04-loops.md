@@ -12,10 +12,18 @@ Currently, 2 Loop structures have been implemented, namely:
 - Example:
 
 ```
-kwa y = 1 Mpaka 10 {
-  andika(“Habari”) //will print "habari" to terminal ten times
+kwa y = 1 Mpaka 6 {
+  andika(“Habari”) //will print "habari" to terminal five times
  }
+
+ >> "Habari"
+ >> "Habari"
+ >> "Habari"
+ >> "Habari"
+ >> "Habari"
+
 ```
+- The upper limit of the range is not included in the iteration. Hence `kwa i = 1 mpaka 3 { andika("Jambo")}` will only print ` "Jambo" ` twice.
 
 You can also loop through a list using the kwa katika syntax instead
 
@@ -25,7 +33,7 @@ You can also loop through a list using the kwa katika syntax instead
 
 ```
   kwa i katika ["Malcolm", "Patrick", "Kiano"]{
-    andika(i)
+    andika(i) // Will print each element in the list
   }
     >> "Malcolm"
     >> "Patrick"

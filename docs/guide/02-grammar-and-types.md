@@ -2,26 +2,25 @@
 
 ## Basics
 
-- Swahili borrows its syntax from javascript, python and ruby. Like Javascript, Swahili is case sensitive. as such the declarations
+- Swahili borrows its syntax from Javascript, Python and Ruby. Like Javascript, Swahili is case sensitive. as such the declarations below are different variables.
 
 ```
-  wacha x = 5
-  wacha X = 3
+  wacha b = 5
+  wacha B = 3
 ```
-
-are entirely different variables.
-
-- Lines can optionally end with a semi-colon like in javascript.
 
 ## Comments
-
-## Declarations
-
-- To declare a variable, we use the keyword `wacha`
+- Swahili uses `//` for single line comments and `/*  */` for multiline comments
 
 ```
-  wacha x = 5
-  wacha X = 3
+  /This is a single line comment
+
+  /*  This
+      is
+      a
+      Multiline
+      Comment
+  */
 ```
 
 ## Variables
@@ -35,14 +34,14 @@ wacha jina = "Kiano" //valid
 wacha 0_jina = "Kiano" //invalid
 ```
 
-- Swahili is case sensitive, hence, `Jina` and `jina` are different variables.
+- Swahili is case sensitive, hence, `Neno` and `neno` are different variables.
 - You can not use Swahli keywords as identifiers.
 
 ```
   wacha kweli = uwongo //will raise an error because kweli is a swahili keyword
 ```
 
-## Declaring Variables
+### Declaring Variables
 
 - To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
 
@@ -55,7 +54,8 @@ wacha jina = tupu //initializes jina to null
 - An attempt to access an undeclared variable results in a Runtime error.
 - You can not perform basic arithmetic and boolean operations on variables with a null value.
 
-## Variable Scope
+
+### Variable Scope
 
 - When running the swahili interpreter on the terminal, variables you declare within a global scope (Outside of any function) can not be redeclared, ie,
 
@@ -68,23 +68,26 @@ x = 5 // this will not raise an error
 - Variables declared inside a function block are only available for that block. For instance:
 
 ```
-x = "Outside block"
-shughuli salamu_tatu(jina){
-  wacha x = 3 //value of x here is 3
-  andika(("Habari, "+ jina )*x)
- }
- salamu_tatu("Wendo")
- andika(x) //will print "Outside block"
+  a = "Outside block"
+  shughuli block_example(){
+    wacha a = "Inside Block"
+    andika(a)
+  }
+  block_example() // Will print "Inside Block"
+  andika(a) // Will print "Outside block"
 ```
 
-## Data Structures and types
+## Data Structures and Data types
 
-- There are 5
+- There are 
   - Boolean: `kweli` that represents true and `uwongo` that represents false
   - null: `tupu` denotes a null value
   - Number: Could be both Integers and floats. For example `42` or `3.14159`
   - Strings: A sequence of characters that represents a text value. For example `Habari`
   - Lists: `Orodha` an ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
+  - Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
+  - Date : Used to represent a date object.
+  - Kamusi : Works like a dictionary by storing items as **key/value pairs**
 
 ## List literals
 
@@ -95,17 +98,17 @@ shughuli salamu_tatu(jina){
 wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 ```
 
-- Lists in Swahili are zero based, that is, the first element has the index of zero.
+- Lists in Swahili are zero based, which means that the first element has the index of zero.
 
 ### Acessing Elements in a list
 
 - Unlike most languages access a specific element in an array we put the index after a forward slash. For example
 
 ```
-wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
-andika(vinywaji/0)
+  wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
+  andika(vinywaji/0)
 >>"chai"
-andika(vinywaji/2)
+  andika(vinywaji/2)
 >>"Kahawa ya Kenya"
 ```
 
@@ -151,6 +154,9 @@ idadi(vinywaji)
 >> 3
 ```
 
+### Replace an element in a list
+- To replace an element in a specific index of the list you can use the `badili` function. You can check the syntax of that [here](../ref/built-in-functions.md)
+
 ## Boolean literals
 
 - The boolean type has 2 literal values: `kweli` and `uwongo`
@@ -186,3 +192,25 @@ andika(" habari \n yako")
 | \"        | Double quote |
 | \'        | Single Quote |
 | \ \|      | Pipe symbol  |
+
+
+## Regular Expressions (RegEx)
+- These are patterns used to match character combinations in strings. 
+- To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. ` RegEx("pattern", "flag")`
+- For Example: 
+```
+  wacha a = RegEx("ab+c", "g")
+  // This Pattern will return RegEx: /ab+c/g
+```
+
+## Date
+- Used to represent a date object. The keyword used to initialize a date is `Tarehe()`.
+```
+  wacha s = tarehe()
+
+```
+- For more information, check [here](../ref/built-in-functions.md) and [here](./07-numbers-and-dates.md)
+
+
+## Kamusi
+- A data structure that stores items as **key/value pairs**. 

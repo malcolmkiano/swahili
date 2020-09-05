@@ -16,7 +16,20 @@
 
 ## Type methods
 
+
 ### Checking type
+
+- **aina(`kitu: any`): `SWString`**<br/>
+  Returns a string indicating the data type of `kitu`
+
+- **niKamusi(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is of type `SWObject`
+
+- **niTarehe(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is of type `SWDateTime`
+
+- **niTupu(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is `SWNull`
 
 - **niNambari(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWNumber`
@@ -43,16 +56,53 @@
 
   For info on `SWDateTime` formatting, read [the guide](../guide/07-numbers-and-dates)
 
+- **RegEx(`muundo: SWString, bendera: SWString`): `SWRegEx`**<br/>
+  Returns `SWRegEx` representation of the value passed in
+
 ### Modification and reading
+
+#### Iterable Modifiers
 
 - **idadi(`kitu: SWList | SWString`): `SWNumber`**<br/>
   Returns the length of a list or string
 
-- **badili(`orodha: SWList, pahala: SWNumber, kitu: any`): `any`**<br/>
-  Modifies an `SWList` in place by replacing the element at the index `pahala` with the value provided for `kitu`. Returns the new value of `kitu`
-
-- **unga(`orodha: SWList, kiungo: SWString):`SWString`**<br/>
+- **unga(`orodha: SWList, kiungo: SWString`):`SWString`**<br/>
   Converts an `SWList` to an `SWString` by joining the elements with the value of `kiungo`
+
+- **ina(`kitu: SWString, kitafuto: SWList`): `SWBoolean`**<br/>
+  Returns a boolean indicating whether a list contains the element `kitu` or not.
+
+- **sehemu(`kitu: SWString, mwanzo: SWNumber, mwisho: SWNumber`): `SWList`**<br/>
+  Returns a section of the list delimited by `mwanzo` and `mwisho`
+
+#### String Modifiers
+
+- **badili(`jina: SWString, kitafuto: SWString | SWRegEx , mbadala: SWString`): `any`**<br/>
+  Modifies an `SWString` in place by replacing the string that matches `kitafuto` with the value provided for `mbadala`. Returns the new value of `jina`
 
 - **tenga(`jina: SWString, kitengo: SWString`): `SWList`**<br/>
   Converts an `SWString` to an `SWList` by splitting each section delimited by the value of `kitengo`
+
+- **herufiKubwa(`jina: SWString`): `SWString`**<br/>
+  Modifies an `SWString` to Upercase
+
+- **herufiNdogo(`jina: SWString`): `SWString`**<br/>
+  Modifies an `SWString` to Lowercase
+
+#### List Modifers & Reading
+
+- **unga(`orodha: SWList, kiungo: SWString`):`SWString`**<br/>
+  Returns a string from the list `orodha`, with the delimiter provided in `kiungo`.
+
+- **weka(`orodha: SWList, pahala: SWNumber, kitu: any`): `SWList`**<br/>
+  Modifies an `SWList` in place by replacing the value at `pahala` with the value provided for `kitu`. Returns the new value of `orodha`
+
+- **kubwa(`orodha:SWList`): `any`**<br/>
+  Returns the largest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the largest number. If the list contains Strings(`SWString`) only, it returns the longest string. If the list contains lists(`SWList`) only, it returns the largest list. For a list of Booleans(`SWBoolean`) only, it returns the first true(`kweli`) value it encounters. If the list contains multiple types, it returns the last element in a list. 
+
+- **ndogo(`orodha:SWList`): `any`**<br/>
+  Returns the smallest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the snallest number. If the list contains Strings(`SWString`) only, it returns the shortest string. If the list contains lists(`SWList`) only, it returns the smallest list. For a list of Booleans(`SWBoolean`) only, it returns the first false(`uwongo`) value it encounters. If the list contains multiple types, it returns the first element in a list. 
+
+#### Date modifers
+- **unda(`tarehe: SWDateTime, muundo: SWString`): `SWString`**<br/>
+  Formats a `tarehe` SWDateTime value as a SWString
