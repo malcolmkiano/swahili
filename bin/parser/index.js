@@ -1000,7 +1000,7 @@ class Parser {
     this.advance();
 
     return res.success(
-      new ForNode(varName, startValue, endValue, stepValue, body, true)
+      new ForNode(varName, startValue, endValue, stepValue, body)
     );
   };
 
@@ -1073,7 +1073,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    return res.success(new ForEachNode(varName, iteration, body, true));
+    return res.success(new ForEachNode(varName, iteration, body));
   };
 
   /** creates a while node */
@@ -1126,7 +1126,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    return res.success(new WhileNode(condition, body, true));
+    return res.success(new WhileNode(condition, body));
   };
 
   /** creates a function definition node */

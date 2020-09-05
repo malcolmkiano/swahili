@@ -234,22 +234,19 @@ class ForNode {
    * @param {Node} endValueNode node containing the value to end iteration at
    * @param {Node} stepValueNode node containing the value used to step through
    * @param {Node} bodyNode node containing the expressions to be run each iteration
-   * @param {Boolean} shouldReturnNull whether the node should return null
    */
   constructor(
     varNameTok,
     startValueNode,
     endValueNode,
     stepValueNode,
-    bodyNode,
-    shouldReturnNull
+    bodyNode
   ) {
     this.varNameTok = varNameTok;
     this.startValueNode = startValueNode;
     this.endValueNode = endValueNode;
     this.stepValueNode = stepValueNode;
     this.bodyNode = bodyNode;
-    this.shouldReturnNull = shouldReturnNull;
 
     this.posStart = this.varNameTok.posStart;
     this.posEnd = this.bodyNode.posEnd;
@@ -263,13 +260,11 @@ class ForEachNode {
    * @param {Token} varNameTok token containing the iterator's name
    * @param {Node} iterationNode node containing the values to iterate over
    * @param {Node} bodyNode node containing the expressions to be run each iteration
-   * @param {Boolean} shouldReturnNull whether the node should return null
    */
-  constructor(varNameTok, iterationNode, bodyNode, shouldReturnNull) {
+  constructor(varNameTok, iterationNode, bodyNode) {
     this.varNameTok = varNameTok;
     this.iterationNode = iterationNode;
     this.bodyNode = bodyNode;
-    this.shouldReturnNull = shouldReturnNull;
 
     this.posStart = this.varNameTok.posStart;
     this.posEnd = this.bodyNode.posEnd;
@@ -282,12 +277,10 @@ class WhileNode {
    * instantiates a while node
    * @param {Node} conditionNode node containing the condition to be met
    * @param {Node} bodyNode node containing the expressions to run each iteration
-   * @param {Boolean} shouldReturnNull whether the node should return null
    */
-  constructor(conditionNode, bodyNode, shouldReturnNull) {
+  constructor(conditionNode, bodyNode) {
     this.conditionNode = conditionNode;
     this.bodyNode = bodyNode;
-    this.shouldReturnNull = shouldReturnNull;
 
     this.posStart = this.conditionNode.posStart;
     this.posEnd = this.bodyNode.posEnd;
