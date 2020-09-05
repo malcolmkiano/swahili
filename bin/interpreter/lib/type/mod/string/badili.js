@@ -1,7 +1,8 @@
 const SWString = require('../../../../types/string');
+const SWRegEx = require('../../../../types/regex');
+const SWBoolean = require('../../../../types/boolean');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
-const SWBoolean = require('../../../../types/boolean');
 
 /**
  * Replaces first instance of
@@ -13,7 +14,6 @@ function badili(inst, executionContext) {
   let jina = executionContext.symbolTable.get('jina');
   let kitafuto = executionContext.symbolTable.get('kitafuto');
   let mbadala = executionContext.symbolTable.get('mbadala');
-  let kamili = executionContext.symbolTable.get('kamili');
 
   if (!jina)
     return res.failure(
@@ -56,12 +56,12 @@ function badili(inst, executionContext) {
       )
     );
 
-  if (!(kitafuto instanceof SWString))
+  if (!(kitafuto instanceof SWString) && !(kitafuto instanceof SWRegEx))
     return res.failure(
       new RTError(
         kitafuto.posStart,
         kitafuto.posEnd,
-        `'kitafuto' must be a string`,
+        `'kitafuto' must be a string or regular expression`,
         executionContext
       )
     );
@@ -76,31 +76,13 @@ function badili(inst, executionContext) {
       )
     );
 
-  if (kamili && !(kamili instanceof SWBoolean))
-    return res.failure(
-      new RTError(
-        kamili.posStart,
-        kamili.posEnd,
-        `'kamili' must be a boolean`,
-        executionContext
-      )
-    );
-
-  let replaceAll = kamili ? kamili.value : false;
-
   // do the replacement
   let result = jina.value.replace(kitafuto.value, mbadala.value);
-  if (replaceAll) {
-    while (result.includes(kitafuto.value)) {
-      result = result.replace(kitafuto.value, mbadala.value);
-    }
-  }
-
   return res.success(new SWString(result));
 }
 
 module.exports = {
   method: badili,
-  args: ['jina', 'kitafuto', 'mbadala', 'kamili'],
+  args: ['jina', 'kitafuto', 'mbadala'],
   types: [SWString],
 };

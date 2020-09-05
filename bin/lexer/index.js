@@ -16,9 +16,16 @@ class Lexer {
    */
   constructor(fileName, text) {
     this.fileName = fileName;
-    this.text = text.replace(/\r/g, '').replace(/\n/g, ';');
     this.pos = new Position(-1, 0, -1, fileName, text);
     this.currentChar = null;
+
+    // treat semicolons as line endings if input is received from <stdin>
+    // semicolons are otherwise ILLEGAL CHARACTERS!
+    if (fileName === '<stdin>') text = text.replace(LEX.semi, '\n');
+
+    // convert all line endings to an @ sign for consistent lexing
+    this.text = text.replace(LEX.line, '@');
+
     this.advance();
   }
 
@@ -72,20 +79,19 @@ class Lexer {
     let escapeCharacter = false;
     this.advance();
 
-    const ESCAPECHARACTERS = {
-      n: '\n',
-      t: '\t',
-    };
-
     while (
       this.currentChar !== null &&
-      (this.currentChar !== '"' || escapeCharacter)
+      (!LEX.doubleQuotes.test(this.currentChar) || escapeCharacter)
     ) {
       if (escapeCharacter) {
-        string += ESCAPECHARACTERS[this.currentChar] || this.currentChar;
+        if (LEX.doubleQuotes.test(this.currentChar)) {
+          string += this.currentChar;
+        } else {
+          string += '\\' + this.currentChar;
+        }
         escapeCharacter = false;
       } else {
-        if (this.currentChar === '\\') {
+        if (LEX.backSlash.test(this.currentChar)) {
           escapeCharacter = true;
         } else {
           string += this.currentChar;

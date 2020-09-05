@@ -25,6 +25,7 @@ const aina = require('./type/check/aina');
 const Nambari = require('./type/cast/Nambari');
 const Jina = require('./type/cast/Jina');
 const Tarehe = require('./type/cast/Tarehe');
+const RegEx = require('./type/cast/RegEx');
 
 // > Modification & reading
 // >>> Iterables (Lists & Strings)
@@ -46,6 +47,9 @@ const herufiKubwa = require('./type/mod/string/herufiKubwa');
 const ndogo = require('./type/mod/number/ndogo');
 const kubwa = require('./type/mod/number/kubwa');
 
+// >>> Dates
+const unda = require('./type/mod/date/unda');
+
 // =====================================================
 // Exports
 module.exports = {
@@ -66,6 +70,7 @@ module.exports = {
     Nambari,
     Jina,
     Tarehe,
+    RegEx,
     idadi,
     weka,
     sehemu,
@@ -77,5 +82,6 @@ module.exports = {
     herufiKubwa,
     ndogo,
     kubwa,
+    unda,
   ],
 };

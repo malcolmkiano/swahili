@@ -25,7 +25,9 @@ module.exports = {
   equals: /=/,
   leftArrow: /</,
   rightArrow: />/,
-  lineEndings: /\r|\n|;/,
+  semi: /;/g,
+  line: /\r?\n/g,
+  lineEndings: /@/, // as far as lexer is concerned
   spacesAndTabs: /\s|\t/, // ignored
   keywords: {
     let: 'wacha',

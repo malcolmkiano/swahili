@@ -17,14 +17,6 @@ const { RTError } = require('./error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
-  constructor() {
-    /**
-     * The maximum number of calls to a while loop that will run before
-     * being forcefully terminated
-     */
-    this.maxCallStackSize = 100000;
-  }
-
   /**
    * Evaluates an AST node
    * @param {Node} node the AST node to visit
@@ -116,12 +108,12 @@ class Interpreter {
       if (Array.isArray(el)) {
         el = el[0];
       }
-      elements.push(el);
+      if (el) elements.push(el);
       if (res.shouldReturn()) return res;
     }
 
     return res.success(
-      new SWList(elements)
+      new SWList(elements.length ? elements : [SWNull.NULL])
         .setContext(context)
         .setPosition(node.posStart, node.posEnd)
     );
@@ -283,7 +275,7 @@ class Interpreter {
     obj.symbolTable.set(currentNode, value);
     if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
-    return res.success(value || SWNull.NULL);
+    return res.success(null);
   };
 
   /**
@@ -360,7 +352,7 @@ class Interpreter {
         )
       );
 
-    return res.success(value);
+    return res.success(null);
   };
 
   /**
@@ -395,7 +387,7 @@ class Interpreter {
     }
 
     context.symbolTable.set(varName, value);
-    return res.success(value);
+    return res.success(null);
   };
 
   /**
@@ -573,29 +565,11 @@ class Interpreter {
 
       // restore original context
       context.symbolTable = blockScope;
-
-      // prevent infinite loops
-      calls++;
-      if (calls === this.maxCallStackSize)
-        return res.failure(
-          new RTError(
-            node.posStart,
-            node.posEnd,
-            `Max call stack size exceeded`,
-            context
-          )
-        );
     }
 
     context.symbolTable = originalScope;
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -662,13 +636,7 @@ class Interpreter {
 
     context.symbolTable = originalScope;
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -700,27 +668,9 @@ class Interpreter {
       if (res.loopShouldBreak) break;
 
       elements.push(value);
-
-      // prevent infinite loops
-      calls++;
-      if (calls === this.maxCallStackSize)
-        return res.failure(
-          new RTError(
-            node.posStart,
-            node.posEnd,
-            `Max call stack size exceeded`,
-            context
-          )
-        );
     }
 
-    return res.success(
-      node.shouldReturnNull
-        ? SWNull.NULL
-        : new SWList(elements)
-            .setContext(context)
-            .setPosition(node.posStart, node.posEnd)
-    );
+    return res.success(null);
   };
 
   /**
@@ -761,7 +711,7 @@ class Interpreter {
         );
     }
 
-    return res.success(funcValue);
+    return res.success(null);
   };
 
   /**

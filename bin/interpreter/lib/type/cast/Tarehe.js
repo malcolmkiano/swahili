@@ -11,7 +11,7 @@ const { RTError } = require('../../../error');
 function Tarehe(inst, executionContext) {
   let res = new RTResult();
   let tarehe = executionContext.symbolTable.get('tarehe');
-  let muundo = executionContext.symbolTable.get('muundo');
+
   let val = null;
   try {
     if (tarehe instanceof SWString || tarehe instanceof SWDateTime) {
@@ -35,10 +35,8 @@ function Tarehe(inst, executionContext) {
   }
 
   let date = new SWDateTime(val);
-  if (muundo instanceof SWString)
-    return res.success(new SWString(date.toFormat(muundo)));
 
   return res.success(date);
 }
 
-module.exports = { method: Tarehe, args: ['tarehe', 'muundo'] };
+module.exports = { method: Tarehe, args: ['tarehe'] };
