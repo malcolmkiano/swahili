@@ -79,15 +79,15 @@ x = 5 // this will not raise an error
 
 ## Data Structures and Data types
 
-- There are 
-  - Boolean: `kweli` that represents true and `uwongo` that represents false
-  - null: `tupu` denotes a null value
-  - Number: Could be both Integers and floats. For example `42` or `3.14159`
-  - Strings: A sequence of characters that represents a text value. For example `Habari`
-  - Lists: `Orodha` an ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
-  - Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
-  - Date : Used to represent a date object.
-  - Kamusi : Works like a dictionary by storing items as **key/value pairs**
+- There are 8 Data structures and Types in Swahili.
+  1. Boolean: `kweli` that represents true and `uwongo` that represents false
+  2. null: `tupu` denotes a null value
+  3. Number: Could be both Integers and floats. For example `42` or `3.14159`
+  4. Strings: A sequence of characters that represents a text value. For example `Habari`
+  5. Lists: `Orodha` an ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
+  6. Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
+  7. Date : Used to represent a date object.
+  8. Kamusi : Works like a dictionary by storing items as **key/value pairs**
 
 ## List literals
 
@@ -213,4 +213,17 @@ andika(" habari \n yako")
 
 
 ## Kamusi
-- A data structure that stores items as **key/value pairs**. 
+A data structure that stores items as **key/value pairs**. 
+
+Syntax: `wacha var = {key_1: value_1, key_2: value_2}`
+
+For example: 
+```
+  wacha mtu = {
+    jina: "Wendo", 
+    umri:21,
+    urefu : 180
+    }
+```
+
+This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
