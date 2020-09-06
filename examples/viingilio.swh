@@ -1,0 +1,11 @@
+wacha mtu = {
+  jina: "Jean",
+  umri: 25,
+  nchi: "France"
+}
+
+kwa sehemu katika mtu.viingilio() {
+  wacha jina = sehemu/0
+  wacha kitu = sehemu/1
+  andika(jina + " => " + Jina(kitu))
+}

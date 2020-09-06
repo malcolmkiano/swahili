@@ -47,6 +47,9 @@ const herufiKubwa = require('./type/mod/string/herufiKubwa');
 const ndogo = require('./type/mod/number/ndogo');
 const kubwa = require('./type/mod/number/kubwa');
 
+// >>> Objects
+const viingilio = require('./type/mod/object/viingilio');
+
 // >>> Dates
 const unda = require('./type/mod/date/unda');
 
@@ -82,6 +85,7 @@ module.exports = {
     herufiKubwa,
     ndogo,
     kubwa,
+    viingilio,
     unda,
   ],
 };
