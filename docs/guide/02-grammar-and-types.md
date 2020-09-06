@@ -13,7 +13,7 @@
 - Swahili uses `//` for single line comments and `/*  */` for multiline comments
 
 ```
-  /This is a single line comment
+  // This is a single line comment
 
   /*  This
       is
@@ -68,7 +68,7 @@ x = 5 // this will not raise an error
 - Variables declared inside a function block are only available for that block. For instance:
 
 ```
-  a = "Outside block"
+  wacha a = "Outside block"
   shughuli block_example(){
     wacha a = "Inside Block"
     andika(a)
@@ -150,7 +150,7 @@ andika(vinywaji)
 - For Example:
 
 ```
-idadi(vinywaji)
+vinywaji.idadi()
 >> 3
 ```
 
@@ -178,7 +178,7 @@ idadi(vinywaji)
 - For Example
 
 ```
-andika(" habari \n yako")
+andika("habari \n yako")
 >> habari
    yako
 ```
@@ -190,8 +190,6 @@ andika(" habari \n yako")
 | \n        | New line     |
 | \t        | Tab space    |
 | \"        | Double quote |
-| \'        | Single Quote |
-| \ \|      | Pipe symbol  |
 
 
 ## Regular Expressions (RegEx)
@@ -227,3 +225,6 @@ For example:
 ```
 
 This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
+
+
+//add type methods

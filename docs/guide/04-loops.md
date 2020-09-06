@@ -71,7 +71,7 @@ Syntax: Ambapo (expr) { }
 - Example:
 
 ```
-ambapo (x>2) {
+ambapo (x > 2) {
   andika ("salamu") //Will print "salamu to terminal as long as x>2
 }
 ```
