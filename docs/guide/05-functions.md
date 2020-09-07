@@ -2,13 +2,13 @@
 
 ## Declaring Functions
 
-The keyword for building functions is `Shughuli`.
+The keyword for building functions is `shughuli`.
 
 A function definition/declaration consists of:
 
 - The name of the function
 - A list of parameters to the function, enclosed in the parentheses and separated by commas.
-- The swahili statements that define a function ,enclosed in curly brackets `{...}`
+- The swahili statements that define a function, enclosed in curly brackets `{...}`
 
 For Example:
 
