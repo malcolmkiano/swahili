@@ -80,16 +80,6 @@ x = 5 // this will not raise an error
 ## Data Structures and Data types
 
 - There are 8 Data structures and Types in Swahili.
-<<<<<<< HEAD
-  1. Boolean: `kweli` that represents true and `uwongo` that represents false
-  2. null: `tupu` denotes a null value
-  3. Number: Could be both Integers and floats. For example `42` or `3.14159`
-  4. Strings: A sequence of characters that represents a text value. For example `Habari`
-  5. Lists: `Orodha` an ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
-  6. Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
-  7. Date : Used to represent a date object.
-  8. Objects : Stores items as **key/value pairs**
-=======
   1. **Boolean `Hali`**: `kweli` that represents true and `uwongo` that represents false
   2. **null `tupu`**: Denotes a null value
   3. **Number `Nambari`**: Could be both Integers and floats. For example `42` or `3.14159`
@@ -98,7 +88,6 @@ x = 5 // this will not raise an error
   6. **Regular Expressions `RegEx`**: These are patterns used to match character combinations in strings. 
   7. **Date `Tarehe`**: Used to represent a date object.
   8. **Dictionary `Kamusi`**: Works like a dictionary by storing items as **key/value pairs**
->>>>>>> 6596a6c9ac4d654c50b9df2134a316af7e0df415
 
 ## List literals
 
@@ -316,11 +305,4 @@ For example:
     }
 ```
 
-<<<<<<< HEAD
 This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
-=======
-This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
-
-
-//add type methods
->>>>>>> 6596a6c9ac4d654c50b9df2134a316af7e0df415
