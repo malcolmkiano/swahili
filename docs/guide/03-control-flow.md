@@ -7,14 +7,28 @@ There are currently 2 control structures implemented:
 
 ## If...else
 
-Syntax: Kama (expr) { }Sivyo{ }
+Syntax: `kama (expr) { } sivyo { }`
 
 - Example:
-  `kama (x>y) { x = 12} sivyo {x =3}`
+``` 
+  kama (x > y) { 
+    x = 12
+  } sivyo {
+    x = 3
+  }
+```
 
 ## If...else if...else
 
-Syntax: Kama (expr){ } Au (expr) { } Sivyo { }
+Syntax: `kama (expr){ } au (expr) { } sivyo { }`
 
 - Example:
-  `kama (x>y) { x = 12} au (x<z) {x =3.14} sivyo { x =3}`
+```
+  kama (x > y) {
+    x = 12
+  } au (x < z) {
+    x = 3.14
+  } sivyo {
+    x = 3
+  }
+```

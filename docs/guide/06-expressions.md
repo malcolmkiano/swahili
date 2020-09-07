@@ -1,6 +1,10 @@
 # Expressions and Operators
 
-Swahili has the following operators: - Assignment Operators - Comparison Operators - Arithmetic Operators - Logical Operators
+Swahili has the following operators: 
+    - Assignment Operators 
+    - Comparison Operators 
+    - Arithmetic Operators 
+    - Logical Operators
 
 ## Assignment Operators
 
@@ -8,7 +12,7 @@ Currently, the only assignment operator we support is `=`
 
 For instance;
 
-- `wacha x = 5` assigns the value 5 to the variable x.
+`wacha x = 5` assigns the value 5 to the variable x.
 
 ## Comparison Operators
 
@@ -27,12 +31,13 @@ These are operators that take numerical values as their operands and return a si
 
 | Operator                      | Description                                                                                                                     | Example.                          |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
-| addition(`+`)                 | adds the left operand to the right operand                                                                                      | `2+3` returns `5`                 |
-| subtraction(`-`)              | subtracts the right operand from the left operand                                                                               | `2-3` returns `-1`                |
-| division(`/`)                 | divides the left operand by the right operand                                                                                   | `6/3` returns `2`                 |
-| multiplication(`*`)           | multiplies the left operand by the right operand                                                                                | `2*3` returns `6`                 |
+| Addition(`+`)                 | adds the left operand to the right operand                                                                                      | `2+3` returns `5`                 |
+| Subtraction(`-`)              | subtracts the right operand from the left operand                                                                               | `2-3` returns `-1`                |
+| Division(`/`)                 | divides the left operand by the right operand                                                                                   | `6/3` returns `2`                 |
+| Multiplication(`*`)           | multiplies the left operand by the right operand                                                                                | `2*3` returns `6`                 |
 | Unary Negation (`-`)          | Unary Operator, returns negation of its operand                                                                                 | if `x = 3` then `-x` returns `-3` |
 | Exponentiation operator (`^`) | Calculates the `base` to the `exponent` power. that is if the base is 2 and the exponent is 3 then, it calculates 2<sup>3</sup> | `3^2` returns `9`                 |
+|  Modulus(`%`)                 | Returns the remainder of division between the left hand operand and the right hand operand                                      | `8%3` returns `2`                 |
 
 ## Logical Operators
 
