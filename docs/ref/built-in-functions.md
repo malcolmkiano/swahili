@@ -4,44 +4,103 @@
 
 - **andika(`ujumbe: SWString`): `SWNull`**<br/>
   Prints `ujumbe` to the console.
+  For Example:
+```
+  andika("Jambo Dunia")
+  >> "Jambo Dunia"
+```
 
 - **soma(`swali: SWString`): `SWString`**<br/>
   Gets and returns user input as a string. Uses the value of `swali` as a prompt message
+  For example:
+```
+  wacha jina = soma()
+  > "Wendo" // User Input
+  andika(jina)
+  >> "Wendo"
+```
 
 - **somaNambari(`swali: SWString`): `SWNumber`**<br/>
   Gets and returns user input as a number. Uses the value of `swali` as a prompt message
+```
+  wacha umri = somaNambari()
+  > 22 // User Input
+  andika(umri)
+  >> 22
+```
 
 - **futa(): `SWNull`**<br/>
   Clears the console window
 
 ## Type methods
 
-
 ### Checking type
 
 - **aina(`kitu: any`): `SWString`**<br/>
   Returns a string indicating the data type of `kitu`
+```
+  wacha x = [1,2,3]
+  andika(aina(x))
+  >> "Orodha"
+```
 
 - **niKamusi(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWObject`
+```
+  wacha mtu = {jina: "Kiano", umri: 23}
+  andika(niKamusi(mtu))
+  >> kweli
+```
 
 - **niTarehe(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWDateTime`
+```
+  wacha leo = Tarehe()
+  andika(niTarehe(leo))
+  >> kweli
+```
 
 - **niTupu(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is `SWNull`
+```
+  wacha bure = tupu
+  andika(niTupu(bure))
+  >> kweli
+```
 
 - **niNambari(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWNumber`
+```
+  wacha pi = 3.141592
+  andika(niNambari(pi))
+  >> kweli
+```
 
 - **niJina(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWString`
+```
+  wacha neno="Wamlambez"
+  andika(niJina(neno))
+  >> kweli
+```
 
 - **niOrodha(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWList`
+```
+  wacha list = [1,2,3,4]
+  andika(niOrodha(list))
+  >> kweli
+```
 
 - **niShughuli(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWBaseFunction`
+```
+  shughuli salimu(jina){
+    andika("Habari" + jina)
+  }
+  andika(niShughuli(salimu))
+  >> kweli
+```
 
 ### Type casting
 
@@ -59,7 +118,7 @@
 - **RegEx(`muundo: SWString, bendera: SWString`): `SWRegEx`**<br/>
   Returns `SWRegEx` representation of the value passed in
 
-### Modification and reading
+### Modification and reading (see also [Grammar and Types](../guide/02-grammar-and-types.md))
 
 #### Iterable Modifiers
 
@@ -89,7 +148,7 @@
 - **herufiNdogo(`jina: SWString`): `SWString`**<br/>
   Modifies an `SWString` to Lowercase
 
-#### List Modifers & Reading
+#### List Modifers & Reading 
 
 - **unga(`orodha: SWList, kiungo: SWString`):`SWString`**<br/>
   Returns a string from the list `orodha`, with the delimiter provided in `kiungo`.

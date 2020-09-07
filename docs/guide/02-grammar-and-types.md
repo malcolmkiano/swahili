@@ -87,7 +87,7 @@ x = 5 // this will not raise an error
   5. Lists: `Orodha` an ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
   6. Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
   7. Date : Used to represent a date object.
-  8. Kamusi : Works like a dictionary by storing items as **key/value pairs**
+  8. Objects : Stores items as **key/value pairs**
 
 ## List literals
 
@@ -155,36 +155,46 @@ vinywaji.idadi()
 ```
 
 ### Largest element in a list
-- To find the largest element in a list, we use the method `kubwa()`. 
-- The following are true for a unitype list:
-  1. If it is a list of integers, it returns the largest integer
-  2. If it is a list of Strings, it returns the longest string
-  3. If it is a list of lists, it returns the largest List
-  4. If it is a list of Booleans, it will return `kweli` (true)
-- If the list is composed of multiple types of elements, then it will return the last element.
-- For Example:
+- To find the largest element in a list of numbers, we use the method `kubwa()`. 
 ```
-  wacha l = [[1,2,3], ["a","aa","aaa","aaaa","aaaaa"], [kweli, uwongo], [1,2,"mixed", kweli]]
-  kwa i katika l{ 
-    andika(i.kubwa()) //get the largest element in every list within l
-  }
-  andika(l.kubwa()) //get the largest element of the list l
-
-  >> 3
-  >> "aaaaa"
-  >> kweli
-  >> kweli
-  >> ["a","aa","aaa","aaaa", "aaaaa"]
+  wacha l = [1,2,4,12,56,887]
+  andika(l.kubwa()) // Get the largest element of the list l
+  >> 887
+```
+### Smallest element in a list
+- To find the smallest element in a list of numbers, we use the method `ndogo()`. 
+```
+  wacha l = [0.1,2,0.04,12,56,887]
+  andika(l.ndogo()) // Get the smallest element of the list l
+  >> 0.04
 ```
 
 ### Replace an element in a list
 - To replace an element in a specific index of the list you can use the `weka()` method. It takes 2 arguments, the first is the index of the element to be replaced and the second is the value to replace it with. 
-- You can check the syntax of that [here](../ref/built-in-functions.md)
+- It has been explained further [here](../ref/built-in-functions.md)
 - For Example: 
 ```
   wacha x = [1,2,3]
-  andika(x.weka(0,12))
+  andika(x.weka(0,12)) // Replace the element in index 0 with the value 12
   >> [12,2,3]
+```
+
+### Joining a list into a string
+- This is achieved using the `unga()` method. The method takes one parameter, which is the delimiter. The delimiter must be a string
+- For Example:
+```
+  wacha jina = ["w", "e", "n", "d", "o"]
+  andika(jina.unga("")) 
+  >> "wendo"
+```
+
+### Checking if a list has a specific element. 
+- To do this, we use the `ina()` method, that returns a boolean(`kweli` or `uwongo`). The parameter passed is the element being searched for.
+- For example, to check if a list has the value of pi (`3.142`):
+```
+  wacha nambari = [2.718, 3.142, 1.618]
+  andika(nambari.ina(3.142))
+  >> kweli
 ```
 
 ## Boolean literals
@@ -296,6 +306,3 @@ For example:
 ```
 
 This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
-
-
-//add type methods
