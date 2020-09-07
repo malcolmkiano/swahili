@@ -5,6 +5,7 @@
 - **andika(`ujumbe: SWString`): `SWNull`**<br/>
   Prints `ujumbe` to the console.
   For Example:
+
 ```
   andika("Jambo Dunia")
   >> "Jambo Dunia"
@@ -13,6 +14,7 @@
 - **soma(`swali: SWString`): `SWString`**<br/>
   Gets and returns user input as a string. Uses the value of `swali` as a prompt message
   For example:
+
 ```
   wacha jina = soma()
   > "Wendo" // User Input
@@ -22,6 +24,7 @@
 
 - **somaNambari(`swali: SWString`): `SWNumber`**<br/>
   Gets and returns user input as a number. Uses the value of `swali` as a prompt message
+
 ```
   wacha umri = somaNambari()
   > 22 // User Input
@@ -38,6 +41,7 @@
 
 - **aina(`kitu: any`): `SWString`**<br/>
   Returns a string indicating the data type of `kitu`
+
 ```
   wacha x = [1,2,3]
   andika(aina(x))
@@ -46,6 +50,7 @@
 
 - **niKamusi(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWObject`
+
 ```
   wacha mtu = {jina: "Kiano", umri: 23}
   andika(niKamusi(mtu))
@@ -54,6 +59,7 @@
 
 - **niTarehe(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWDateTime`
+
 ```
   wacha leo = Tarehe()
   andika(niTarehe(leo))
@@ -62,6 +68,7 @@
 
 - **niTupu(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is `SWNull`
+
 ```
   wacha bure = tupu
   andika(niTupu(bure))
@@ -70,6 +77,7 @@
 
 - **niNambari(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWNumber`
+
 ```
   wacha pi = 3.141592
   andika(niNambari(pi))
@@ -78,6 +86,7 @@
 
 - **niJina(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWString`
+
 ```
   wacha neno="Wamlambez"
   andika(niJina(neno))
@@ -86,6 +95,7 @@
 
 - **niOrodha(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWList`
+
 ```
   wacha list = [1,2,3,4]
   andika(niOrodha(list))
@@ -94,6 +104,7 @@
 
 - **niShughuli(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWBaseFunction`
+
 ```
   shughuli salimu(jina){
     andika("Habari" + jina)
@@ -148,7 +159,7 @@
 - **herufiNdogo(`jina: SWString`): `SWString`**<br/>
   Modifies an `SWString` to Lowercase
 
-#### List Modifers & Reading 
+#### List Modifers & Reading
 
 - **unga(`orodha: SWList, kiungo: SWString`):`SWString`**<br/>
   Returns a string from the list `orodha`, with the delimiter provided in `kiungo`.
@@ -157,11 +168,12 @@
   Modifies an `SWList` in place by replacing the value at `pahala` with the value provided for `kitu`. Returns the new value of `orodha`
 
 - **kubwa(`orodha:SWList`): `any`**<br/>
-  Returns the largest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the largest number. If the list contains Strings(`SWString`) only, it returns the longest string. If the list contains lists(`SWList`) only, it returns the largest list. For a list of Booleans(`SWBoolean`) only, it returns the first true(`kweli`) value it encounters. If the list contains multiple types, it returns the last element in a list. 
+  Returns the largest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the largest number. If the list contains Strings(`SWString`) only, it returns the longest string. If the list contains lists(`SWList`) only, it returns the largest list. For a list of Booleans(`SWBoolean`) only, it returns the first true(`kweli`) value it encounters. If the list contains multiple types, it returns the last element in a list.
 
 - **ndogo(`orodha:SWList`): `any`**<br/>
-  Returns the smallest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the snallest number. If the list contains Strings(`SWString`) only, it returns the shortest string. If the list contains lists(`SWList`) only, it returns the smallest list. For a list of Booleans(`SWBoolean`) only, it returns the first false(`uwongo`) value it encounters. If the list contains multiple types, it returns the first element in a list. 
+  Returns the smallest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the snallest number. If the list contains Strings(`SWString`) only, it returns the shortest string. If the list contains lists(`SWList`) only, it returns the smallest list. For a list of Booleans(`SWBoolean`) only, it returns the first false(`uwongo`) value it encounters. If the list contains multiple types, it returns the first element in a list.
 
 #### Date modifers
+
 - **unda(`tarehe: SWDateTime, muundo: SWString`): `SWString`**<br/>
   Formats a `tarehe` SWDateTime value as a SWString

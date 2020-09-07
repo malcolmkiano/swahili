@@ -4,10 +4,11 @@
 
 The keyword for building functions is `Shughuli`.
 
-A function definition/declaration consists of: 
-  - The name of the function 
-  - A list of parameters to the function, enclosed in the parentheses and separated by commas. 
-  - The swahili statements that define a function ,enclosed in curly brackets `{...}`
+A function definition/declaration consists of:
+
+- The name of the function
+- A list of parameters to the function, enclosed in the parentheses and separated by commas.
+- The swahili statements that define a function ,enclosed in curly brackets `{...}`
 
 For Example:
 
@@ -49,7 +50,8 @@ wacha foo = shughuli bar(){
 }
 ```
 
-Within the function body, the following are equivalent 
-  1. bar() 
-  2. foo()
-A function that calls itself is called a `recursive function`. Both execute the same code multiple times, and both require a condition (to avoid an infinite loop, or rather, infinite recursion in this case).
+Within the function body, the following are equivalent
+
+1. bar()
+2. foo()
+   A function that calls itself is called a `recursive function`. Both execute the same code multiple times, and both require a condition (to avoid an infinite loop, or rather, infinite recursion in this case).

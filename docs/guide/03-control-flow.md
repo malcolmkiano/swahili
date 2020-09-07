@@ -10,8 +10,9 @@ There are currently 2 control structures implemented:
 Syntax: `kama (expr) { } sivyo { }`
 
 - Example:
-``` 
-  kama (x > y) { 
+
+```
+  kama (x > y) {
     x = 12
   } sivyo {
     x = 3
@@ -23,6 +24,7 @@ Syntax: `kama (expr) { } sivyo { }`
 Syntax: `kama (expr){ } au (expr) { } sivyo { }`
 
 - Example:
+
 ```
   kama (x > y) {
     x = 12

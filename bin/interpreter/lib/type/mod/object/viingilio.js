@@ -5,7 +5,7 @@ const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
 /**
- * Returns the length of a list/string
+ * Returns an array of tuples containing the key/value pairs of an object
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
