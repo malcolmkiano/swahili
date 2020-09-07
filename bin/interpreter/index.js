@@ -192,11 +192,12 @@ class Interpreter {
       }
     }
 
-    if (chainLength > 1) {
+    if (chainLength) {
       try {
         let methodName = propChain[chainLength - 1];
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
         if (!typeMethod) throw 0;
+        if (!value) value = obj;
 
         let supportedTypes = typeMethod[`${methodName}_types`];
         for (let i = 0; i < supportedTypes.length; i++) {
