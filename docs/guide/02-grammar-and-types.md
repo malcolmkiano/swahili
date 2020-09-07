@@ -28,17 +28,17 @@
 - Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore (`_` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
 
 ```
-wacha _jina = "Kiano" //valid
-wacha Jina = "Kiano" //valid
-wacha jina = "Kiano" //valid
-wacha 0_jina = "Kiano" //invalid
+wacha _jina = "Kiano" // valid
+wacha Jina = "Kiano" // valid
+wacha jina = "Kiano" // valid
+wacha 0_jina = "Kiano" // invalid
 ```
 
 - Swahili is case sensitive, hence, `Neno` and `neno` are different variables.
 - You can not use Swahli keywords as identifiers.
 
 ```
-  wacha kweli = uwongo //will raise an error because kweli is a swahili keyword
+  wacha kweli = uwongo // will raise an error because kweli is a Swahili keyword
 ```
 
 ### Declaring Variables
@@ -46,9 +46,9 @@ wacha 0_jina = "Kiano" //invalid
 - To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
 
 ```
-wacha jina //will raise an error
+wacha jina // will raise an error
 wacha jina = "" // is valid
-wacha jina = tupu //initializes jina to null
+wacha jina = tupu // initializes jina to null
 ```
 
 - An attempt to access an undeclared variable results in a Runtime error.
@@ -73,13 +73,14 @@ x = 5 // this will not raise an error
     wacha a = "Inside Block"
     andika(a)
   }
-  block_example() // Will print "Inside Block"
-  andika(a) // Will print "Outside block"
+  block_example() // will print "Inside Block"
+  andika(a) // will print "Outside block"
 ```
 
 ## Data Structures and Data types
 
 - There are 8 Data structures and Types in Swahili.
+<<<<<<< HEAD
   1. Boolean: `kweli` that represents true and `uwongo` that represents false
   2. null: `tupu` denotes a null value
   3. Number: Could be both Integers and floats. For example `42` or `3.14159`
@@ -88,6 +89,16 @@ x = 5 // this will not raise an error
   6. Regular Expressions (RegEx) : These are patterns used to match character combinations in strings. 
   7. Date : Used to represent a date object.
   8. Objects : Stores items as **key/value pairs**
+=======
+  1. **Boolean `Hali`**: `kweli` that represents true and `uwongo` that represents false
+  2. **null `tupu`**: Denotes a null value
+  3. **Number `Nambari`**: Could be both Integers and floats. For example `42` or `3.14159`
+  4. **Strings `Jina`**: A sequence of characters that represents a text value. For example `Habari`
+  5. **Lists `Orodha`**: An ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
+  6. **Regular Expressions `RegEx`**: These are patterns used to match character combinations in strings. 
+  7. **Date `Tarehe`**: Used to represent a date object.
+  8. **Dictionary `Kamusi`**: Works like a dictionary by storing items as **key/value pairs**
+>>>>>>> 6596a6c9ac4d654c50b9df2134a316af7e0df415
 
 ## List literals
 
@@ -117,7 +128,7 @@ wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 - To append an element to the end of a list we use the plus sign(`+`) followed by the element we want to add. For Example
 
 ```
-vinywaji + "soda"
+vinywaji = vinywaji + "soda"
 andika(vinywaji)
 >>["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "soda" ]
 ```
@@ -127,7 +138,7 @@ andika(vinywaji)
 - To delete an element in a list we use the `-` followed by the index of the element. For Example:
 
 ```
-vinywaji -3
+vinywaji = vinywaji - 3
 andika(vinywaji)
 >>["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 ```
@@ -139,7 +150,7 @@ andika(vinywaji)
 
 ```
   wacha vyakula = ["maandazi", "wali", "mahamri"]
-  wacha vyakula_vinywaji = vinywaji*vyakula
+  wacha vyakula_vinywaji = vinywaji * vyakula
   andika(vyakula_vinywaji)
   >> ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "maandazi", "wali", "mahamri"]
 ```
@@ -285,7 +296,7 @@ andika("habari \n yako")
 ## Date
 - Used to represent a date object. The keyword used to initialize a date is `Tarehe()`.
 ```
-  wacha s = tarehe()
+  wacha s = Tarehe()
 
 ```
 - For more information, check [here](../ref/built-in-functions.md) and [here](./07-numbers-and-dates.md)
@@ -300,9 +311,16 @@ For example:
 ```
   wacha mtu = {
     jina: "Wendo", 
-    umri:21,
+    umri: 21,
     urefu : 180
     }
 ```
 
+<<<<<<< HEAD
 This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
+=======
+This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`
+
+
+//add type methods
+>>>>>>> 6596a6c9ac4d654c50b9df2134a316af7e0df415
