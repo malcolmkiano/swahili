@@ -146,7 +146,7 @@ andika(vinywaji)
 
 ### Length of a list
 
-- To get the length of a list, (how many elements are in a list) we use the inbuilt function idadi() and pass the list as an argument.
+- To get the length of a list, (how many elements are in a list) we use the inbuilt function `idadi()`.
 - For Example:
 
 ```
@@ -154,8 +154,38 @@ vinywaji.idadi()
 >> 3
 ```
 
+### Largest element in a list
+- To find the largest element in a list, we use the method `kubwa()`. 
+- The following are true for a unitype list:
+  1. If it is a list of integers, it returns the largest integer
+  2. If it is a list of Strings, it returns the longest string
+  3. If it is a list of lists, it returns the largest List
+  4. If it is a list of Booleans, it will return `kweli` (true)
+- If the list is composed of multiple types of elements, then it will return the last element.
+- For Example:
+```
+  wacha l = [[1,2,3], ["a","aa","aaa","aaaa","aaaaa"], [kweli, uwongo], [1,2,"mixed", kweli]]
+  kwa i katika l{ 
+    andika(i.kubwa()) //get the largest element in every list within l
+  }
+  andika(l.kubwa()) //get the largest element of the list l
+
+  >> 3
+  >> "aaaaa"
+  >> kweli
+  >> kweli
+  >> ["a","aa","aaa","aaaa", "aaaaa"]
+```
+
 ### Replace an element in a list
-- To replace an element in a specific index of the list you can use the `badili` function. You can check the syntax of that [here](../ref/built-in-functions.md)
+- To replace an element in a specific index of the list you can use the `weka()` method. It takes 2 arguments, the first is the index of the element to be replaced and the second is the value to replace it with. 
+- You can check the syntax of that [here](../ref/built-in-functions.md)
+- For Example: 
+```
+  wacha x = [1,2,3]
+  andika(x.weka(0,12))
+  >> [12,2,3]
+```
 
 ## Boolean literals
 
@@ -171,6 +201,47 @@ vinywaji.idadi()
 ## String literals
 
 - A string literal is zero or more characters enclosed in double(`" "`) quotation marks. Swahili does not support use of single quotation marks to denote strings, hence `andika('Habari Dunia')` is invalid but `andika("Habari Dunia")` is valid.
+
+### Convert a String to Uppercase
+- To capitalize a string, we use the inbuilt `herufiKubwa()` method. 
+- For Example: 
+```
+  wacha x = "habari"
+  andika(x.herufiKubwa()) // Will print "HABARI"
+```
+
+### Splitting a string into a list
+- To split a string into an array we use the `tenga()` method. The method takes in a delimiter that allows Swahili to know where to split the string. The delimiter must be a string and it can not be null. 
+- For example: 
+```
+  wacha x = "This is a sample string"
+  andika(x.tenga(" ")) // Split the string everytime it encounters a space. 
+  >> ["This", "is", "a", "sample", "string"]
+```
+- If you want to get individual characters of a string, you split it with the delimiter `("")`. For instance:
+```
+  wacha x = "Wendo"
+  andika(x.tenga(""))
+  >> ["W","e","n","d","o"]
+```
+
+### Replacing a substring within a string.
+- This is done using the inbuilt `badili()` method. It takes two parameters; The substring to be replaced, and the substring to replace it with. 
+- For example:
+``` 
+  wacha x = "Habari Dunia"
+  andika(x.badili("Dunia", "Wendo"))
+  >> "Habari Wendo"
+```
+
+### Convert a String to Lowercase
+- To convert a string to lowercase, we use the inbuilt  `herufiNdogo()` method
+- For Example
+```
+  wacha x = "HABARI"
+  andika(x.herufiNdogo()) // Will print "habari"
+```
+
 
 ## Special Characters
 
