@@ -10,7 +10,8 @@
 ```
 
 ## Comments
-- Swahili uses `//` for single line comments and `/*  */` for multiline comments
+
+- Swahili uses `//` for single line comments and `/* */` for multiline comments
 
 ```
   // This is a single line comment
@@ -54,7 +55,6 @@ wacha jina = tupu // initializes jina to null
 - An attempt to access an undeclared variable results in a Runtime error.
 - You can not perform basic arithmetic and boolean operations on variables with a null value.
 
-
 ### Variable Scope
 
 - When running the swahili interpreter on the terminal, variables you declare within a global scope (Outside of any function) can not be redeclared, ie,
@@ -85,9 +85,9 @@ x = 5 // this will not raise an error
   3. **Number `Nambari`**: Could be both Integers and floats. For example `42` or `3.14159`
   4. **Strings `Jina`**: A sequence of characters that represents a text value. For example `Habari`
   5. **Lists `Orodha`**: An ordered collection of items. Can hold multiple data types: for example `[1,2,3]` or `[1, "orodha", kweli]`
-  6. **Regular Expressions `RegEx`**: These are patterns used to match character combinations in strings. 
+  6. **Regular Expressions `RegEx`**: These are patterns used to match character combinations in strings.
   7. **Date `Tarehe`**: Used to represent a date object.
-  8. **Dictionary `Kamusi`**: Works like a dictionary by storing items as **key/value pairs**
+  8. **Object `Kamusi`**: Works like a dictionary by storing items as **key/value pairs**
 
 ## List literals
 
@@ -155,24 +155,31 @@ vinywaji.idadi()
 ```
 
 ### Largest element in a list
-- To find the largest element in a list of numbers, we use the method `kubwa()`. 
+
+- To find the largest element in a list of numbers, we use the method `kubwa()`.
+
 ```
-  wacha l = [1,2,4,12,56,887]
+  wacha l = [1, 2, 4, 12, 56, 887]
   andika(l.kubwa()) // Get the largest element of the list l
   >> 887
 ```
+
 ### Smallest element in a list
-- To find the smallest element in a list of numbers, we use the method `ndogo()`. 
+
+- To find the smallest element in a list of numbers, we use the method `ndogo()`.
+
 ```
-  wacha l = [0.1,2,0.04,12,56,887]
+  wacha l = [0.1, 2, 0.04, 12, 56, 887]
   andika(l.ndogo()) // Get the smallest element of the list l
   >> 0.04
 ```
 
 ### Replace an element in a list
-- To replace an element in a specific index of the list you can use the `weka()` method. It takes 2 arguments, the first is the index of the element to be replaced and the second is the value to replace it with. 
+
+- To replace an element in a specific index of the list you can use the `weka()` method. It takes 2 arguments, the first is the index of the element to be replaced and the second is the value to replace it with.
 - It has been explained further [here](../ref/built-in-functions.md)
-- For Example: 
+- For Example:
+
 ```
   wacha x = [1,2,3]
   andika(x.weka(0,12)) // Replace the element in index 0 with the value 12
@@ -180,17 +187,21 @@ vinywaji.idadi()
 ```
 
 ### Joining a list into a string
+
 - This is achieved using the `unga()` method. The method takes one parameter, which is the delimiter. The delimiter must be a string
 - For Example:
+
 ```
   wacha jina = ["w", "e", "n", "d", "o"]
-  andika(jina.unga("")) 
+  andika(jina.unga(""))
   >> "wendo"
 ```
 
-### Checking if a list has a specific element. 
+### Checking if a list has a specific element.
+
 - To do this, we use the `ina()` method, that returns a boolean(`kweli` or `uwongo`). The parameter passed is the element being searched for.
 - For example, to check if a list has the value of pi (`3.142`):
+
 ```
   wacha nambari = [2.718, 3.142, 1.618]
   andika(nambari.ina(3.142))
@@ -213,22 +224,28 @@ vinywaji.idadi()
 - A string literal is zero or more characters enclosed in double(`" "`) quotation marks. Swahili does not support use of single quotation marks to denote strings, hence `andika('Habari Dunia')` is invalid but `andika("Habari Dunia")` is valid.
 
 ### Convert a String to Uppercase
-- To capitalize a string, we use the inbuilt `herufiKubwa()` method. 
-- For Example: 
+
+- To capitalize a string, we use the inbuilt `herufiKubwa()` method.
+- For Example:
+
 ```
   wacha x = "habari"
   andika(x.herufiKubwa()) // Will print "HABARI"
 ```
 
 ### Splitting a string into a list
-- To split a string into an array we use the `tenga()` method. The method takes in a delimiter that allows Swahili to know where to split the string. The delimiter must be a string and it can not be null. 
-- For example: 
+
+- To split a string into an array we use the `tenga()` method. The method takes in a delimiter that allows Swahili to know where to split the string. The delimiter must be a string and it can not be null.
+- For example:
+
 ```
   wacha x = "This is a sample string"
-  andika(x.tenga(" ")) // Split the string everytime it encounters a space. 
+  andika(x.tenga(" ")) // Split the string everytime it encounters a space.
   >> ["This", "is", "a", "sample", "string"]
 ```
+
 - If you want to get individual characters of a string, you split it with the delimiter `("")`. For instance:
+
 ```
   wacha x = "Wendo"
   andika(x.tenga(""))
@@ -236,22 +253,25 @@ vinywaji.idadi()
 ```
 
 ### Replacing a substring within a string.
-- This is done using the inbuilt `badili()` method. It takes two parameters; The substring to be replaced, and the substring to replace it with. 
+
+- This is done using the inbuilt `badili()` method. It takes two parameters; The substring to be replaced, and the substring to replace it with.
 - For example:
-``` 
+
+```
   wacha x = "Habari Dunia"
   andika(x.badili("Dunia", "Wendo"))
   >> "Habari Wendo"
 ```
 
 ### Convert a String to Lowercase
-- To convert a string to lowercase, we use the inbuilt  `herufiNdogo()` method
+
+- To convert a string to lowercase, we use the inbuilt `herufiNdogo()` method
 - For Example
+
 ```
   wacha x = "HABARI"
   andika(x.herufiNdogo()) // Will print "habari"
 ```
-
 
 ## Special Characters
 
@@ -272,37 +292,42 @@ andika("habari \n yako")
 | \t        | Tab space    |
 | \"        | Double quote |
 
-
 ## Regular Expressions (RegEx)
-- These are patterns used to match character combinations in strings. 
+
+- These are patterns used to match character combinations in strings.
 - To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. ` RegEx("pattern", "flag")`
-- For Example: 
+- For Example:
+
 ```
   wacha a = RegEx("ab+c", "g")
   // This Pattern will return RegEx: /ab+c/g
 ```
 
-## Date
+## Dates
+
 - Used to represent a date object. The keyword used to initialize a date is `Tarehe()`.
+
 ```
   wacha s = Tarehe()
 
 ```
+
 - For more information, check [here](../ref/built-in-functions.md) and [here](./07-numbers-and-dates.md)
 
+## Objects
 
-## Kamusi
-A data structure that stores items as **key/value pairs**. 
+A data structure that stores items as **key/value pairs**.
 
 Syntax: `wacha var = {key_1: value_1, key_2: value_2}`
 
-For example: 
+For example:
+
 ```
   wacha mtu = {
-    jina: "Wendo", 
+    jina: "Wendo",
     umri: 21,
     urefu : 180
-    }
+  }
 ```
 
 This then allows us to get specific values by checking their keys. For instance `mtu.jina` would return `"Wendo"`

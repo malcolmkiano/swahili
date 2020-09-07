@@ -23,7 +23,8 @@ kwa y = 1 Mpaka 6 {
  >> "Habari"
 
 ```
-- The upper limit of the range is not included in the iteration. Hence `kwa i = 1 mpaka 3 { andika("Jambo")}` will only print ` "Jambo" ` twice.
+
+- The upper limit of the range is not included in the iteration. Hence `kwa i = 1 mpaka 3 { andika("Jambo")}` will only print `"Jambo"` twice.
 
 You can also loop through a list using the kwa katika syntax instead
 
