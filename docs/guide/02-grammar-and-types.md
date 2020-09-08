@@ -296,7 +296,7 @@ andika("habari \n yako")
 ## Regular Expressions (RegEx)
 
 - These are patterns used to match character combinations in strings.
-- To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. ` RegEx("pattern", "flag")`
+- To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. `RegEx("pattern", "flag")`
 - For Example:
 
 ```

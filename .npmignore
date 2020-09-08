@@ -1,4 +1,5 @@
 docs
 examples
+tests
 .eslintrc
 .prettierrc
