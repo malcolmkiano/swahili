@@ -13,14 +13,14 @@ Currently, 2 Loop structures have been implemented, namely:
 
 ```
 kwa y = 1 Mpaka 6 {
-  andika(“Habari”) //will print "habari" to terminal five times
- }
+  andika(“Habari”) // will print "habari" to terminal five times
+}
 
- >> "Habari"
- >> "Habari"
- >> "Habari"
- >> "Habari"
- >> "Habari"
+>> "Habari"
+>> "Habari"
+>> "Habari"
+>> "Habari"
+>> "Habari"
 
 ```
 
@@ -33,12 +33,13 @@ You can also loop through a list using the kwa katika syntax instead
 - Example:
 
 ```
-  kwa i katika ["Malcolm", "Patrick", "Kiano"]{
-    andika(i) // Will print each element in the list
-  }
-    >> "Malcolm"
-    >> "Patrick"
-    >> "Kiano"
+kwa i katika ["Malcolm", "Patrick", "Kiano"]{
+  andika(i) // Will print each element in the list
+}
+
+>> "Malcolm"
+>> "Patrick"
+>> "Kiano"
 ```
 
 This syntax also works if you pass in a variable that holds a list. For instance:
@@ -73,6 +74,6 @@ Syntax: Ambapo (expr) { }
 
 ```
 ambapo (x > 2) {
-  andika ("salamu") //Will print "salamu to terminal as long as x>2
+  andika ("salamu") // Will print "salamu to terminal as long as x>2
 }
 ```
