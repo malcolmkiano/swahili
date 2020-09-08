@@ -13,9 +13,9 @@ A function definition/declaration consists of:
 For Example:
 
 ```
-  shughuli Salimu(jina){
-    andika("Habari, " + jina)
-  }
+shughuli Salimu(jina) {
+  andika("Habari, " + jina)
+}
 ```
 
 The function `Salimu` takes one parameter called `jina`. The function consists of one statement that says to return the concatenated string `Habari` and the parameter passed into `jina`.
@@ -54,4 +54,5 @@ Within the function body, the following are equivalent
 
 1. bar()
 2. foo()
-   A function that calls itself is called a `recursive function`. Both execute the same code multiple times, and both require a condition (to avoid an infinite loop, or rather, infinite recursion in this case).
+
+A function that calls itself is called a `recursive function`. Both execute the same code multiple times, and both require a condition (to avoid an infinite loop, or rather, infinite recursion in this case).

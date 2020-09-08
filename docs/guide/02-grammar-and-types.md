@@ -2,49 +2,50 @@
 
 ## Basics
 
-- Swahili borrows its syntax from Javascript, Python and Ruby. Like Javascript, Swahili is case sensitive. as such the declarations below are different variables.
+Swahili borrows its syntax from Javascript, Python and Ruby. Like Javascript, Swahili is case sensitive. as such the declarations below are different variables.
 
 ```
-  wacha b = 5
-  wacha B = 3
+wacha b = 5
+wacha B = 3
 ```
 
 ## Comments
 
-- Swahili uses `//` for single line comments and `/* */` for multiline comments
+Swahili uses `//` for single line comments and `/* */` for multiline comments
 
 ```
-  // This is a single line comment
+// This is a single line comment
 
-  /*  This
-      is
-      a
-      Multiline
-      Comment
-  */
+/*  This
+    is
+    a
+    Multiline
+    Comment
+*/
 ```
 
 ## Variables
 
-- Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore (`_` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
+Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore ( `_` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
 
 ```
-wacha _jina = "Kiano" // valid
-wacha Jina = "Kiano" // valid
-wacha jina = "Kiano" // valid
-wacha 0_jina = "Kiano" // invalid
+wacha _jina = "John" // valid
+wacha Jina = "John" // valid
+wacha jina = "John" // valid
+wacha 0_jina = "John" // invalid
 ```
 
-- Swahili is case sensitive, hence, `Neno` and `neno` are different variables.
-- You can not use Swahli keywords as identifiers.
+Swahili is case sensitive, hence, `Neno` and `neno` are different variables.
+
+You cannot use Swahli keywords as variable names.
 
 ```
-  wacha kweli = uwongo // will raise an error because kweli is a Swahili keyword
+wacha kweli = uwongo // will raise an error because kweli is a Swahili keyword
 ```
 
 ### Declaring Variables
 
-- To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
+To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
 
 ```
 wacha jina // will raise an error
@@ -57,7 +58,7 @@ wacha jina = tupu // initializes jina to null
 
 ### Variable Scope
 
-- When running the swahili interpreter on the terminal, variables you declare within a global scope (Outside of any function) can not be redeclared, ie,
+Variables you declare within a global scope (outside of any function) cannot be redeclared, ie,
 
 ```
 wacha x = 3
@@ -69,7 +70,7 @@ x = 5 // this will not raise an error
 
 ```
   wacha a = "Outside block"
-  shughuli block_example(){
+  shughuli block_example() {
     wacha a = "Inside Block"
     andika(a)
   }
@@ -295,7 +296,7 @@ andika("habari \n yako")
 ## Regular Expressions (RegEx)
 
 - These are patterns used to match character combinations in strings.
-- To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. ` RegEx("pattern", "flag")`
+- To declare a RegExp we use the RegEx() function. The function takes in 2 arguments; A RegEx pattern and a RegEx flag. `RegEx("pattern", "flag")`
 - For Example:
 
 ```
@@ -314,11 +315,9 @@ andika("habari \n yako")
 
 - For more information, check [here](../ref/built-in-functions.md) and [here](./07-numbers-and-dates.md)
 
-## Objects
+## Object Literals
 
-A data structure that stores items as **key/value pairs**.
-
-Syntax: `wacha var = {key_1: value_1, key_2: value_2}`
+An object literal is a list of zero or more pairs of property names and associated values of an object, enclosed in curly braces (`{}`).
 
 For example:
 

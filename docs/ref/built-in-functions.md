@@ -121,9 +121,8 @@
 - **Jina(`kitu: any`): `SWString`**<br/>
   Returns an `SWString` representation of the value passed in
 
-- **Tarehe(`siku: SWDateTime | SWString, [muundo: SWString]`): `SWDateTime`**<br/>
-  Returns the current date if the only parameter entered is `siku`. Returns a formatted date and time if `muundo` matches the formatting strings.
-
+- **Tarehe(`siku: SWDateTime | SWString`): `SWDateTime`**<br/>
+  Returns the current date, or a date with the value matching the parameter `siku`.
   For info on `SWDateTime` formatting, read [the guide](../guide/07-numbers-and-dates)
 
 - **RegEx(`muundo: SWString, bendera: SWString`): `SWRegEx`**<br/>
@@ -136,14 +135,11 @@
 - **idadi(`kitu: SWList | SWString`): `SWNumber`**<br/>
   Returns the length of a list or string
 
-- **unga(`orodha: SWList, kiungo: SWString`):`SWString`**<br/>
-  Converts an `SWList` to an `SWString` by joining the elements with the value of `kiungo`
+- **ina(`kitu: SWString | SWList, kitafuto: SWList`): `SWBoolean`**<br/>
+  Returns a boolean indicating whether a string/list contains the element `kitu` or not.
 
-- **ina(`kitu: SWString, kitafuto: SWList`): `SWBoolean`**<br/>
-  Returns a boolean indicating whether a list contains the element `kitu` or not.
-
-- **sehemu(`kitu: SWString, mwanzo: SWNumber, mwisho: SWNumber`): `SWList`**<br/>
-  Returns a section of the list delimited by `mwanzo` and `mwisho`
+- **sehemu(`kitu: SWString | SWList, mwanzo: SWNumber, mwisho: SWNumber`): `SWString | SWList`**<br/>
+  Returns a section of the string/list delimited by `mwanzo` and `mwisho`
 
 #### String Modifiers
 
@@ -168,10 +164,10 @@
   Modifies an `SWList` in place by replacing the value at `pahala` with the value provided for `kitu`. Returns the new value of `orodha`
 
 - **kubwa(`orodha:SWList`): `any`**<br/>
-  Returns the largest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the largest number. If the list contains Strings(`SWString`) only, it returns the longest string. If the list contains lists(`SWList`) only, it returns the largest list. For a list of Booleans(`SWBoolean`) only, it returns the first true(`kweli`) value it encounters. If the list contains multiple types, it returns the last element in a list.
+  Returns the largest element in a list `orodha` of numbers(`SWNumber`).
 
 - **ndogo(`orodha:SWList`): `any`**<br/>
-  Returns the smallest element in a list `orodha`. For a list of numbers(`SWNumber`) only, it returns the snallest number. If the list contains Strings(`SWString`) only, it returns the shortest string. If the list contains lists(`SWList`) only, it returns the smallest list. For a list of Booleans(`SWBoolean`) only, it returns the first false(`uwongo`) value it encounters. If the list contains multiple types, it returns the first element in a list.
+  Returns the smallest element in a list `orodha` of numbers(`SWNumber`).
 
 #### Date modifers
 

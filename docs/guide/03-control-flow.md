@@ -12,11 +12,11 @@ Syntax: `kama (expr) { } sivyo { }`
 - Example:
 
 ```
-  kama (x > y) {
-    x = 12
-  } sivyo {
-    x = 3
-  }
+kama (x > y) {
+  x = 12
+} sivyo {
+  x = 3
+}
 ```
 
 ## If...else if...else
@@ -26,11 +26,11 @@ Syntax: `kama (expr){ } au (expr) { } sivyo { }`
 - Example:
 
 ```
-  kama (x > y) {
-    x = 12
-  } au (x < z) {
-    x = 3.14
-  } sivyo {
-    x = 3
-  }
+kama (x > y) {
+  x = 12
+} au (x < z) {
+  x = 3.14
+} sivyo {
+  x = 3
+}
 ```
