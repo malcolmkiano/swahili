@@ -13,16 +13,6 @@ function unga(inst, executionContext) {
   let orodha = executionContext.symbolTable.get('orodha');
   let kiungo = executionContext.symbolTable.get('kiungo');
 
-  if (!orodha)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'orodha' is required`,
-        executionContext
-      )
-    );
-
   if (!kiungo)
     return res.failure(
       new RTError(
@@ -34,16 +24,6 @@ function unga(inst, executionContext) {
     );
 
   // check types
-  if (!(orodha instanceof SWList))
-    return res.failure(
-      new RTError(
-        orodha.posStart,
-        orodha.posEnd,
-        `'orodha' must be a list`,
-        executionContext
-      )
-    );
-
   if (!(kiungo instanceof SWString))
     return res.failure(
       new RTError(

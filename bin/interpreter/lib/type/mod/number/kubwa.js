@@ -11,24 +11,7 @@ const { RTError } = require('../../../../error');
 function kubwa(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
-  let args = executionContext.symbolTable.get('__hoja'); // helper variable holding a list of all args
-
-  // ensure param was provided
-  if (!orodha)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'orodha' is required`,
-        executionContext
-      )
-    );
-
-  // default to the args list
-  let list = args.elements;
-
-  // if 'orodha' is a list, use its elements
-  if (orodha instanceof SWList) list = orodha.elements;
+  let list = orodha.elements;
 
   // ensure at least one element in the list
   if (!list.length)

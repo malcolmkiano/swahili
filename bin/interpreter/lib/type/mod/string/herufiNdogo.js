@@ -11,27 +11,6 @@ function herufiNdogo(inst, executionContext) {
   let res = new RTResult();
   let neno = executionContext.symbolTable.get('neno');
 
-  if (!neno)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'neno' is required`,
-        executionContext
-      )
-    );
-
-  // check types
-  if (!(neno instanceof SWString))
-    return res.failure(
-      new RTError(
-        neno.posStart,
-        neno.posEnd,
-        `'neno' must be a string`,
-        executionContext
-      )
-    );
-
   // convert to lowercase
   let str = neno.value;
   let result = new SWString(str.toLowerCase());

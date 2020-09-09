@@ -12,25 +12,6 @@ const { RTError } = require('../../../../error');
 function viingilio(inst, executionContext) {
   let res = new RTResult();
   let kitu = executionContext.symbolTable.get('kitu');
-  if (!kitu)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'kitu' is required`,
-        executionContext
-      )
-    );
-
-  if (!(kitu instanceof SWObject))
-    return res.failure(
-      new RTError(
-        kitu.posStart,
-        kitu.posEnd,
-        `Parameter 'kitu' must be an object`,
-        executionContext
-      )
-    );
 
   let entries = Object.entries(kitu.symbolTable.symbols);
   let mapped = entries.map(

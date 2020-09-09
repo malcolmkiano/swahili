@@ -13,26 +13,6 @@ function unda(inst, executionContext) {
   let tarehe = executionContext.symbolTable.get('tarehe');
   let muundo = executionContext.symbolTable.get('muundo');
 
-  if (!tarehe)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'tarehe' is required`,
-        executionContext
-      )
-    );
-
-  if (!(tarehe instanceof SWDateTime))
-    return res.failure(
-      new RTError(
-        tarehe.posStart,
-        tarehe.posEnd,
-        `Parameter 'tarehe' must be a date`,
-        executionContext
-      )
-    );
-
   if (muundo && !(muundo instanceof SWString))
     return res.failure(
       new RTError(
