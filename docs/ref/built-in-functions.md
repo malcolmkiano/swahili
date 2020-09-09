@@ -148,10 +148,10 @@
 
 ```
   wacha list = [1,2,3,4]
-  andika(list.ina(3)) // => kweli
+  andika(list.pahala(3)) // => 2
 
   wacha str = "Something"
-  andika(str.ina("x")) // => uwongo
+  andika(str.pahala("x")) // => -1
 ```
 
 - _iterable_.**sehemu(`mwanzo: SWNumber[, mwisho: SWNumber]`): `iterable`**<br/>
