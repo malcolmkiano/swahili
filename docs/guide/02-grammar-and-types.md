@@ -29,9 +29,9 @@ Swahili uses `//` for single line comments and `/* */` for multiline comments
 Variables are used as symbolic names for values within the program. The names of variables, called **identifiers** must begin with either an underscore ( `_` ), or an alphabetic character in either upper or lower case. Subsequent characters can be alphanumeric or an underscore. Hence:
 
 ```
-wacha _jina = "John" // valid
-wacha Jina = "John" // valid
-wacha jina = "John" // valid
+wacha _jina = "John"  // valid
+wacha Jina = "John"   // valid
+wacha jina = "John"   // valid
 wacha 0_jina = "John" // invalid
 ```
 
@@ -48,8 +48,8 @@ wacha kweli = uwongo // will raise an error because kweli is a Swahili keyword
 To declare a variable, we use the keyword `wacha`, followed by the identifier name and an initialization. You **have to** initialize your variables when you declare them. If you want a variable to be empty on declaration you intitalize it to null (tupu).
 
 ```
-wacha jina // will raise an error
-wacha jina = "" // is valid
+wacha jina        // will raise an error
+wacha jina = ""   // is valid
 wacha jina = tupu // initializes jina to null
 ```
 
@@ -63,7 +63,7 @@ Variables you declare within a global scope (outside of any function) cannot be 
 ```
 wacha x = 3
 wacha x = 5 // this line will raise an error
-x = 5 // this will not raise an error
+x = 5       // this will not raise an error
 ```
 
 - Variables declared inside a function block are only available for that block. For instance:
@@ -74,8 +74,8 @@ x = 5 // this will not raise an error
     wacha a = "Inside Block"
     andika(a)
   }
-  block_example() // will print "Inside Block"
-  andika(a) // will print "Outside block"
+  block_example() // => "Inside Block"
+  andika(a)       // => "Outside block"
 ```
 
 ## Data Structures and Data types
@@ -107,10 +107,8 @@ wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 
 ```
   wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
-  andika(vinywaji/0)
->>"chai"
-  andika(vinywaji/2)
->>"Kahawa ya Kenya"
+  andika(vinywaji/0) // => "chai"
+  andika(vinywaji/2) // => "Kahawa ya Kenya"
 ```
 
 ### Appending elements to a list
@@ -119,8 +117,7 @@ wacha vinywaji = ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 
 ```
 vinywaji = vinywaji + "soda"
-andika(vinywaji)
->>["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "soda" ]
+andika(vinywaji) // => ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "soda" ]
 ```
 
 ### Deleting elements in a list
@@ -129,8 +126,7 @@ andika(vinywaji)
 
 ```
 vinywaji = vinywaji - 3
-andika(vinywaji)
->>["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
+andika(vinywaji) // => ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya" ]
 ```
 
 ### Concatenation of 2 lists
@@ -141,72 +137,7 @@ andika(vinywaji)
 ```
   wacha vyakula = ["maandazi", "wali", "mahamri"]
   wacha vyakula_vinywaji = vinywaji * vyakula
-  andika(vyakula_vinywaji)
-  >> ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "maandazi", "wali", "mahamri"]
-```
-
-### Length of a list
-
-- To get the length of a list, (how many elements are in a list) we use the inbuilt function `idadi()`.
-- For Example:
-
-```
-vinywaji.idadi()
->> 3
-```
-
-### Largest element in a list
-
-- To find the largest element in a list of numbers, we use the method `kubwa()`.
-
-```
-  wacha l = [1, 2, 4, 12, 56, 887]
-  andika(l.kubwa()) // Get the largest element of the list l
-  >> 887
-```
-
-### Smallest element in a list
-
-- To find the smallest element in a list of numbers, we use the method `ndogo()`.
-
-```
-  wacha l = [0.1, 2, 0.04, 12, 56, 887]
-  andika(l.ndogo()) // Get the smallest element of the list l
-  >> 0.04
-```
-
-### Replace an element in a list
-
-- To replace an element in a specific index of the list you can use the `weka()` method. It takes 2 arguments, the first is the index of the element to be replaced and the second is the value to replace it with.
-- It has been explained further [here](../ref/built-in-functions.md)
-- For Example:
-
-```
-  wacha x = [1,2,3]
-  andika(x.weka(0,12)) // Replace the element in index 0 with the value 12
-  >> [12,2,3]
-```
-
-### Joining a list into a string
-
-- This is achieved using the `unga()` method. The method takes one parameter, which is the delimiter. The delimiter must be a string
-- For Example:
-
-```
-  wacha jina = ["w", "e", "n", "d", "o"]
-  andika(jina.unga(""))
-  >> "wendo"
-```
-
-### Checking if a list has a specific element.
-
-- To do this, we use the `ina()` method, that returns a boolean(`kweli` or `uwongo`). The parameter passed is the element being searched for.
-- For example, to check if a list has the value of pi (`3.142`):
-
-```
-  wacha nambari = [2.718, 3.142, 1.618]
-  andika(nambari.ina(3.142))
-  >> kweli
+  andika(vyakula_vinywaji) // => ["chai", "kahawa ya Uhabeshi", "Kahawa ya Kenya", "maandazi", "wali", "mahamri"]
 ```
 
 ## Boolean literals
@@ -224,65 +155,13 @@ vinywaji.idadi()
 
 - A string literal is zero or more characters enclosed in double(`" "`) quotation marks. Swahili does not support use of single quotation marks to denote strings, hence `andika('Habari Dunia')` is invalid but `andika("Habari Dunia")` is valid.
 
-### Convert a String to Uppercase
-
-- To capitalize a string, we use the inbuilt `herufiKubwa()` method.
-- For Example:
-
-```
-  wacha x = "habari"
-  andika(x.herufiKubwa()) // Will print "HABARI"
-```
-
-### Splitting a string into a list
-
-- To split a string into an array we use the `tenga()` method. The method takes in a delimiter that allows Swahili to know where to split the string. The delimiter must be a string and it can not be null.
-- For example:
-
-```
-  wacha x = "This is a sample string"
-  andika(x.tenga(" ")) // Split the string everytime it encounters a space.
-  >> ["This", "is", "a", "sample", "string"]
-```
-
-- If you want to get individual characters of a string, you split it with the delimiter `("")`. For instance:
-
-```
-  wacha x = "Wendo"
-  andika(x.tenga(""))
-  >> ["W","e","n","d","o"]
-```
-
-### Replacing a substring within a string.
-
-- This is done using the inbuilt `badili()` method. It takes two parameters; The substring to be replaced, and the substring to replace it with.
-- For example:
-
-```
-  wacha x = "Habari Dunia"
-  andika(x.badili("Dunia", "Wendo"))
-  >> "Habari Wendo"
-```
-
-### Convert a String to Lowercase
-
-- To convert a string to lowercase, we use the inbuilt `herufiNdogo()` method
-- For Example
-
-```
-  wacha x = "HABARI"
-  andika(x.herufiNdogo()) // Will print "habari"
-```
-
 ## Special Characters
 
-- In addition to ordinary characters you can also require special characters in strings.
+- In addition to ordinary characters you can also add special characters to strings.
 - For Example
 
 ```
-andika("habari \n yako")
->> habari
-   yako
+  wacha a = "habari \n yako"
 ```
 
 - The charaters `\n` add a new line. The list of special characters is shown below
@@ -301,7 +180,7 @@ andika("habari \n yako")
 
 ```
   wacha a = RegEx("ab+c", "g")
-  // This Pattern will return RegEx: /ab+c/g
+  andika(a) // => /ab+c/g
 ```
 
 ## Dates
@@ -310,7 +189,6 @@ andika("habari \n yako")
 
 ```
   wacha s = Tarehe()
-
 ```
 
 - For more information, check [here](../ref/built-in-functions.md) and [here](./07-numbers-and-dates.md)
