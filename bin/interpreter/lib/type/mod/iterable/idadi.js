@@ -12,30 +12,10 @@ const { RTError } = require('../../../../error');
 function idadi(inst, executionContext) {
   let res = new RTResult();
   let kitu = executionContext.symbolTable.get('kitu');
-  if (!kitu)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'kitu' is required`,
-        executionContext
-      )
-    );
 
-  if (kitu instanceof SWString || kitu instanceof SWList) {
-    return res.success(
-      new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
-    );
-  } else {
-    return res.failure(
-      new RTError(
-        kitu.posStart,
-        kitu.posEnd,
-        `Cannot find length of non-iterable value`,
-        executionContext
-      )
-    );
-  }
+  return res.success(
+    new SWNumber(kitu.elements ? kitu.elements.length : kitu.value.length)
+  );
 }
 
 module.exports = { method: idadi, args: ['kitu'], types: [SWString, SWList] };

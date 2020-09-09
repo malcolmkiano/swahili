@@ -186,15 +186,14 @@ class Interpreter {
     let props = propChain.reverse();
     for (let propName of props) {
       value = obj.symbolTable.get(propName) || value;
-      if (value instanceof SWObject && !(value instanceof SWFunction)) {
+      if (obj.symbolTable.get(propName)) chainLength--;
+      if (value instanceof SWObject && !(value instanceof SWFunction))
         obj = value;
-        chainLength--;
-      }
     }
 
     if (chainLength) {
       try {
-        let methodName = propChain[chainLength - 1];
+        let methodName = propChain[chainLength];
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
         if (!typeMethod) throw 0;
         if (!value) value = obj;
@@ -267,7 +266,7 @@ class Interpreter {
     }
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = currentNode;
+      if (!value.name) value.name = currentNode;
       if (!(value instanceof SWFunction)) {
         value.parent = obj.symbolTable.symbols;
       }
@@ -335,7 +334,7 @@ class Interpreter {
       );
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = varName;
+      if (!value.name) value.name = varName;
 
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
@@ -380,7 +379,7 @@ class Interpreter {
       );
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = varName;
+      if (!value.name) value.name = varName;
 
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
@@ -699,20 +698,9 @@ class Interpreter {
             context
           )
         );
-
-      let isSet = context.symbolTable.set(funcName, funcValue);
-      if (!isSet)
-        return res.failure(
-          new RTError(
-            node.posStart,
-            node.posEnd,
-            `Cannot change value of constant '${funcName}'`,
-            context
-          )
-        );
     }
 
-    return res.success(null);
+    return res.success(funcValue);
   };
 
   /**

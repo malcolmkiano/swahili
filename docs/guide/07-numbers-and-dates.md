@@ -33,11 +33,11 @@ For Example: (assume current date & time is May 21<sup>st</sup> 2019 at 1:23pm)
 wacha leo = Tarehe()
 // Will print today's date & time
 andika(leo)
-    >> "21/5/2020 1:23"
+    // =>"21/5/2020 1:23"
 
 // Formatting the output
 andika(Tarehe(leo,"t s M, MK, sa:d w"))
-    >> "21 Alhamisi Mei 2020, 1:23 mchana"
+    // =>"21 Alhamisi Mei 2020, 1:23 mchana"
 ```
 
 In the english language, we segment the 12hr system day into am and pm. This maps so that midnight to midday is am and midday to midnight is pm.

@@ -52,14 +52,12 @@ The concatenation (`+`) operator can be used to concatenate 2 strings together. 
 For example:
 
 ```
-andika("Habari " + "yako")
->> Habari Yako
+andika("Habari " + "yako") // => Habari Yako
 ```
 
 - It can also be used with variables, for instance:
 
 ```
 wacha jina = "Wendo"
-andika("Habari" + jina)
->> Habari Wendo.
+andika("Habari" + jina) // => Habari Wendo.
 ```

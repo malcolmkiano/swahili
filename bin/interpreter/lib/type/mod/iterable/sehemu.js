@@ -15,32 +15,12 @@ function sehemu(inst, executionContext) {
   let mwanzo = executionContext.symbolTable.get('mwanzo');
   let mwisho = executionContext.symbolTable.get('mwisho');
 
-  if (!kitu)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'kitu' is required`,
-        executionContext
-      )
-    );
-
   if (!mwanzo)
     return res.failure(
       new RTError(
         kitu.posStart,
         inst.posEnd,
         `Parameter 'mwanzo' is required`,
-        executionContext
-      )
-    );
-
-  if (!(kitu instanceof SWString) && !(kitu instanceof SWList))
-    return res.failure(
-      new RTError(
-        kitu.posStart,
-        kitu.posEnd,
-        `Cannot find segment of non-iterable value`,
         executionContext
       )
     );

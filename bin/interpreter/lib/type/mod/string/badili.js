@@ -15,16 +15,6 @@ function badili(inst, executionContext) {
   let kitafuto = executionContext.symbolTable.get('kitafuto');
   let mbadala = executionContext.symbolTable.get('mbadala');
 
-  if (!jina)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'jina' is required`,
-        executionContext
-      )
-    );
-
   if (!kitafuto)
     return res.failure(
       new RTError(
@@ -46,16 +36,6 @@ function badili(inst, executionContext) {
     );
 
   // check types
-  if (!(jina instanceof SWString))
-    return res.failure(
-      new RTError(
-        jina.posStart,
-        jina.posEnd,
-        `'jina' must be a string`,
-        executionContext
-      )
-    );
-
   if (!(kitafuto instanceof SWString) && !(kitafuto instanceof SWRegEx))
     return res.failure(
       new RTError(

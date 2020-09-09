@@ -13,16 +13,6 @@ function tenga(inst, executionContext) {
   let jina = executionContext.symbolTable.get('jina');
   let kitengo = executionContext.symbolTable.get('kitengo');
 
-  if (!jina)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'jina' is required`,
-        executionContext
-      )
-    );
-
   if (!kitengo)
     return res.failure(
       new RTError(
@@ -34,16 +24,6 @@ function tenga(inst, executionContext) {
     );
 
   // check types
-  if (!(jina instanceof SWString))
-    return res.failure(
-      new RTError(
-        jina.posStart,
-        jina.posEnd,
-        `'jina' must be a string`,
-        executionContext
-      )
-    );
-
   if (!(kitengo instanceof SWString))
     return res.failure(
       new RTError(

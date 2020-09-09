@@ -15,16 +15,6 @@ function weka(inst, executionContext) {
   let pahala = executionContext.symbolTable.get('pahala');
   let kitu = executionContext.symbolTable.get('kitu');
 
-  if (!orodha)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'orodha' is required`,
-        executionContext
-      )
-    );
-
   if (!pahala)
     return res.failure(
       new RTError(
@@ -46,16 +36,6 @@ function weka(inst, executionContext) {
     );
 
   // check types
-  if (!(orodha instanceof SWList))
-    return res.failure(
-      new RTError(
-        orodha.posStart,
-        orodha.posEnd,
-        `'orodha' must be a list`,
-        executionContext
-      )
-    );
-
   if (!(pahala instanceof SWNumber) || !Number.isInteger(pahala.value))
     return res.failure(
       new RTError(
