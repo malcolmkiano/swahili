@@ -132,8 +132,19 @@
   andika(str.idadi()) // => 9
 ```
 
-- _iterable_**.ina(`kitafuto: any`): `SWBoolean`**<br/>
+- _iterable_.**ina(`kitafuto: any`): `SWBoolean`**<br/>
   Returns a boolean indicating whether a string/list contains the element `kitu` or not.
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.ina(3)) // => kweli
+
+  wacha str = "Something"
+  andika(str.ina("x")) // => uwongo
+```
+
+- _iterable_.**pahala(`kitafuto: any`): `SWNumber`**<br/>
+  Returns an SWNumber indicating the position of `kitafuto` in the iterable, or a `-1` if it does not exist.
 
 ```
   wacha list = [1,2,3,4]

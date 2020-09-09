@@ -32,6 +32,7 @@ const RegEx = require('./type/cast/RegEx');
 const idadi = require('./type/mod/iterable/idadi');
 const sehemu = require('./type/mod/iterable/sehemu');
 const ina = require('./type/mod/iterable/ina');
+const pahala = require('./type/mod/iterable/pahala');
 
 // >>> Lists
 const weka = require('./type/mod/list/weka');
@@ -78,6 +79,7 @@ module.exports = {
     weka,
     sehemu,
     ina,
+    pahala,
     unga,
     tenga,
     badili,
