@@ -201,14 +201,6 @@
 
 #### Lists
 
-- _list_.**unga(`kiungo: SWString`): `SWString`**<br/>
-  Returns a new SWString from the list, joined with the delimiter provided for `kiungo`.
-
-```
-  wacha list = [1,2,3,4]
-  andika(list.unga("-")) // => "1-2-3-4"
-```
-
 - _list_.**weka(`pahala: SWNumber, kitu: any`): `SWList`**<br/>
   Modifies an `SWList` in place by replacing the value at `pahala` with the value provided for `kitu`. Returns the value of the list
 
@@ -216,6 +208,26 @@
   wacha list = [1,2,3,4]
   list.weka(0, 5)
   andika(list) // => [5,2,3,4]
+```
+
+- _list_.**fanya(`shug: SWFunction`): `SWList`**<br/>
+  Maps each element in a list to a new value using the function provided for `shug`. The function `shug` receives two arguments: `el` (the current element) and `idx` (the current index). Returns the value of the new list
+
+```
+  wacha list = [1,2,3,4]
+  shughuli multByIndex(el, idx) {
+    rudisha el * idx
+  }
+
+  andika(list.fanya(double)) // => [0,2,6,12]
+```
+
+- _list_.**unga(`kiungo: SWString`): `SWString`**<br/>
+  Returns a new SWString from the list, joined with the delimiter provided for `kiungo`.
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.unga("-")) // => "1-2-3-4"
 ```
 
 - _list_.**kubwa(): `SWNumber`**<br/>

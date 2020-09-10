@@ -37,6 +37,7 @@ const pahala = require('./type/mod/iterable/pahala');
 // >>> Lists
 const weka = require('./type/mod/list/weka');
 const unga = require('./type/mod/list/unga');
+const fanya = require('./type/mod/list/fanya');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
@@ -76,11 +77,12 @@ module.exports = {
     Tarehe,
     RegEx,
     idadi,
-    weka,
     sehemu,
     ina,
     pahala,
+    weka,
     unga,
+    fanya,
     tenga,
     badili,
     herufiNdogo,

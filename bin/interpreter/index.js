@@ -698,6 +698,17 @@ class Interpreter {
             context
           )
         );
+
+      let isSet = context.symbolTable.set(funcName, funcValue);
+      if (!isSet)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot change value of constant '${funcName}'`,
+            context
+          )
+        );
     }
 
     return res.success(funcValue);
@@ -733,7 +744,10 @@ class Interpreter {
         )
       );
 
-    valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
+    valueToCall = valueToCall
+      .copy()
+      .setContext(context)
+      .setPosition(node.posStart, node.posEnd);
 
     for (let argNode of node.argNodes) {
       let val = res.register(this.visit(argNode, context, caller));
