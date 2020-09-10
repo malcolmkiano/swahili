@@ -3,15 +3,15 @@
 shughuli fizzBuzz(nambari){
   kwa i = 1 mpaka (nambari+1){
     kama (i % 15 == 0){
-      andika (Jina(i) + ": Fizz Buzz");
+      andika (Jina(i) + ": Fizz Buzz")
     } au (i % 5 == 0){
-      andika (Jina(i) + ": Buzz");
+      andika (Jina(i) + ": Buzz")
     } au (i % 3 == 0){
-      andika (Jina(i) + ": Fizz ");
+      andika (Jina(i) + ": Fizz ")
     } sivyo {
-      andika (i);
+      andika (i)
     }
   }
 }
 
-fizzBuzz(100);
+fizzBuzz(100)

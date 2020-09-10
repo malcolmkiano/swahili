@@ -20,9 +20,11 @@ const {
   WhileNode,
   FuncDefNode,
   CallNode,
+  TryCatchNode,
   ReturnNode,
   ContinueNode,
   BreakNode,
+  ThrowNode,
 } = require('../interpreter/nodes');
 
 // abstraction to make code shorter
@@ -148,6 +150,18 @@ class Parser {
       }
       return res.success(
         new ReturnNode(expr, posStart, this.currentTok.posStart.copy())
+      );
+    }
+
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.throw)) {
+      res.registerAdvancement();
+      this.advance();
+
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+
+      return res.success(
+        new ThrowNode(expr, posStart, this.currentTok.posStart.copy())
       );
     }
 
@@ -444,6 +458,10 @@ class Parser {
       let listExpr = res.register(this.listExpr());
       if (res.error) return res;
       return res.success(listExpr);
+    } else if (tok.matches(TT.KEYWORD, LEX.keywords.try)) {
+      let tryExpr = res.register(this.tryExpr());
+      if (res.error) return res;
+      return res.success(tryExpr);
     } else if (tok.matches(TT.KEYWORD, LEX.keywords.if)) {
       let ifExpr = res.register(this.ifExpr());
       if (res.error) return res;
@@ -749,6 +767,174 @@ class Parser {
 
     return res.success(
       new ListNode(elementNodes, posStart, this.currentTok.posEnd.copy())
+    );
+  };
+
+  /** parse tokens to make a TryCatchNode */
+  tryExpr = () => {
+    let res = new ParseResult();
+    let tryBody = null;
+    let errVarNameTok = null;
+    let catchBody = null;
+    let finallyBody = null;
+    let posStart = this.currentTok.posStart.copy();
+
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.try))
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${LEX.keywords.try}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type !== TT.LCURL)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.leftCurly.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    tryBody = res.register(this.statements());
+    if (res.error) return res;
+
+    if (this.currentTok.type !== TT.RCURL)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.rightCurly.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.catch))
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${LEX.keywords.catch}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type !== TT.LPAREN)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.leftParen.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (!this.currentTok.type === TT.IDENTIFIER)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(TT.IDENTIFIER)}'`
+        )
+      );
+
+    errVarNameTok = this.currentTok;
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type !== TT.RPAREN)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.rightParen.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.type !== TT.LCURL)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.leftCurly.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    catchBody = res.register(this.statements());
+    if (res.error) return res;
+
+    if (this.currentTok.type !== TT.RCURL)
+      return res.failure(
+        new InvalidSyntaxError(
+          this.currentTok.posStart,
+          this.currentTok.posEnd,
+          `Expected '${lc(LEX.rightCurly.source)}'`
+        )
+      );
+
+    res.registerAdvancement();
+    this.advance();
+
+    if (this.currentTok.matches(TT.KEYWORD, LEX.keywords.finally)) {
+      res.registerAdvancement();
+      this.advance();
+
+      if (this.currentTok.type !== TT.LCURL)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '${lc(LEX.leftCurly.source)}'`
+          )
+        );
+
+      res.registerAdvancement();
+      this.advance();
+
+      finallyBody = res.register(this.statements());
+      if (res.error) return res;
+
+      if (this.currentTok.type !== TT.RCURL)
+        return res.failure(
+          new InvalidSyntaxError(
+            this.currentTok.posStart,
+            this.currentTok.posEnd,
+            `Expected '${lc(LEX.rightCurly.source)}'`
+          )
+        );
+
+      res.registerAdvancement();
+      this.advance();
+    }
+
+    return res.success(
+      new TryCatchNode(
+        tryBody,
+        errVarNameTok,
+        catchBody,
+        finallyBody,
+        posStart,
+        this.currentTok.posEnd.copy()
+      )
     );
   };
 
@@ -1135,7 +1321,7 @@ class Parser {
     let varNameTok = null;
     let body = null;
 
-    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.function)) {
+    if (!this.currentTok.matches(TT.KEYWORD, LEX.keywords.function))
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
@@ -1143,7 +1329,6 @@ class Parser {
           `Expected '${LEX.keywords.function}'`
         )
       );
-    }
 
     res.registerAdvancement();
     this.advance();
@@ -1232,7 +1417,7 @@ class Parser {
     res.registerAdvancement();
     this.advance();
 
-    if (this.currentTok.type !== TT.LCURL) {
+    if (this.currentTok.type !== TT.LCURL)
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
@@ -1240,7 +1425,6 @@ class Parser {
           `Expected '${lc(LEX.leftCurly.source)}'`
         )
       );
-    }
 
     res.registerAdvancement();
     this.advance();
@@ -1248,7 +1432,7 @@ class Parser {
     body = res.register(this.statements());
     if (res.error) return res;
 
-    if (this.currentTok.type !== TT.RCURL) {
+    if (this.currentTok.type !== TT.RCURL)
       return res.failure(
         new InvalidSyntaxError(
           this.currentTok.posStart,
@@ -1256,7 +1440,6 @@ class Parser {
           `Expected '${lc(LEX.rightCurly.source)}'`
         )
       );
-    }
 
     res.registerAdvancement();
     this.advance();

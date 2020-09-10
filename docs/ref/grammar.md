@@ -6,6 +6,7 @@ This will be updated as the language develops
 | :---------------- | :------------------------------------------------------------------- |
 | **statements**    | NEWLINE* `statement` (NEWLINE+ `statement`)*                         |
 | **statement**     | KEYWORD:RUDISHA `expr`?                                              |
+|                   | KEYWORD:TUPA `expr`                                                  |
 |                   | KEYWORD:ENDELEA                                                      |
 |                   | KEYWORD:ONDOKA                                                       |
 |                   | IDENTIFIER EQ `expr`                                                 |
@@ -25,6 +26,7 @@ This will be updated as the language develops
 |                   | `access`                                                             |
 |                   | `obj-expr`                                                           |
 |                   | `list-expr`                                                          |
+|                   | `try-expr`                                                           |
 |                   | `if-expr`                                                            |
 |                   | `while-expr`                                                         |
 |                   | `func-def`                                                           |
@@ -33,6 +35,11 @@ This will be updated as the language develops
 | **access**        | IDENTIFIER(DOT IDENTIFIER)\*                                         |
 | **obj-expr**      | LCURL (IDENTIFIER COL `expr` (COMMA IDENTIFIER COL `expr`)\*)? RCURL |
 | **list-expr**     | LSQUARE (`expr` (COMMA `expr`)\*)? RSQUARE                           |
+| **try-expr**      | KEYWORD:JARIBU LCURL                                                 |
+|                   | `statements` RCURL                                                   |
+|                   | KEYWORD:IWAPO LPAREN IDENTIFIER RPAREN LCURL                         |
+|                   | `statements` RCURL                                                   |
+|                   | (KEYWORD:MWISHOWE LCURL `statements` RCURL)?                         |
 | **if-expr**       | KEYWORD:KAMA `expr` LCURL                                            |
 |                   | (`statements` RCURL `if-expr-b`\|`if-expr-c`?)                       |
 | **if-expr-b**     | KEYWORD:AU `expr` LCURL                                              |

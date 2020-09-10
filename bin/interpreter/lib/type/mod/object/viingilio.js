@@ -12,8 +12,10 @@ const { RTError } = require('../../../../error');
 function viingilio(inst, executionContext) {
   let res = new RTResult();
   let kitu = executionContext.symbolTable.get('kitu');
+  let symbols = { ...kitu.symbolTable.symbols };
+  delete symbols.hii;
 
-  let entries = Object.entries(kitu.symbolTable.symbols);
+  let entries = Object.entries(symbols);
   let mapped = entries.map(
     ([key, value]) => new SWList([new SWString(key), value])
   );
