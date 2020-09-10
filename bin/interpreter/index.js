@@ -275,7 +275,7 @@ class Interpreter {
     obj.symbolTable.set(currentNode, value);
     if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -352,7 +352,7 @@ class Interpreter {
         )
       );
 
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -387,7 +387,7 @@ class Interpreter {
     }
 
     context.symbolTable.set(varName, value);
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
