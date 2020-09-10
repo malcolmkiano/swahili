@@ -1,6 +1,5 @@
 const SWString = require('../../../../types/string');
 const SWRegEx = require('../../../../types/regex');
-const SWBoolean = require('../../../../types/boolean');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 

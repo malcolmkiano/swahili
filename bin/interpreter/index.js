@@ -275,7 +275,7 @@ class Interpreter {
     obj.symbolTable.set(currentNode, value);
     if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -352,7 +352,7 @@ class Interpreter {
         )
       );
 
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -387,7 +387,7 @@ class Interpreter {
     }
 
     context.symbolTable.set(varName, value);
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -698,6 +698,17 @@ class Interpreter {
             context
           )
         );
+
+      let isSet = context.symbolTable.set(funcName, funcValue);
+      if (!isSet)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot change value of constant '${funcName}'`,
+            context
+          )
+        );
     }
 
     return res.success(funcValue);
@@ -733,7 +744,10 @@ class Interpreter {
         )
       );
 
-    valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
+    valueToCall = valueToCall
+      .copy()
+      .setContext(context)
+      .setPosition(node.posStart, node.posEnd);
 
     for (let argNode of node.argNodes) {
       let val = res.register(this.visit(argNode, context, caller));
