@@ -13,25 +13,25 @@ const { RTError } = require('../../../../error');
 function fanya(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
-  let shughuli = executionContext.symbolTable.get('shughuli');
+  let shug = executionContext.symbolTable.get('shug');
 
-  if (!shughuli)
+  if (!shug)
     return res.failure(
       new RTError(
         inst.posStart,
         inst.posEnd,
-        `Parameter 'shughuli' is required`,
+        `Parameter 'shug' is required`,
         executionContext
       )
     );
 
   // check types
-  if (!(shughuli instanceof SWBaseFunction))
+  if (!(shug instanceof SWBaseFunction))
     return res.failure(
       new RTError(
-        shughuli.posStart,
-        shughuli.posEnd,
-        `'shughuli' must be a function`,
+        shug.posStart,
+        shug.posEnd,
+        `'shug' must be a function`,
         executionContext
       )
     );
@@ -41,7 +41,7 @@ function fanya(inst, executionContext) {
   for (let i = 0; i < orodha.elements.length; i++) {
     let el = orodha.elements[i];
     let idx = new SWNumber(i);
-    let res = shughuli.execute([el, idx]);
+    let res = shug.execute([el, idx]);
     if (res.error) return res;
     els.push(res.value || SWNull.NULL);
   }
@@ -52,6 +52,6 @@ function fanya(inst, executionContext) {
 
 module.exports = {
   method: fanya,
-  args: ['orodha', 'shughuli'],
+  args: ['orodha', 'shug'],
   types: [SWList],
 };
