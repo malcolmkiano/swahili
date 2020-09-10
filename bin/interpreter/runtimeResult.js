@@ -49,6 +49,16 @@ class RTResult {
     return this;
   }
 
+  /**
+   * Registers a throw value
+   * @param {*} value value to be thrown
+   */
+  successThrow(value) {
+    this.reset();
+    this.error = value;
+    return this;
+  }
+
   /** Registers a continue result */
   successContinue() {
     this.reset();

@@ -53,7 +53,7 @@ npx swahili-lang [filename]
 
 1. [Introduction](./docs/guide/01-introduction.md)
 2. [Grammar and types](./docs/guide/02-grammar-and-types.md)
-3. [Control flow and error handling](./docs/guide/03-control-flow.md)
+3. [Control flow and error handling](./docs/guide/03-control-flow-and-error-handling.md)
 4. [Loops and iterations](./docs/guide/04-loops.md)
 5. [Functions](./docs/guide/05-functions.md)
 6. [Expressions and operators](./docs/guide/06-expressions.md)

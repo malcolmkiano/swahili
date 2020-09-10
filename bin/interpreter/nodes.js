@@ -333,11 +333,39 @@ class CallNode {
   }
 }
 
+/** node representing a try-catch block */
+class TryCatchNode {
+  /**
+   * instantiates a try-catch node
+   * @param {Node} tryBodyNode node containing the expressions to try
+   * @param {Token} errVarNameTok token containing the name of the variable to be used to hold the error
+   * @param {Node} catchBodyNode node containing the expressions to run if try block fails
+   * @param {Node} finallyBodyNode node containing the expressions to run after try/catch
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(
+    tryBodyNode,
+    errVarNameTok,
+    catchBodyNode,
+    finallyBodyNode,
+    posStart,
+    posEnd
+  ) {
+    this.tryBodyNode = tryBodyNode;
+    this.errVarNameTok = errVarNameTok;
+    this.catchBodyNode = catchBodyNode;
+    this.finallyBodyNode = finallyBodyNode;
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 /** node representing a return value */
 class ReturnNode {
   /**
    * instantiate a return value node
-   * @param {Node} nodeToReturn node representing the function to be called
+   * @param {Node} nodeToReturn node representing the value to be returned
    * @param {Position} posStart line/col position of the node
    * @param {Position} posEnd line/col position of the node
    */
@@ -374,6 +402,21 @@ class BreakNode {
   }
 }
 
+/** node representing a thrown exception */
+class ThrowNode {
+  /**
+   * instantiate a thrown exception node
+   * @param {Node} nodeToThrow node representing the value to be thrown
+   * @param {Position} posStart line/col position of the node
+   * @param {Position} posEnd line/col position of the node
+   */
+  constructor(nodeToThrow, posStart, posEnd) {
+    this.nodeToThrow = nodeToThrow;
+    this.posStart = posStart;
+    this.posEnd = posEnd;
+  }
+}
+
 module.exports = {
   NumberNode,
   StringNode,
@@ -392,7 +435,9 @@ module.exports = {
   WhileNode,
   FuncDefNode,
   CallNode,
+  TryCatchNode,
   ReturnNode,
   ContinueNode,
   BreakNode,
+  ThrowNode,
 };

@@ -115,10 +115,25 @@ class RTError extends Error {
   }
 }
 
+/** Uncaught exception */
+class UncaughtException extends Error {
+  /**
+   * Occurs when something goes wrong while the interpreter visits the different nodes
+   * @param {Position} posStart the start position of the node where the error occurred
+   * @param {Position} posEnd the end positoin of the node where the error occurred
+   * @param {String} details More information about the error
+   */
+  constructor(posStart, posEnd, details, context) {
+    super(posStart, posEnd, 'Uncaught Exception', details);
+    this.context = context;
+  }
+}
+
 module.exports = {
   Error,
   IllegalCharError,
   ExpectedCharError,
   InvalidSyntaxError,
   RTError,
+  UncaughtException,
 };

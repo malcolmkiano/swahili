@@ -2,10 +2,10 @@
 // A function that recurses (calls itself) until it reaches its base case (when nambari <= 1)
 shughuli fibonacci(nambari){
   kama (nambari <= 1) {
-    rudisha 1;
+    rudisha 1
   }
 
-  rudisha fibonacci(nambari - 1) + fibonacci(nambari - 2);
+  rudisha fibonacci(nambari - 1) + fibonacci(nambari - 2)
 }
 
 // Mtumizi ataandika nambari ya vifaa anavyotaka kuonyeshwa

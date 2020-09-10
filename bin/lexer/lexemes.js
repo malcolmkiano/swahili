@@ -40,8 +40,12 @@ module.exports = {
     step: 'hatua',
     while: 'ambapo',
     function: 'shughuli',
+    try: 'jaribu',
+    catch: 'iwapo',
+    finally: 'mwishowe',
     return: 'rudisha',
     continue: 'endelea',
     break: 'ondoka',
+    throw: 'tupa',
   },
 };
