@@ -118,7 +118,7 @@ class RTError extends Error {
 /** Uncaught exception */
 class UncaughtException extends Error {
   /**
-   * Occurs when something goes wrong while the interpreter visits the different nodes
+   * Occurs when an error is manually thrown by the program
    * @param {Position} posStart the start position of the node where the error occurred
    * @param {Position} posEnd the end positoin of the node where the error occurred
    * @param {String} details More information about the error
