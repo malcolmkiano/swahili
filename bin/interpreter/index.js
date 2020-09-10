@@ -113,7 +113,7 @@ class Interpreter {
     }
 
     return res.success(
-      new SWList(elements.length ? elements : [SWNull.NULL])
+      new SWList(elements)
         .setContext(context)
         .setPosition(node.posStart, node.posEnd)
     );
