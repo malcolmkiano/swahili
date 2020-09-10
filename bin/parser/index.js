@@ -157,10 +157,9 @@ class Parser {
       res.registerAdvancement();
       this.advance();
 
-      let expr = res.tryRegister(this.expr());
-      if (!expr) {
-        this.reverse(res.toReverseCount);
-      }
+      let expr = res.register(this.expr());
+      if (res.error) return res;
+
       return res.success(
         new ThrowNode(expr, posStart, this.currentTok.posStart.copy())
       );
