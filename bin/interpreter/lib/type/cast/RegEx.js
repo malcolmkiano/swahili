@@ -23,16 +23,6 @@ function RegEx(inst, executionContext) {
       )
     );
 
-  if (!bendera)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'bendera' is required`,
-        executionContext
-      )
-    );
-
   if (!(muundo instanceof SWString))
     return res.failure(
       new RTError(
@@ -43,7 +33,7 @@ function RegEx(inst, executionContext) {
       )
     );
 
-  if (!(bendera instanceof SWString))
+  if (bendera && !(bendera instanceof SWString))
     return res.failure(
       new RTError(
         bendera.posStart,
@@ -54,7 +44,7 @@ function RegEx(inst, executionContext) {
     );
 
   let pattern = muundo.value;
-  let flags = bendera.value;
+  let flags = bendera ? bendera.value : '';
 
   const validFlags = 'igmsuy';
   for (let i = 0; i < flags.length; i++) {

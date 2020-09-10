@@ -1,4 +1,5 @@
 const SWList = require('../../../../types/list');
+const SWRegEx = require('../../../../types/regex');
 const SWString = require('../../../../types/string');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
@@ -24,7 +25,7 @@ function tenga(inst, executionContext) {
     );
 
   // check types
-  if (!(kitengo instanceof SWString))
+  if (!(kitengo instanceof SWString) && !(kitengo instanceof SWRegEx))
     return res.failure(
       new RTError(
         kitengo.posStart,
