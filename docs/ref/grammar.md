@@ -14,7 +14,7 @@ This will be updated as the language develops
 | **expr**          | KEYWORD:WACHA IDENTIFIER EQ `expr`                                   |
 |                   | `comp-expr` ((AND\|OR) `comp-expr`)\*                                |
 | **comp-expr**     | NOT `comp-expr`                                                      |
-|                   | `arith-expr` ((EE\|LT\|GT\|LTE\|GTE) `arith-expr`)\*                 |
+|                   | `arith-expr` ((EE\|NE\|LT\|GT\|LTE\|GTE) `arith-expr`)\*             |
 | **arith-expr**    | `term` ((PLUS\|MINUS) `term`)\*                                      |
 | **term**          | `factor` (MUL\|DIV\|MOD) `factor`)\*                                 |
 | **factor**        | (PLUS\|MINUS) `factor`                                               |
