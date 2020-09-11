@@ -38,6 +38,7 @@ const pahala = require('./type/mod/iterable/pahala');
 const weka = require('./type/mod/list/weka');
 const unga = require('./type/mod/list/unga');
 const fanya = require('./type/mod/list/fanya');
+const panga = require('./type/mod/list/panga');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
@@ -83,6 +84,7 @@ module.exports = {
     weka,
     unga,
     fanya,
+    panga,
     tenga,
     badili,
     herufiNdogo,

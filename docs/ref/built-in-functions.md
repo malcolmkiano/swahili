@@ -246,6 +246,14 @@
   andika(list.ndogo()) // => 1
 ```
 
+- _list_.**panga(): `SWList`**</br>
+  Sorts a list in place and returns the sorted list.
+
+```
+  wacha list = [5,4,3]
+  andika(list.panga()) // => [3,4,5]
+```
+
 #### Dates
 
 - _date_.**unda(`muundo: SWString`): `SWString`**<br/>
