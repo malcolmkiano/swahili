@@ -1,4 +1,5 @@
 const SWList = require('../../../../types/list');
+const SWRegEx = require('../../../../types/regex');
 const SWString = require('../../../../types/string');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
@@ -13,16 +14,6 @@ function tenga(inst, executionContext) {
   let jina = executionContext.symbolTable.get('jina');
   let kitengo = executionContext.symbolTable.get('kitengo');
 
-  if (!jina)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'jina' is required`,
-        executionContext
-      )
-    );
-
   if (!kitengo)
     return res.failure(
       new RTError(
@@ -34,17 +25,7 @@ function tenga(inst, executionContext) {
     );
 
   // check types
-  if (!(jina instanceof SWString))
-    return res.failure(
-      new RTError(
-        jina.posStart,
-        jina.posEnd,
-        `'jina' must be a string`,
-        executionContext
-      )
-    );
-
-  if (!(kitengo instanceof SWString))
+  if (!(kitengo instanceof SWString) && !(kitengo instanceof SWRegEx))
     return res.failure(
       new RTError(
         kitengo.posStart,

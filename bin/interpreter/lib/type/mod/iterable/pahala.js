@@ -1,15 +1,15 @@
 const SWString = require('../../../../types/string');
 const SWList = require('../../../../types/list');
-const SWBoolean = require('../../../../types/boolean');
+const SWNumber = require('../../../../types/number');
 const RTResult = require('../../../../runtimeResult');
 const { RTError } = require('../../../../error');
 
 /**
- * Returns a boolean indicating whether an iterable contains a value
+ * Returns the index of a value in an iterable, or -1 if value does not exist
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
-function ina(inst, executionContext) {
+function pahala(inst, executionContext) {
   let res = new RTResult();
   let kitu = executionContext.symbolTable.get('kitu');
   let kitafuto = executionContext.symbolTable.get('kitafuto');
@@ -25,18 +25,18 @@ function ina(inst, executionContext) {
     );
 
   return res.success(
-    new SWBoolean(
+    new SWNumber(
       kitu.elements
         ? kitu.elements
             .map((el) => el.toString(false))
-            .includes(kitafuto.toString(false))
-        : kitu.toString(false).includes(kitafuto.toString(false))
+            .indexOf(kitafuto.toString(false))
+        : kitu.toString(false).indexOf(kitafuto.toString(false))
     )
   );
 }
 
 module.exports = {
-  method: ina,
+  method: pahala,
   args: ['kitu', 'kitafuto'],
   types: [SWString, SWList],
 };

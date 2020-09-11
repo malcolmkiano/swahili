@@ -32,10 +32,12 @@ const RegEx = require('./type/cast/RegEx');
 const idadi = require('./type/mod/iterable/idadi');
 const sehemu = require('./type/mod/iterable/sehemu');
 const ina = require('./type/mod/iterable/ina');
+const pahala = require('./type/mod/iterable/pahala');
 
 // >>> Lists
 const weka = require('./type/mod/list/weka');
 const unga = require('./type/mod/list/unga');
+const fanya = require('./type/mod/list/fanya');
 
 // >>> Strings
 const tenga = require('./type/mod/string/tenga');
@@ -46,6 +48,9 @@ const herufiKubwa = require('./type/mod/string/herufiKubwa');
 // >>> Numbers
 const ndogo = require('./type/mod/number/ndogo');
 const kubwa = require('./type/mod/number/kubwa');
+
+// >>> Objects
+const viingilio = require('./type/mod/object/viingilio');
 
 // >>> Dates
 const unda = require('./type/mod/date/unda');
@@ -72,16 +77,19 @@ module.exports = {
     Tarehe,
     RegEx,
     idadi,
-    weka,
     sehemu,
     ina,
+    pahala,
+    weka,
     unga,
+    fanya,
     tenga,
     badili,
     herufiNdogo,
     herufiKubwa,
     ndogo,
     kubwa,
+    viingilio,
     unda,
   ],
 };

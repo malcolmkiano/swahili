@@ -2,7 +2,7 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to native Swahili-speaking students.
 
-![Version 0.9.4](https://img.shields.io/badge/version-0.9.4-blue)
+![Version 0.9.7](https://img.shields.io/badge/version-0.9.7-blue)
 [![Run on Repl.it](https://repl.it/badge/github/malcolmkiano/swahili)](https://repl.it/@moredigital/swahili-1)
 
 ## Get Started
@@ -53,7 +53,7 @@ npx swahili-lang [filename]
 
 1. [Introduction](./docs/guide/01-introduction.md)
 2. [Grammar and types](./docs/guide/02-grammar-and-types.md)
-3. [Control flow and error handling](./docs/guide/03-control-flow.md)
+3. [Control flow and error handling](./docs/guide/03-control-flow-and-error-handling.md)
 4. [Loops and iterations](./docs/guide/04-loops.md)
 5. [Functions](./docs/guide/05-functions.md)
 6. [Expressions and operators](./docs/guide/06-expressions.md)

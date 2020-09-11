@@ -12,10 +12,18 @@ Currently, 2 Loop structures have been implemented, namely:
 - Example:
 
 ```
-kwa y = 1 Mpaka 10 {
-  andika(“Habari”) //will print "habari" to terminal ten times
- }
+kwa y = 1 Mpaka 6 {
+  andika(“Habari”) // will print "habari" to terminal five times
+}
+
+// => "Habari"
+// => "Habari"
+// => "Habari"
+// => "Habari"
+// => "Habari"
 ```
+
+- The upper limit of the range is not included in the iteration. Hence `kwa i = 1 mpaka 3 { andika("Jambo")}` will only print `"Jambo"` twice.
 
 You can also loop through a list using the kwa katika syntax instead
 
@@ -24,12 +32,13 @@ You can also loop through a list using the kwa katika syntax instead
 - Example:
 
 ```
-  kwa i katika ["Malcolm", "Patrick", "Kiano"]{
-    andika(i)
-  }
-    >> "Malcolm"
-    >> "Patrick"
-    >> "Kiano"
+kwa i katika ["Malcolm", "Patrick", "Kiano"]{
+  andika(i) // Will print each element in the list
+}
+
+// => "Malcolm"
+// => "Patrick"
+// => "Kiano"
 ```
 
 This syntax also works if you pass in a variable that holds a list. For instance:
@@ -48,10 +57,10 @@ You can also loop through each character in a string by passing that string or a
     andika(c)
   }
 
-    >>"K"
-    >>"i"
-    ...
-    >>"o"
+  // => "K"
+  // => "i"
+  // ...
+  // => "o"
 ```
 
 Basically, the Kwa...Katika syntax accepts list expressions, String expressions, identifiers or function calls to functions that evaluate to a list or a string.
@@ -63,7 +72,9 @@ Syntax: Ambapo (expr) { }
 - Example:
 
 ```
-ambapo (x>2) {
-  andika ("salamu") //Will print "salamu to terminal as long as x>2
+wacha x = 0
+ambapo (x > 2) {
+  andika ("salamu") // Will print "salamu to terminal as long as x>2
+  x = x + 1
 }
 ```

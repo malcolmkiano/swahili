@@ -18,7 +18,7 @@ class SWBaseFunction extends SWObject {
    */
   constructor(name) {
     super();
-    this.name = name || '<isiyotambuliwa>';
+    this.name = name || null;
     this.typeName = 'Shughuli';
   }
 
@@ -82,7 +82,8 @@ class SWBaseFunction extends SWObject {
    * @returns {String}
    */
   toString(format = true) {
-    return format ? colors.cyan(`<shughuli ${this.name}>`) : this.name;
+    let name = this.name || '<isiyotambuliwa>';
+    return format ? colors.cyan(`<shughuli ${name}>`) : name;
   }
 }
 

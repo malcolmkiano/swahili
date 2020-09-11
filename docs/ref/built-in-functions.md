@@ -2,14 +2,32 @@
 
 ## I/O
 
-- **andika(`ujumbe: SWString`): `SWNull`**<br/>
-  Prints `ujumbe` to the console.
+- **andika(`kitu: any`[, ...vitu: any[]]): `SWNull`**<br/>
+  Prints given arguments to the console.
+  For Example:
+
+```
+  andika("Jambo Dunia") // => "Jambo Dunia"
+```
 
 - **soma(`swali: SWString`): `SWString`**<br/>
   Gets and returns user input as a string. Uses the value of `swali` as a prompt message
+  For example:
+
+```
+  wacha jina = soma()
+  > "Wendo" // User Input
+  andika(jina) // => "Wendo"
+```
 
 - **somaNambari(`swali: SWString`): `SWNumber`**<br/>
   Gets and returns user input as a number. Uses the value of `swali` as a prompt message
+
+```
+  wacha umri = somaNambari()
+  > 22 // User Input
+  andika(umri) // => 22
+```
 
 - **futa(): `SWNull`**<br/>
   Clears the console window
@@ -18,17 +36,71 @@
 
 ### Checking type
 
+- **aina(`kitu: any`): `SWString`**<br/>
+  Returns a string indicating the data type of `kitu`
+
+```
+  wacha x = [1,2,3]
+  andika(aina(x)) // => "Orodha"
+```
+
+- **niKamusi(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is of type `SWObject`
+
+```
+  wacha mtu = {jina: "John", umri: 23}
+  andika(niKamusi(mtu)) // => kweli
+```
+
+- **niTarehe(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is of type `SWDateTime`
+
+```
+  wacha leo = Tarehe()
+  andika(niTarehe(leo)) // => kweli
+```
+
+- **niTupu(`kitu: any`): `SWBoolean`**<br/>
+  Returns `kweli` if `kitu` is `SWNull`
+
+```
+  wacha bure = tupu
+  andika(niTupu(bure)) // => kweli
+```
+
 - **niNambari(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWNumber`
+
+```
+  wacha pi = 3.141592
+  andika(niNambari(pi)) // => kweli
+```
 
 - **niJina(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWString`
 
+```
+  wacha neno="Wamlambez"
+  andika(niJina(neno)) // => kweli
+```
+
 - **niOrodha(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWList`
 
+```
+  wacha list = [1,2,3,4]
+  andika(niOrodha(list)) // => kweli
+```
+
 - **niShughuli(`kitu: any`): `SWBoolean`**<br/>
   Returns `kweli` if `kitu` is of type `SWBaseFunction`
+
+```
+  shughuli salimu(jina){
+    andika("Habari" + jina)
+  }
+  andika(niShughuli(salimu)) // =>kweli
+```
 
 ### Type casting
 
@@ -38,21 +110,158 @@
 - **Jina(`kitu: any`): `SWString`**<br/>
   Returns an `SWString` representation of the value passed in
 
-- **Tarehe(`siku: SWDateTime | SWString, [muundo: SWString]`): `SWDateTime`**<br/>
-  Returns the current date if the only parameter entered is `siku`. Returns a formatted date and time if `muundo` matches the formatting strings.
-
+- **Tarehe(`siku: SWDateTime | SWString`): `SWDateTime`**<br/>
+  Returns the current date, or a date with the value matching the parameter `siku`.
   For info on `SWDateTime` formatting, read [the guide](../guide/07-numbers-and-dates)
 
-### Modification and reading
+- **RegEx(`muundo: SWString, bendera: SWString`): `SWRegEx`**<br/>
+  Returns `SWRegEx` representation of the value passed in
 
-- **idadi(`kitu: SWList | SWString`): `SWNumber`**<br/>
+### Modification and reading (see also [Grammar and Types](../guide/02-grammar-and-types.md))
+
+#### Iterables
+
+- _iterable_.**idadi(): `SWNumber`**<br/>
   Returns the length of a list or string
 
-- **badili(`orodha: SWList, pahala: SWNumber, kitu: any`): `any`**<br/>
-  Modifies an `SWList` in place by replacing the element at the index `pahala` with the value provided for `kitu`. Returns the new value of `kitu`
+```
+  wacha list = [1,2,3,4]
+  andika(list.idadi()) // => 4
 
-- **unga(`orodha: SWList, kiungo: SWString):`SWString`**<br/>
-  Converts an `SWList` to an `SWString` by joining the elements with the value of `kiungo`
+  wacha str = "Something"
+  andika(str.idadi()) // => 9
+```
 
-- **tenga(`jina: SWString, kitengo: SWString`): `SWList`**<br/>
-  Converts an `SWString` to an `SWList` by splitting each section delimited by the value of `kitengo`
+- _iterable_.**ina(`kitafuto: any`): `SWBoolean`**<br/>
+  Returns a boolean indicating whether a string/list contains the element `kitu` or not.
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.ina(3)) // => kweli
+
+  wacha str = "Something"
+  andika(str.ina("x")) // => uwongo
+```
+
+- _iterable_.**pahala(`kitafuto: any`): `SWNumber`**<br/>
+  Returns an SWNumber indicating the position of `kitafuto` in the iterable, or a `-1` if it does not exist.
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.pahala(3)) // => 2
+
+  wacha str = "Something"
+  andika(str.pahala("x")) // => -1
+```
+
+- _iterable_.**sehemu(`mwanzo: SWNumber[, mwisho: SWNumber]`): `iterable`**<br/>
+  Returns a section of the string/list delimited by `mwanzo` and `mwisho`
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.sehemu(1,2)) // => [2,3]
+
+  wacha str = "Something"
+  andika(str.sehemu(-3)) // => "ing"
+```
+
+#### Strings
+
+- _str_.**badili(`kitafuto: SWString | SWRegEx , mbadala: SWString`): `SWString`**<br/>
+  Returns a new `SWString` made by replacing the string that matches `kitafuto` with the value provided for `mbadala`.
+
+```
+  wacha str = "Something"
+  andika(str.badili("thing", "body")) // => "Somebody"
+```
+
+- _str_.**tenga(`kitengo: SWString | SWRegEx`): `SWList`**<br/>
+  Returns an `SWList` made by splitting `str`, delimited by the value of `kitengo`
+
+```
+  wacha str = "Everybody-was-kungfu-fighting"
+  andika(str.tenga("-")) // => ["Everybody", "was", "kungfu", "fighting"]
+```
+
+- _str_.**herufiKubwa(): `SWString`**<br/>
+  Returns the uppercase equivalent of an `SWString`
+
+```
+  wacha str = "abcde"
+  andika(str.herufiKubwa()) // => "ABCDE"
+```
+
+- _str_.**herufiNdogo(): `SWString`**<br/>
+  Returns the lowercase equivalent of an `SWString`
+
+```
+  wacha str = "FGHIJ"
+  andika(str.herufiNdogo()) // => "fghij"
+```
+
+#### Lists
+
+- _list_.**weka(`pahala: SWNumber, kitu: any`): `SWList`**<br/>
+  Modifies an `SWList` in place by replacing the value at `pahala` with the value provided for `kitu`. Returns the value of the list
+
+```
+  wacha list = [1,2,3,4]
+  list.weka(0, 5)
+  andika(list) // => [5,2,3,4]
+```
+
+- _list_.**fanya(`shug: SWFunction`): `SWList`**<br/>
+  Maps each element in a list to a new value using the function provided for `shug`. The function `shug` receives two arguments: `el` (the current element) and `idx` (the current index). Returns the value of the new list
+
+```
+  wacha list = [1,2,3,4]
+  shughuli multByIndex(el, idx) {
+    rudisha el * idx
+  }
+
+  andika(list.fanya(double)) // => [0,2,6,12]
+```
+
+- _list_.**unga(`kiungo: SWString`): `SWString`**<br/>
+  Returns a new SWString from the list, joined with the delimiter provided for `kiungo`.
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.unga("-")) // => "1-2-3-4"
+```
+
+- _list_.**kubwa(): `SWNumber`**<br/>
+  Returns the largest element in a list of numbers(`SWNumber`).
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.kubwa()) // => 4
+```
+
+- _list_.**ndogo(): `SWNumber`**<br/>
+  Returns the smallest element in a list of numbers(`SWNumber`).
+
+```
+  wacha list = [1,2,3,4]
+  andika(list.ndogo()) // => 1
+```
+
+#### Dates
+
+- _date_.**unda(`muundo: SWString`): `SWString`**<br/>
+  Formats a SWDateTime value as a SWString
+
+```
+  wacha date = Tarehe("01/01/2001")
+  andika(date.unda("s, M t, MK")) // => "Jumatatu, Januari 01, 2001"
+```
+
+#### Objects
+
+- _obj_.**viingilio(): `SWList`**<br/>
+  Returns a list containing the key-value pairs of an object as tuples. This allows you to iterate through the properties of an object
+
+```
+  wacha obj = { jina: "John", umri: 23 }
+  andika(obj.viingilio()) // => [["jina", "John"], ["umri", 23]]
+```

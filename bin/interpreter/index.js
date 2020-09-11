@@ -13,7 +13,7 @@ const SWObject = require('./types/object');
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
-const { RTError } = require('./error');
+const { RTError, UncaughtException } = require('./error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
@@ -113,7 +113,7 @@ class Interpreter {
     }
 
     return res.success(
-      new SWList(elements.length ? elements : [SWNull.NULL])
+      new SWList(elements)
         .setContext(context)
         .setPosition(node.posStart, node.posEnd)
     );
@@ -186,17 +186,17 @@ class Interpreter {
     let props = propChain.reverse();
     for (let propName of props) {
       value = obj.symbolTable.get(propName) || value;
-      if (value instanceof SWObject && !(value instanceof SWFunction)) {
+      if (obj.symbolTable.get(propName)) chainLength--;
+      if (value instanceof SWObject && !(value instanceof SWFunction))
         obj = value;
-        chainLength--;
-      }
     }
 
-    if (chainLength > 1) {
+    if (chainLength) {
       try {
-        let methodName = propChain[chainLength - 1];
+        let methodName = propChain[chainLength] || propChain[chainLength - 1];
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
         if (!typeMethod) throw 0;
+        if (!value) value = obj;
 
         let supportedTypes = typeMethod[`${methodName}_types`];
         for (let i = 0; i < supportedTypes.length; i++) {
@@ -266,7 +266,7 @@ class Interpreter {
     }
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = currentNode;
+      if (!value.name) value.name = currentNode;
       if (!(value instanceof SWFunction)) {
         value.parent = obj.symbolTable.symbols;
       }
@@ -275,7 +275,7 @@ class Interpreter {
     obj.symbolTable.set(currentNode, value);
     if (caller) caller.symbolTable.set('hii', obj);
     if (obj.parent) obj.parent[obj.name] = obj;
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -334,7 +334,7 @@ class Interpreter {
       );
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = varName;
+      if (!value.name) value.name = varName;
 
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
@@ -352,7 +352,7 @@ class Interpreter {
         )
       );
 
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -379,7 +379,7 @@ class Interpreter {
       );
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
-      value.name = varName;
+      if (!value.name) value.name = varName;
 
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
@@ -387,7 +387,7 @@ class Interpreter {
     }
 
     context.symbolTable.set(varName, value);
-    return res.success(null);
+    return res.success(value);
   };
 
   /**
@@ -711,7 +711,7 @@ class Interpreter {
         );
     }
 
-    return res.success(null);
+    return res.success(funcValue);
   };
 
   /**
@@ -744,7 +744,10 @@ class Interpreter {
         )
       );
 
-    valueToCall = valueToCall.copy().setPosition(node.posStart, node.posEnd);
+    valueToCall = valueToCall
+      .copy()
+      .setContext(context)
+      .setPosition(node.posStart, node.posEnd);
 
     for (let argNode of node.argNodes) {
       let val = res.register(this.visit(argNode, context, caller));
@@ -762,6 +765,49 @@ class Interpreter {
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
     return res.success(returnValue);
+  };
+
+  /**
+   * Evaluates a try catch node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} caller the calling type
+   * @returns {RTResult}
+   */
+  visitTryCatchNode = (node, context, caller = null) => {
+    let res = new RTResult();
+    let err = null;
+
+    const tryContext = new Context('<try>', context, node.posStart);
+    tryContext.symbolTable = new SymbolTable(context.symbolTable);
+
+    for (let line of node.tryBodyNode.elementNodes) {
+      res.register(this.visit(line, tryContext, caller));
+      if (res.shouldReturn()) {
+        err = res.error;
+        res.reset();
+        break;
+      }
+    }
+
+    if (err) {
+      let errVarName = node.errVarNameTok.value;
+      tryContext.symbolTable.set(errVarName, new SWString(err.details));
+
+      for (let line of node.catchBodyNode.elementNodes) {
+        res.register(this.visit(line, tryContext, caller));
+        if (res.shouldReturn()) return res;
+      }
+    }
+
+    if (node.finallyBodyNode) {
+      for (let line of node.finallyBodyNode.elementNodes) {
+        res.register(this.visit(line, tryContext, caller));
+        if (res.shouldReturn()) return res;
+      }
+    }
+
+    return res.success(SWNull.NULL);
   };
 
   /**
@@ -784,6 +830,34 @@ class Interpreter {
       value.symbolTable = caller.symbolTable;
 
     return res.successReturn(value);
+  };
+
+  /**
+   * Evaluates a throw node
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} caller the calling type
+   * @returns {RTResult}
+   */
+  visitThrowNode = (node, context, caller = null) => {
+    let res = new RTResult();
+    let value = SWNull.NULL;
+
+    if (node.nodeToThrow) {
+      value = res.register(this.visit(node.nodeToThrow, context, caller));
+      if (res.shouldReturn()) return res;
+    }
+
+    if (value instanceof SWFunction && caller)
+      value.symbolTable = caller.symbolTable;
+
+    let err = new UncaughtException(
+      node.posStart,
+      node.posEnd,
+      value.toString(false)
+    );
+
+    return res.successThrow(err);
   };
 
   /**
