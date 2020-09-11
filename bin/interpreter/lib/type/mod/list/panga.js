@@ -12,19 +12,7 @@ function panga(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
  
-  // default to the args list
   let list = orodha.elements;
-
-  // ensure at least one element in the list
-  if (!list.length)
-    return res.failure(
-      new RTError(
-        orodha.posStart,
-        orodha.posEnd,
-        `'orodha' must have at least one element`,
-        executionContext
-      )
-    );
   
   // Ensure the list contains numerical values
   for (let i = 0; i < list.length; i++) {
@@ -40,8 +28,7 @@ function panga(inst, executionContext) {
       );
   }
 
- // sort the list items
-  //let result = list.sort();   
+ // sort the list items 
   orodha.elements.sort();
   return res.success(orodha);
 
