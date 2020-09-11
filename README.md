@@ -35,7 +35,10 @@ You can pass in a file path to be executed when you run the `swahili` command in
 swahili ./examples/jambo.swh
 ```
 
-To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), get [this VS Code extension](https://marketplace.visualstudio.com/items?itemName=swahili-lang.swahili-syntax).
+To see more options for the `swahili` command run 
+```
+swahili -h
+```
 
 ### Run without installing
 
@@ -44,6 +47,8 @@ If you'd like to run without installing, simply use:
 ```
 npx swahili-lang [filename]
 ```
+
+To enable syntax highlighting for your Swahili programs in VS Code (more coming soon!), get [this VS Code extension](https://marketplace.visualstudio.com/items?itemName=swahili-lang.swahili-syntax).
 
 ---
 

@@ -62,7 +62,12 @@ const printHelp = () => {
   print('  Print this help', true);
   print('-l, --load');
   print('  Load a script at <filename> and run Swahili REPL', true);
+  print('-v, --version');
+  print('  Print the installed version of swahili-lang', true);
 
+  print(
+    'swahili [-l|--load] <filename>\tScript at <filename> will be executed and loaded into the current context'
+  );
   print(
     'swahili <filename>\tScript at <filename> will be executed and the program will exit'
   );
