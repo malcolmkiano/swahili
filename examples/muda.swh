@@ -1,0 +1,9 @@
+wacha r = rudia(shughuli () {
+  wacha t = Tarehe()
+  andika(t.unda("sa:d w"))
+}, 1000)
+
+subiri(shughuli () {
+  komesha(r)
+  andika("Mwisho!")
+}, 5000)

@@ -49,6 +49,7 @@ function run(fileName, text, temp = false) {
   context.symbolTable = temp
     ? new SymbolTable(globalSymbolTable)
     : globalSymbolTable;
+
   const result = intr.visit(ast.node, context);
 
   return [result.value, result.error];

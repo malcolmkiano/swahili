@@ -35,7 +35,8 @@ You can pass in a file path to be executed when you run the `swahili` command in
 swahili ./examples/jambo.swh
 ```
 
-To see more options for the `swahili` command run 
+To see more options for the `swahili` command run
+
 ```
 swahili -h
 ```

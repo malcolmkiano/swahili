@@ -11,9 +11,9 @@ const { RTError } = require('../../../../error');
 function panga(inst, executionContext) {
   let res = new RTResult();
   let orodha = executionContext.symbolTable.get('orodha');
- 
+
   let list = orodha.elements;
-  
+
   // Ensure the list contains numerical values
   for (let i = 0; i < list.length; i++) {
     let element = list[i];
@@ -28,10 +28,9 @@ function panga(inst, executionContext) {
       );
   }
 
- // sort the list items 
+  // sort the list items
   orodha.elements.sort();
   return res.success(orodha);
-
 }
 
 module.exports = { method: panga, args: ['orodha'], types: [SWList] };

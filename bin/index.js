@@ -122,10 +122,13 @@ if (args.length) {
 }
 
 // begin the repl
-console.clear();
-if (load)
+if (load) {
   print(
     `Script ${colors.green('"' + fileName + '"')} was successfully loaded.`,
     true
   );
+} else {
+  console.clear();
+}
+
 getInput();

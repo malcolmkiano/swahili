@@ -3,6 +3,12 @@
 const constants = require('./constants');
 
 // =====================================================
+// Async methods
+const subiri = require('./async/subiri');
+const rudia = require('./async/rudia');
+const komesha = require('./async/komesha');
+
+// =====================================================
 // I/O methods
 const andika = require('./io/andika');
 const soma = require('./io/soma');
@@ -61,6 +67,9 @@ const unda = require('./type/mod/date/unda');
 module.exports = {
   constants,
   functions: [
+    subiri,
+    rudia,
+    komesha,
     andika,
     soma,
     somaNambari,

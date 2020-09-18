@@ -335,7 +335,6 @@ class Interpreter {
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       if (!value.name) value.name = varName;
-
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
       }
@@ -380,7 +379,6 @@ class Interpreter {
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       if (!value.name) value.name = varName;
-
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
       }
@@ -764,6 +762,7 @@ class Interpreter {
         .copy()
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
+
     return res.success(returnValue);
   };
 
@@ -782,7 +781,7 @@ class Interpreter {
     tryContext.symbolTable = new SymbolTable(context.symbolTable);
 
     for (let line of node.tryBodyNode.elementNodes) {
-      res.register(this.visit(line, tryContext, caller));
+      res.register(this.visit(line, trycontext, caller));
       if (res.shouldReturn()) {
         err = res.error;
         res.reset();
@@ -795,14 +794,14 @@ class Interpreter {
       tryContext.symbolTable.set(errVarName, new SWString(err.details));
 
       for (let line of node.catchBodyNode.elementNodes) {
-        res.register(this.visit(line, tryContext, caller));
+        res.register(this.visit(line, trycontext, caller));
         if (res.shouldReturn()) return res;
       }
     }
 
     if (node.finallyBodyNode) {
       for (let line of node.finallyBodyNode.elementNodes) {
-        res.register(this.visit(line, tryContext, caller));
+        res.register(this.visit(line, trycontext, caller));
         if (res.shouldReturn()) return res;
       }
     }
