@@ -19,6 +19,7 @@ class SWBaseFunction extends SWObject {
   constructor(name) {
     super();
     this.name = name || null;
+    this.interpreter = null; // here to hold the instance of the interpreter when available
     this.typeName = 'Shughuli';
   }
 

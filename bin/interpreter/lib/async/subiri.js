@@ -25,16 +25,6 @@ function subiri(inst, executionContext) {
       )
     );
 
-  if (!muda)
-    return res.failure(
-      new RTError(
-        inst.posStart,
-        inst.posEnd,
-        `Parameter 'muda' is required`,
-        executionContext
-      )
-    );
-
   // check types
   if (!(shug instanceof SWBaseFunction))
     return res.failure(
@@ -47,9 +37,10 @@ function subiri(inst, executionContext) {
     );
 
   if (
-    !(muda instanceof SWNumber) ||
-    !Number.isInteger(muda.value) ||
-    muda.value < 0
+    muda &&
+    (!(muda instanceof SWNumber) ||
+      !Number.isInteger(muda.value) ||
+      muda.value < 0)
   )
     return res.failure(
       new RTError(
@@ -60,10 +51,12 @@ function subiri(inst, executionContext) {
       )
     );
 
+  let delay = muda ? muda.value : 0;
   let params = args.elements.slice(2);
   let tm = setTimeout(() => {
     shug.execute(params);
-  }, muda.value);
+  }, delay);
+  inst.interpreter.callbackQueue.push(tm);
 
   return res.success(new SWTimeout('timeout', shug, muda.value, tm));
 }

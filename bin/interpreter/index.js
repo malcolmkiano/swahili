@@ -17,6 +17,11 @@ const { RTError, UncaughtException } = require('./error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
+  /** instantiates the interpreter */
+  constructor() {
+    this.callbackQueue = [];
+  }
+
   /**
    * Evaluates an AST node
    * @param {Node} node the AST node to visit
@@ -746,6 +751,9 @@ class Interpreter {
       .copy()
       .setContext(context)
       .setPosition(node.posStart, node.posEnd);
+
+    // add the interpreter to it just in case we need it
+    if (!valueToCall.interpreter) valueToCall.interpreter = this;
 
     for (let argNode of node.argNodes) {
       let val = res.register(this.visit(argNode, context, caller));

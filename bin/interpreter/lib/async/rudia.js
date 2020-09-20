@@ -64,6 +64,7 @@ function rudia(inst, executionContext) {
   let int = setInterval(() => {
     shug.execute(params);
   }, muda.value);
+  inst.interpreter.callbackQueue.push(int);
 
   return res.success(new SWTimeout('interval', shug, muda.value, int));
 }

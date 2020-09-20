@@ -41,6 +41,7 @@ function komesha(inst, executionContext) {
   if (muda.name) {
     muda.parent[muda.name] = SWNull.NULL;
   }
+  inst.interpreter.callbackQueue.shift();
 
   return res.success(SWNull.NULL);
 }
