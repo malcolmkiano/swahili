@@ -36,17 +36,12 @@ function subiri(inst, executionContext) {
       )
     );
 
-  if (
-    muda &&
-    (!(muda instanceof SWNumber) ||
-      !Number.isInteger(muda.value) ||
-      muda.value < 0)
-  )
+  if (muda && (!(muda instanceof SWNumber) || muda.value < 0))
     return res.failure(
       new RTError(
         muda.posStart,
         muda.posEnd,
-        `'muda' must be an int >= 0`,
+        `'muda' must be a number >= 0`,
         executionContext
       )
     );

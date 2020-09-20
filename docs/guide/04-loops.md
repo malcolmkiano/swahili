@@ -32,19 +32,19 @@ You can also loop through a list using the kwa katika syntax instead
 - Example:
 
 ```
-kwa i katika ["Malcolm", "Patrick", "Kiano"]{
+kwa i katika ["Halima", "Maria", "Juma"]{
   andika(i) // Will print each element in the list
 }
 
-// => "Malcolm"
-// => "Patrick"
-// => "Kiano"
+// => "Halima"
+// => "Maria"
+// => "Juma"
 ```
 
 This syntax also works if you pass in a variable that holds a list. For instance:
 
 ```
-  wacha majina = ["Malcolm", "Patrick", "Kiano"]
+  wacha majina = ["Halima", "Maria", "Juma"]
   kwa i katika majina{
     andika(i)
   }
@@ -53,14 +53,14 @@ This syntax also works if you pass in a variable that holds a list. For instance
 You can also loop through each character in a string by passing that string or a variable name that holds a string as shown below
 
 ```
-  kwa c katika "Kiano"{
+  kwa c katika "Juma"{
     andika(c)
   }
 
-  // => "K"
-  // => "i"
-  // ...
-  // => "o"
+  // => "J"
+  // => "u"
+  // => "m"
+  // => "a"
 ```
 
 Basically, the Kwa...Katika syntax accepts list expressions, String expressions, identifiers or function calls to functions that evaluate to a list or a string.
