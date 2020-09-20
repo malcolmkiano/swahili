@@ -1,0 +1,29 @@
+wacha a = 5
+
+// subtract 1 from a and print it, we won't see 4 until after "Jambo"
+// because this is an async call
+wacha hesabu = rudia(shughuli () {
+  a = a - 1
+  andika(a)
+}, 1000)
+
+// another async call, this gets deferred 5 seconds
+// and the program continues
+subiri(shughuli () {
+  komesha(hesabu)
+  andika("Kwaheri!")
+}, 5000)
+
+// 0ms deferrence means that the interpreter won't wait for this to resolve
+// before moving on, best for deferring slow method calls
+subiri(shughuli () {
+  wacha b = 1
+  kwa i = 1 mpaka 100000 {
+    b = b + i
+  }
+
+  andika("Asante sana kwa kutumia Swahili!") // this will show up after "Jambo" as well
+}, 0)
+
+// this is the first synchronous output
+andika("Jambo!")

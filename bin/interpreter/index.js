@@ -17,6 +17,11 @@ const { RTError, UncaughtException } = require('./error');
 
 /** Analyzes abstract syntax trees from the parser and executes programs */
 class Interpreter {
+  /** instantiates the interpreter */
+  constructor() {
+    this.callbackQueue = [];
+  }
+
   /**
    * Evaluates an AST node
    * @param {Node} node the AST node to visit
@@ -335,7 +340,6 @@ class Interpreter {
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       if (!value.name) value.name = varName;
-
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
       }
@@ -380,7 +384,6 @@ class Interpreter {
 
     if (value instanceof SWObject && !(value instanceof SWBuiltInFunction)) {
       if (!value.name) value.name = varName;
-
       if (!(value instanceof SWFunction)) {
         value.parent = context.symbolTable.symbols;
       }
@@ -749,6 +752,9 @@ class Interpreter {
       .setContext(context)
       .setPosition(node.posStart, node.posEnd);
 
+    // add the interpreter to it just in case we need it
+    if (!valueToCall.interpreter) valueToCall.interpreter = this;
+
     for (let argNode of node.argNodes) {
       let val = res.register(this.visit(argNode, context, caller));
       if (Array.isArray(val)) val = val[0];
@@ -764,6 +770,7 @@ class Interpreter {
         .copy()
         .setPosition(node.posStart, node.posEnd)
         .setContext(context);
+
     return res.success(returnValue);
   };
 

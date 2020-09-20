@@ -4,7 +4,6 @@
 
 - **andika(`kitu: any`[, ...vitu: any[]]): `SWNull`**<br/>
   Prints given arguments to the console.
-  For Example:
 
 ```
   andika("Jambo Dunia") // => "Jambo Dunia"
@@ -12,7 +11,6 @@
 
 - **soma(`swali: SWString`): `SWString`**<br/>
   Gets and returns user input as a string. Uses the value of `swali` as a prompt message
-  For example:
 
 ```
   wacha jina = soma()
@@ -272,4 +270,54 @@
 ```
   wacha obj = { jina: "John", umri: 23 }
   andika(obj.viingilio()) // => [["jina", "John"], ["umri", 23]]
+```
+
+## Async (Timeouts)
+
+- **subiri(`shug: SWFunction[, muda: SWNumber[, arg1, arg2, ...]]`): `SWTimeout`**<br/>
+  Sets a timer which executes a function once the timer expires. `muda` represents the delay in ms. Additional arguments (`arg1, arg2, ...`) get passed through to the function specified by `shug`.
+
+  If `muda` is omitted, a value of 0 is used, meaning execute "immediately", or more accurately, the next event cycle. Note that in either case, the actual delay may be longer than intended.
+
+  A timeout can be cancelled using the `komesha()` method.
+
+```
+  shughuli ngojaWatu(a, b) {
+    // hoja "a" na "b" hazihitajiki
+    andika(a, "na", b, "wamefika.")
+  }
+
+  wacha s = subiri(ngojaWatu, 1000, "John", "Stella")
+```
+
+- **rudia(`shug: SWFunction, muda: SWNumber[, arg1, arg2, ...]`): `SWTimeout`**<br/>
+  Repeatedly calls a function with a fixed time delay between each call. It returns an `SWTimeout` that uniquely identifies it, so you can remove it later by calling `komesha()`. `muda` must be at least **`1ms`** to allow code to actually run.
+
+  > Ensure that execution duration is shorter than interval frequency
+
+  If there is a possibility that your logic could take longer to execute than the interval time, it is recommended that you recursively call a named function using `subiri()`.
+
+```
+  shughuli semaSaa() {
+    wacha t = Tarehe()
+    andika(t.unda("sa:d w"))
+  }
+
+  wacha r = rudia(semaSaa, 1000)
+```
+
+- **komesha(`muda: SWTimeout`): `SWNull`**<br/>
+  Cancels a timeout created by `subiri()` or `rudia()`
+
+```
+  shughuli semaSaa() {
+    wacha t = Tarehe()
+    andika(t.unda("sa:d w"))
+  }
+
+  wacha r = rudia(semaSaa, 1000)
+
+  wacha s = subiri(shughuli () {
+    komesha(r) // stops printing the time after 5 seconds
+  }, 5000)
 ```

@@ -4,6 +4,7 @@
 class RTResult {
   /** instantiate a runtime result */
   constructor() {
+    this.context = null;
     this.reset();
   }
 

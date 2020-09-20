@@ -38,12 +38,14 @@ function getInput() {
   rl.question(`${colors.brightMagenta('swahili')} > `, (text) => {
     if (text) {
       // handle input
-      const [result, error] = run('<stdin>', text);
+      const [result, error, callbackQueue] = run('<stdin>', text);
       handleOutput(result, error, true);
-    }
 
-    // keep prompting until they manually terminate the process
-    getInput();
+      startEventLoop(callbackQueue);
+    } else {
+      // keep prompting until they manually terminate the process
+      getInput();
+    }
   });
 }
 
@@ -73,6 +75,33 @@ const printHelp = () => {
   );
   print('swahili\t\t\tRun Swahili REPL');
 };
+
+/**
+ * monitors the callback queue and terminates the program or prompts for input when the queue is empty
+ * @param {[]} queue the callback queue
+ * @param {boolean} preRepl whether the watch is being called before the repl starts or not
+ * @param {boolean} loadIn whether the script being watched is a load-in or not
+ */
+function startEventLoop(queue, preRepl = false, loadIn = false) {
+  let interval = setInterval(() => {
+    let q = queue ? queue.filter((tm) => !tm._destroyed) : [];
+    if (!q.length) {
+      clearInterval(interval);
+      if (preRepl && !loadIn) {
+        process.exit(0);
+      } else {
+        if (loadIn)
+          print(
+            `Script ${colors.green(
+              '"' + fileName + '"'
+            )} was successfully loaded.`,
+            true
+          );
+        getInput();
+      }
+    }
+  }, 1);
+}
 
 let fileName;
 let load = false;
@@ -116,16 +145,11 @@ if (args.length) {
   }
 
   // process the file
-  const [result, error] = run(fileName, script, !load);
+  const [result, error, callbackQueue] = run(fileName, script, !load);
   handleOutput(result, error);
-  if (!load) process.exit(0);
-}
 
-// begin the repl
-console.clear();
-if (load)
-  print(
-    `Script ${colors.green('"' + fileName + '"')} was successfully loaded.`,
-    true
-  );
-getInput();
+  startEventLoop(callbackQueue, true, load);
+} else {
+  console.clear();
+  getInput();
+}

@@ -1,6 +1,6 @@
 {
   "name": "swahili-lang",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to Swahili speaking students.",
   "repository": {
     "type": "git",

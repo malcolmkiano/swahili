@@ -2,7 +2,7 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to native Swahili-speaking students.
 
-![Version 0.9.7](https://img.shields.io/badge/version-0.9.7-blue)
+![Version 0.9.8](https://img.shields.io/badge/version-0.9.8-blue)
 [![Run on Repl.it](https://repl.it/badge/github/malcolmkiano/swahili)](https://repl.it/@moredigital/swahili-1)
 
 ## Get Started
@@ -35,7 +35,8 @@ You can pass in a file path to be executed when you run the `swahili` command in
 swahili ./examples/jambo.swh
 ```
 
-To see more options for the `swahili` command run 
+To see more options for the `swahili` command run
+
 ```
 swahili -h
 ```

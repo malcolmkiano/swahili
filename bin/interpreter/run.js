@@ -29,7 +29,7 @@ for (let fn of functions) {
  * @param {String} fileName name of file to be processed
  * @param {String} text content of the file
  * @param {Boolean} temp run the program in a temporary isolated scope if true
- * @returns {[String, Error]}
+ * @returns {[String, Error, []]}
  */
 function run(fileName, text, temp = false) {
   // Generate tokens
@@ -49,9 +49,11 @@ function run(fileName, text, temp = false) {
   context.symbolTable = temp
     ? new SymbolTable(globalSymbolTable)
     : globalSymbolTable;
-  const result = intr.visit(ast.node, context);
 
-  return [result.value, result.error];
+  const result = intr.visit(ast.node, context);
+  const callbackQueue = intr.callbackQueue;
+
+  return [result.value, result.error, callbackQueue];
 }
 
 module.exports = run;
