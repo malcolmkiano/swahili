@@ -5,7 +5,7 @@ const RTResult = require('../../runtimeResult');
 const { RTError } = require('../../error');
 
 /**
- * Waits for given amount of time before running a function
+ * Repeats a function each given amount of time
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */

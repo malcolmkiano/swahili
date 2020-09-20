@@ -1,10 +1,10 @@
 const util = require('util');
 const colors = require('colors');
 
-const SWObject = require('./object');
+const SWValue = require('./value');
 
 /**  Timeout data type */
-class SWTimeout extends SWObject {
+class SWTimeout extends SWValue {
   /**
    * instantiates a timeout
    * @param {string} type the type of timeout (interval/timeout)
@@ -52,8 +52,14 @@ class SWTimeout extends SWObject {
    * @returns {String}
    */
   toString(showColor = true) {
-    let output = (str) => (showColor ? colors.blue(str) : str);
-    return output(`Muda*`);
+    const recurring = this.type === 'interval' ? '*' : '';
+    let output = `Muda<${this.time}>${recurring}`;
+
+    if (showColor) {
+      output = colors.brightBlue(output);
+    }
+
+    return output;
   }
 }
 

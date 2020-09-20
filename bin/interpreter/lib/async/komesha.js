@@ -4,7 +4,7 @@ const RTResult = require('../../runtimeResult');
 const { RTError } = require('../../error');
 
 /**
- * Waits for given amount of time before running a function
+ * Kills a timeout
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
@@ -38,9 +38,6 @@ function komesha(inst, executionContext) {
     clearTimeout(muda.value);
   }
 
-  if (muda.name) {
-    muda.parent[muda.name] = SWNull.NULL;
-  }
   inst.interpreter.callbackQueue.shift();
 
   return res.success(SWNull.NULL);
