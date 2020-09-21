@@ -1,0 +1,11 @@
+wacha hesabu = impoti("./modules/hesabu.swh")
+
+wacha idadi = somaNambari("Nambari ngapi? ")
+wacha nambari = []
+
+kwa i = 0 mpaka idadi {
+  nambari = nambari + somaNambari("Nambari: ")
+}
+
+andika(hesabu.ongeza(nambari))
+andika(hesabu.ondoa(nambari))

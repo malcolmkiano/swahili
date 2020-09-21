@@ -272,6 +272,42 @@
   andika(obj.viingilio()) // => [["jina", "John"], ["umri", 23]]
 ```
 
+## Modules
+
+- **expoti(`kitu: any`): `any`**<br/>
+  Used when creating Swahili modules by exporting bindings to functions, dictionaries or primitive values from the module so they can be used by other programs with the `impoti()` method. Only the last call to `expoti()` in a module will be made available. Because of this, it is recommended to use an object if you need multiple values in the export.
+
+```
+  wacha hesabu = {}
+
+  hesabu.ongeza = shughuli (nambari) {
+    wacha jumla = 0
+    kwa n katika nambari {
+      jumla = jumla + n
+    }
+
+    rudisha jumla
+  }
+
+  expoti(hesabu)
+```
+
+- **impoti(`faili: SWString`): `any`**<br/>
+  Used to import read-only bindings which are exported by another module. The file path given for `faili` must be a local file and can be either **absolute** or **relative**.
+
+```
+  wacha hesabu = impoti("./hesabu.swh")
+
+  wacha idadi = somaNambari("Nambari ngapi? ")
+  wacha nambari = []
+
+  kwa i = 0 mpaka idadi {
+    nambari = nambari + somaNambari("Nambari: ")
+  }
+
+  andika(hesabu.ongeza(nambari))
+```
+
 ## Async (Timeouts)
 
 - **subiri(`shug: SWFunction[, muda: SWNumber[, arg1, arg2, ...]]`): `SWTimeout`**<br/>

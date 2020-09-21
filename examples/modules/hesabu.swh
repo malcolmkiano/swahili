@@ -1,0 +1,22 @@
+wacha hesabu = {}
+
+hesabu.ongeza = shughuli (nambari) {
+  wacha jumla = 0
+  kwa n katika nambari {
+    jumla = jumla + n
+  }
+
+  rudisha jumla
+}
+
+hesabu.ondoa = shughuli (nambari) {
+  wacha jumla = nambari/0
+  kwa i = 1 mpaka nambari.idadi() {
+    wacha n = nambari/i
+    jumla = jumla - n
+  }
+
+  rudisha jumla
+}
+
+expoti(hesabu)
