@@ -8,3 +8,4 @@ kwa i = 0 mpaka idadi {
 }
 
 andika(hesabu.ongeza(nambari))
+andika(hesabu.ondoa(nambari))
