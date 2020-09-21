@@ -56,6 +56,17 @@ function impoti(inst, executionContext) {
       executionContext,
       inst
     );
+
+    if (!exportValue.value)
+      return res.failure(
+        new RTError(
+          faili.posStart,
+          faili.posEnd,
+          `No exports found in '${fileName}'`,
+          executionContext
+        )
+      );
+
     return exportValue;
   } catch (err) {
     return res.failure(
