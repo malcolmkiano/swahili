@@ -62,7 +62,7 @@ function impoti(inst, executionContext) {
         new RTError(
           faili.posStart,
           faili.posEnd,
-          `No exports found in '${fileName}'`,
+          `No exports found in "${fileName}"`,
           executionContext
         )
       );
@@ -73,7 +73,7 @@ function impoti(inst, executionContext) {
       new RTError(
         faili.posStart,
         faili.posEnd,
-        `Could not import '${fileName}'`,
+        `Could not import "${fileName}"`,
         executionContext
       )
     );
