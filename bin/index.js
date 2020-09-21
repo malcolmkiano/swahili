@@ -7,6 +7,7 @@ const readline = require('readline');
 const info = require('../package.json');
 const print = require('./utils/print');
 const run = require('./interpreter/run');
+const checkFile = require('./utils/checkFile');
 
 /** set up terminal interface */
 const rl = readline.createInterface({
@@ -126,18 +127,7 @@ if (args.length) {
 
   try {
     if (load) fileName = args[1];
-    if (fs.lstatSync(fileName).isDirectory()) {
-      fileName = fileName.replace(/\/|\\/g, '/');
-      fileName = fileName.split('/').filter(Boolean); // remove all falsy values
-      fileName.push('index.swh'); // default to index
-      fileName = fileName.join('/');
-    }
-
-    if (fs.existsSync(fileName)) {
-      script = fs.readFileSync(fileName, 'utf8');
-    } else {
-      throw new Error('File not found');
-    }
+    script = checkFile(fileName, true);
   } catch (err) {
     let error = `Failed to load script "${fileName}"\n` + err.toString();
     handleOutput(null, error);

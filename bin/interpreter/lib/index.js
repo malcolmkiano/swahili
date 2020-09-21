@@ -16,6 +16,11 @@ const somaNambari = require('./io/somaNambari');
 const futa = require('./io/futa');
 
 // =====================================================
+// Module methods
+const expoti = require('./module/expoti');
+const impoti = require('./module/impoti');
+
+// =====================================================
 // Type methods
 // > Checking
 const niNambari = require('./type/check/niNambari');
@@ -74,6 +79,8 @@ module.exports = {
     soma,
     somaNambari,
     futa,
+    expoti,
+    impoti,
     niNambari,
     niJina,
     niOrodha,

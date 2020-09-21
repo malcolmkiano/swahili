@@ -1,3 +1,4 @@
+const path = require('path');
 const stringWithArrows = require('../utils/stringWithArrows');
 
 class Error {
@@ -21,10 +22,9 @@ class Error {
    */
   toString() {
     let pos = this.posStart;
+    let fileName = path.resolve(pos.fileName);
     let result = `${this.errorName}: ${this.details}` + '\n';
-    result += `File "${pos.fileName}:${pos.lineNumber + 1}:${
-      pos.colNumber + 1
-    }"`;
+    result += `File "${fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}"`;
     if (pos.fileName === '<stdin>')
       result += '\n\n' + stringWithArrows(pos.fileText, pos, this.posEnd);
     return result;
@@ -90,10 +90,11 @@ class RTError extends Error {
     let ctx = this.context;
 
     while (ctx) {
+      let fileName = path.resolve(pos.fileName);
       result =
-        `File "${pos.fileName}:${pos.lineNumber + 1}:${
-          pos.colNumber + 1
-        }", in ${ctx.displayName}\n` + result;
+        `File "${fileName}:${pos.lineNumber + 1}:${pos.colNumber + 1}", in ${
+          ctx.displayName
+        }\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }

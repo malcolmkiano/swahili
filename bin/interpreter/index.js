@@ -10,6 +10,9 @@ const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
 
+const Lexer = require('../lexer');
+const Parser = require('../parser');
+
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');
@@ -20,6 +23,22 @@ class Interpreter {
   /** instantiates the interpreter */
   constructor() {
     this.callbackQueue = [];
+    this.exportValue = null;
+  }
+
+  /**
+   * Runs a clone interpreter and returns the export value (if any)
+   * @param {Node} node the AST node to visit
+   * @param {Context} context the calling context
+   * @param {*} caller the calling type
+   */
+  copyHeadless(node, context, caller = null) {
+    let res = new RTResult();
+    const copy = new Interpreter();
+    res.register(copy.visit(node, context, caller));
+    if (res.error) return res;
+
+    return res.success(copy.exportValue);
   }
 
   /**

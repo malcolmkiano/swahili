@@ -1,0 +1,12 @@
+shughuli ongeza(orodha) {
+  wacha jumla = 0
+  kwa nambari katika orodha {
+    jumla = jumla + nambari
+  }
+
+  rudisha jumla
+}
+
+expoti({
+  ongeza: ongeza
+})
