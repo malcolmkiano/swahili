@@ -127,7 +127,7 @@ if (args.length) {
 
   try {
     if (load) fileName = args[1];
-    script = checkFile(fileName, true);
+    [fileName, script] = checkFile(fileName, true);
   } catch (err) {
     let error = `Failed to load script "${fileName}"\n` + err.toString();
     handleOutput(null, error);
