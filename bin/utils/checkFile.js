@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 /**
  * Checks if a file exists and return its contents
@@ -17,6 +18,7 @@ function checkFile(fileName, updateDir = false) {
     let output = fs.readFileSync(fileName, 'utf8');
 
     // update the process cwd if they run a file in some deeply nested dir
+    let filePath = path.resolve(fileName);
     if (updateDir) {
       if (fileName.includes('/')) {
         let parent = fileName.substr(0, fileName.lastIndexOf('/'));
@@ -24,7 +26,7 @@ function checkFile(fileName, updateDir = false) {
       }
     }
 
-    return output;
+    return [filePath, output];
   } else {
     throw new Error('File not found');
   }

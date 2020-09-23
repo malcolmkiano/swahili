@@ -27,6 +27,7 @@ class SWValue {
    * @returns {SWValue}
    */
   setContext(context = null) {
+    if (!this.context) this.defContext = context;
     this.context = context;
     return this;
   }

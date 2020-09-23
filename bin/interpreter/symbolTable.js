@@ -3,7 +3,7 @@
  * and a pointer to its parent (if any)
  */
 class SymbolTable {
-  constructor(parent) {
+  constructor(parent = null) {
     this.symbols = {};
     this.constants = {};
     this.parent = parent;

@@ -27,18 +27,21 @@ class Interpreter {
   }
 
   /**
-   * Runs a clone interpreter and returns the export value (if any)
+   * Runs code to get the export value (if any)
    * @param {Node} node the AST node to visit
    * @param {Context} context the calling context
    * @param {*} caller the calling type
    */
   copyHeadless(node, context, caller = null) {
     let res = new RTResult();
-    const copy = new Interpreter();
-    res.register(copy.visit(node, context, caller));
+    let currentExportValue = this.exportValue;
+    res.register(this.visit(node, context, caller));
     if (res.error) return res;
 
-    return res.success(copy.exportValue);
+    let output = this.exportValue;
+    this.exportValue = currentExportValue;
+
+    return res.success(output);
   }
 
   /**
@@ -315,7 +318,10 @@ class Interpreter {
 
     let value =
       context.symbolTable.get(varName) ||
-      (caller ? caller.symbolTable.get(varName) : null);
+      (caller
+        ? caller.symbolTable.get(varName) ||
+          caller.defContext.symbolTable.get(varName)
+        : null);
 
     if (!value)
       return res.failure(
@@ -621,7 +627,10 @@ class Interpreter {
       );
 
     let iterable = iteratorValue.value
-      ? iteratorValue.value.split('').map((s) => new SWString(s))
+      ? iteratorValue.value
+          .toString()
+          .split('')
+          .map((s) => new SWString(s))
       : iteratorValue.elements;
 
     if (!iterable)

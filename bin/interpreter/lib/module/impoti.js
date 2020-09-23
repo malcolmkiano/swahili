@@ -38,7 +38,7 @@ function impoti(inst, executionContext) {
   let fileName = faili.value;
   let text;
   try {
-    text = checkFile(fileName);
+    [fileName, text] = checkFile(fileName);
 
     // Generate tokens
     const lexer = new Lexer(fileName, text);
@@ -73,7 +73,7 @@ function impoti(inst, executionContext) {
       new RTError(
         faili.posStart,
         faili.posEnd,
-        `Could not import "${fileName}"`,
+        `Could not import "${faili.value}"`,
         executionContext
       )
     );

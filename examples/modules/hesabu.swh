@@ -1,18 +1,28 @@
 wacha hesabu = {}
 
-hesabu.ongeza = shughuli (nambari) {
+shughuli fanyaOrodha(kitu) {
+  kama (niOrodha(kitu/0)) {
+    rudisha kitu/0
+  } sivyo {
+    rudisha kitu
+  }
+}
+
+hesabu.ongeza = shughuli () {
+  wacha orodha = fanyaOrodha(__hoja) // "__hoja" is an easy way to access all the args passed in
   wacha jumla = 0
-  kwa n katika nambari {
+  kwa n katika orodha {
     jumla = jumla + n
   }
 
   rudisha jumla
 }
 
-hesabu.ondoa = shughuli (nambari) {
-  wacha jumla = nambari/0
-  kwa i = 1 mpaka nambari.idadi() {
-    wacha n = nambari/i
+hesabu.ondoa = shughuli () {
+  wacha orodha = fanyaOrodha(__hoja)
+  wacha jumla = orodha/0
+  kwa i = 1 mpaka orodha.idadi() {
+    wacha n = orodha/i
     jumla = jumla - n
   }
 
@@ -20,3 +30,4 @@ hesabu.ondoa = shughuli (nambari) {
 }
 
 expoti(hesabu)
+
