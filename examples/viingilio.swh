@@ -1,7 +1,7 @@
 wacha mtu = {
   jina: "Jean",
   umri: 25,
-  nchi: "France"
+  nchi: "Ufaransa"
 }
 
 kwa sehemu katika mtu.viingilio() {
