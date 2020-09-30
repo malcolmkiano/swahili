@@ -2,7 +2,8 @@ wacha watu = [
   ["Juma", 25, "Nairobi", "Kenya"],
   ["Hali", 22, "Washington", "USA"],
   ["Ann", 20, "Coventry", "UK"],
-  ["Eduardo", 19, "Kigali", "Rwanda"]
+  ["Eduardo", 19, "Kigali", "Rwanda"],
+  ["飞飞", 43, "北京市", "中国"]
 ]
 
 // kwa ... mpaka idadi
