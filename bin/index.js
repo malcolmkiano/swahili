@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 const args = process.argv.slice(2);
-const fs = require('fs');
 const colors = require('colors');
 const readline = require('readline');
 
