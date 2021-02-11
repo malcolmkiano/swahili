@@ -368,7 +368,7 @@
     wacha mwanzo = 0
     wacha mwisho = watu.idadi() - 1
 
-    wacha pahala = yoyote(mwanzo, mwisho)
+    wacha pahala = yoyote(mwanzo, mwisho, kweli)
     rudisha watu / pahala
   }
 
