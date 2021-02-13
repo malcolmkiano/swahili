@@ -15,7 +15,7 @@ shughuli ondoa() {
 }
 
 shughuli aya(nambari) {
-  kama (nambari == 0) { rudisha }
+  kama (nambari <= 0) { rudisha }
   
   chupa(nambari)
   chupa(nambari, kweli)

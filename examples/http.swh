@@ -1,0 +1,8 @@
+wacha watu = []
+
+sihi("https://swapi-sws.herokuapp.com/people", shughuli (data) {
+  watu = data.results
+  kwa mtu katika watu {
+    andika(mtu.name)
+  }
+})

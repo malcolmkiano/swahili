@@ -1,4 +1,5 @@
 const checkFile = require('../../../utils/checkFile');
+const packages = require('../../../packages');
 
 const Lexer = require('../../../lexer');
 const Parser = require('../../../parser');
@@ -34,6 +35,27 @@ function impoti(inst, executionContext) {
         executionContext
       )
     );
+
+  // check if they're importing a swahili package
+  const fn = faili.value.toLowerCase();
+  if (fn.startsWith('@swahili')) {
+    const parts = fn.split('/');
+    const name = parts[1];
+    const info = packages[name];
+    if (parts.length > 2 || !info)
+      return res.failure(
+        new RTError(
+          faili.posStart,
+          faili.posEnd,
+          `'${parts.slice(1).join('/')}' is not a Swahili package`,
+          executionContext
+        )
+      );
+
+    // get and return the package
+    const package = executionContext.symbolTable.get(`*${name}`); // packages are hidden with an asterisk
+    return res.success(package);
+  }
 
   let fileName = faili.value;
   let text;

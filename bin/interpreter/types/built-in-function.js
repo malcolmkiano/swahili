@@ -15,11 +15,12 @@ class SWBuiltInFunction extends SWBaseFunction {
     super(name);
 
     // library injection
-    for (let { method, args, types = null } of functions) {
-      let name = method.name;
-      this[`execute_${name}`] = method;
-      this[name] = args;
-      if (types) this[`${name}_types`] = types;
+    const fn = functions.find((f) => f.method.name === name);
+    if (fn) {
+      const { method, args, types = null } = fn;
+      this[name] = method;
+      this.args = args;
+      if (types) this.types = types;
     }
   }
 
@@ -31,9 +32,8 @@ class SWBuiltInFunction extends SWBaseFunction {
     let res = new RTResult();
     let executionContext = this.generateNewContext();
 
-    let methodName = `execute_${this.name}`;
-    let method = this[methodName] || this.noExecuteMethod;
-    let argNames = this[this.name];
+    let method = this[this.name] || this.noExecuteMethod;
+    let argNames = this.args;
 
     res.register(this.populateArgs(argNames, args, executionContext));
     if (res.shouldReturn()) return res;
@@ -49,7 +49,7 @@ class SWBuiltInFunction extends SWBaseFunction {
    * @param {Context} context the calling context
    */
   noExecuteMethod = (node, context) => {
-    throw new Error(`No execute_${node.constructor.name} method defined`);
+    throw new Error(`No ${node.constructor.name} method defined`);
   };
 
   /**
@@ -58,6 +58,10 @@ class SWBuiltInFunction extends SWBaseFunction {
    */
   copy() {
     let copy = new SWBuiltInFunction(this.name);
+    copy.args = this.args;
+    copy.name = this.name;
+    copy.types = this.types;
+    copy[this.name] = this[this.name];
     copy.setPosition(this.posStart, this.posEnd);
     copy.setContext(this.context);
     return copy;

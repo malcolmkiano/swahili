@@ -46,6 +46,7 @@ class SWBaseFunction extends SWObject {
     let nullValue = nullType ? SWNull.NULL : null;
     let allArgs = [];
     argNames = argNames || [];
+    args = args || [];
     for (let i = 0; i < argNames.length; i++) {
       let argName = argNames[i];
       let argValue = i < args.length ? args[i] : nullValue;

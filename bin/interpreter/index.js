@@ -9,9 +9,7 @@ const SWBaseFunction = require('./types/base-function');
 const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
-
-const Lexer = require('../lexer');
-const Parser = require('../parser');
+const SWPackage = require('./types/package');
 
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
@@ -173,7 +171,7 @@ class Interpreter {
     if (res.shouldReturn()) return res;
 
     // if not an object, see if any typed methods support this value
-    if (!(obj instanceof SWObject)) {
+    if (!(obj instanceof SWObject) && !(obj instanceof SWPackage)) {
       try {
         if (propChain.length > 1) throw 0;
 
@@ -181,7 +179,7 @@ class Interpreter {
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
         if (!typeMethod) throw 0;
 
-        let supportedTypes = typeMethod[`${methodName}_types`];
+        let supportedTypes = typeMethod.types || [];
         for (let i = 0; i < supportedTypes.length; i++) {
           let type = supportedTypes[i];
           if (obj instanceof type) {
@@ -214,7 +212,10 @@ class Interpreter {
     for (let propName of props) {
       value = obj.symbolTable.get(propName) || value;
       if (obj.symbolTable.get(propName)) chainLength--;
-      if (value instanceof SWObject && !(value instanceof SWFunction))
+      if (
+        (value instanceof SWObject || value instanceof SWPackage) &&
+        !(value instanceof SWFunction)
+      )
         obj = value;
     }
 
@@ -225,7 +226,7 @@ class Interpreter {
         if (!typeMethod) throw 0;
         if (!value) value = obj;
 
-        let supportedTypes = typeMethod[`${methodName}_types`];
+        let supportedTypes = typeMethod.types;
         for (let i = 0; i < supportedTypes.length; i++) {
           let type = supportedTypes[i];
           if (value instanceof type) {
@@ -280,6 +281,17 @@ class Interpreter {
       if (self.name) obj = context.symbolTable.get(self.name);
       if (!obj) obj = self;
     }
+
+    // cannot mutate properties on packages
+    if (obj instanceof SWPackage)
+      return res.failure(
+        new RTError(
+          node.posStart,
+          node.posEnd,
+          `Cannot modify package properties`,
+          context
+        )
+      );
 
     let valueNode;
 
@@ -564,7 +576,6 @@ class Interpreter {
       stepValue = res.register(this.visit(node.stepValueNode, context, caller));
     }
 
-    let calls = 0;
     let i = startValue.value;
 
     condition =
@@ -680,8 +691,6 @@ class Interpreter {
   visitWhileNode = (node, context, caller = null) => {
     let res = new RTResult();
     let elements = [];
-
-    let calls = 0;
 
     while (true) {
       let condition = res.register(
