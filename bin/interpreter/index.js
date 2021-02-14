@@ -300,6 +300,16 @@ class Interpreter {
         obj = valueNode;
       }
 
+      if (valueNode instanceof SWPackage)
+        return res.failure(
+          new RTError(
+            node.posStart,
+            node.posEnd,
+            `Cannot modify package properties`,
+            context
+          )
+        );
+
       currentNode = node.nodeChain[i].value;
       valueNode = obj.symbolTable.get(currentNode);
     }
