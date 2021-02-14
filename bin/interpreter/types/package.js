@@ -5,8 +5,8 @@ const SWValue = require('./value');
 const SWBoolean = require('./boolean');
 const SymbolTable = require('../symbolTable');
 
-/** Object data type */
-class SWObject extends SWValue {
+/** Package data type */
+class SWPackage extends SWValue {
   /**
    * instantiates an object
    * @param {Node[]} symbols nodes containing the properties of the object
@@ -17,7 +17,7 @@ class SWObject extends SWValue {
     this.populateSymbols(symbols);
     this.name = null;
     this.parent = null;
-    this.typeName = 'Kamusi';
+    this.typeName = 'Pkg';
   }
 
   /**
@@ -27,7 +27,7 @@ class SWObject extends SWValue {
   populateSymbols(symbols) {
     for (let { name, value } of symbols) {
       // add a reference to this object in all child functions
-      if (value instanceof SWObject) {
+      if (value instanceof SWPackage) {
         value.name = name;
         value.parent = this.symbolTable.symbols;
         value.symbolTable.setConstant('hii', this);
@@ -55,13 +55,13 @@ class SWObject extends SWValue {
 
   /**
    * creates a new instance of the object
-   * @returns {SWObject}
+   * @returns {SWPackage}
    */
   copy() {
     let symbolMap = Object.entries(
       this.symbolTable.symbols
     ).map(([name, value]) => ({ name, value }));
-    let copy = new SWObject(symbolMap);
+    let copy = new SWPackage(symbolMap);
     copy.name = this.name;
     copy.parent = this.parent;
     copy.setPosition(this.posStart, this.posEnd);
@@ -74,22 +74,15 @@ class SWObject extends SWValue {
   }
 
   /**
-   * string representation of the object class
-   * @param {Boolean} expose whether to show a breakdown of the object or not
+   * string representation of the package class
+   * @param {Boolean} format whether to format the name or not
    * @returns {String}
    */
-  toString(expose = true) {
-    let elements = { ...this.symbolTable.symbols };
-    delete elements['hii']; // prevent endless cycle
-
-    let entries = Object.entries(elements);
-    let s = entries.length ? ' ' : ''; // spaces to be shown if object has values
-    let output = [];
-    for (let [name, value] of entries) {
-      output.push(`${colors.brightBlue(name)}: ${value.toString()}`);
-    }
-    return expose ? `{${s}${output.join(', ')}${s}}` : `[SWObject]`;
+  toString(format = true) {
+    return format
+      ? colors.brightCyan(`<pkg: @swahili/${this.name}>`)
+      : this.name;
   }
 }
 
-module.exports = SWObject;
+module.exports = SWPackage;

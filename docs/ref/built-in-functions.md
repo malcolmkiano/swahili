@@ -272,6 +272,15 @@
   andika(obj.viingilio()) // => [["jina", "John"], ["umri", 23]]
 ```
 
+- _obj_.**ondoa(jina: SWString): `SWNull`**<br/>
+  Removes the key `jina` from the object.
+
+```
+  wacha obj = { jina: "John", umri: 23 }
+  obj.ondoa("umri")
+  andika(obj() // => { jina: "John" }
+```
+
 ## Modules
 
 - **expoti(`kitu: any`): `any`**<br/>

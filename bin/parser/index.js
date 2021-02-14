@@ -583,12 +583,12 @@ class Parser {
         this.advance();
       }
 
-      if (this.currentTok.type !== TT.IDENTIFIER)
+      if (![TT.IDENTIFIER, TT.STRING].includes(this.currentTok.type))
         return res.failure(
           new InvalidSyntaxError(
             this.currentTok.posStart,
             this.currentTok.posEnd,
-            `Expected ${lc(TT.IDENTIFIER)}`
+            `Expected ${lc(TT.IDENTIFIER)} or ${lc(TT.STRING)}`
           )
         );
 
@@ -623,12 +623,12 @@ class Parser {
           this.advance();
         }
 
-        if (this.currentTok.type !== TT.IDENTIFIER)
+        if (![TT.IDENTIFIER, TT.STRING].includes(this.currentTok.type))
           return res.failure(
             new InvalidSyntaxError(
               this.currentTok.posStart,
               this.currentTok.posEnd,
-              `Expected ${lc(TT.IDENTIFIER)}`
+              `Expected ${lc(TT.IDENTIFIER)} or ${lc(TT.STRING)}`
             )
           );
 
