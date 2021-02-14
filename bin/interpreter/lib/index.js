@@ -16,6 +16,10 @@ const somaNambari = require('./io/somaNambari');
 const futa = require('./io/futa');
 
 // =====================================================
+// Math methods
+const yoyote = require('./math/yoyote');
+
+// =====================================================
 // Module methods
 const expoti = require('./module/expoti');
 const impoti = require('./module/impoti');
@@ -80,6 +84,7 @@ module.exports = {
     soma,
     somaNambari,
     futa,
+    yoyote,
     expoti,
     impoti,
     niNambari,
