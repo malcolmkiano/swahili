@@ -82,3 +82,4 @@ To enable syntax highlighting for your Swahili programs in VS Code (more coming 
 - [Vyupa 99 (99 Bottles)](./examples/99.swh)
 - [Mfuatano wa Fibonacci (Fibonacci Sequence)](./examples/fibonacci.swh)
 - [Tarihi (To-do List)](./examples/tarihi.swh)
+- [Mchezo wa Dadu (Dice Rolls)](./examples/mchezo_wa_dadu.swh)

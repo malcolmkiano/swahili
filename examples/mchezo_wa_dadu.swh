@@ -1,0 +1,13 @@
+//mchezo_wa_dadu is the dice game. 
+//impoti pakiti ya kuchagua nambari yoyote (Import the random number package)
+wacha tausworth = impoti("@swahili/yoyote") 
+
+// shughuli hii itarudisha nambari kati ya moja na sita
+shughuli cheza(){
+    rudisha tausworth.tausworth(1,6)
+}
+
+//rudisha nambari kati ya moja na sita, mara kumi
+kwa i =1 mpaka 11{
+    andika(cheza())
+}
