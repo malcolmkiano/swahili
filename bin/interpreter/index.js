@@ -10,9 +10,6 @@ const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
 
-const Lexer = require('../lexer');
-const Parser = require('../parser');
-
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
 const RTResult = require('./runtimeResult');

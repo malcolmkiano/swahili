@@ -357,3 +357,20 @@
     komesha(r) // stops printing the time after 5 seconds
   }, 5000)
 ```
+
+## Math
+
+- **yoyote(`[mwanzo: SWNumber, mwisho: SWNumber, raundi: SWBoolean]`): `SWNumber`**<br/>
+  Generates a pseudo-random number, and if `mwanzo` and `mwisho` are specified, returns a pseudo-random number in the range provided (inclusive). If `raundi` is provided (and _true_), the number will be rounded to the nearest lower whole number.
+
+```
+  shughuli mtuYeyote(watu) {
+    wacha mwanzo = 0
+    wacha mwisho = watu.idadi() - 1
+
+    wacha pahala = yoyote(mwanzo, mwisho, kweli)
+    rudisha watu / pahala
+  }
+
+  mtu = mtuYeyote(["Juma", "Maria", "Halima"])
+```
