@@ -1,5 +1,5 @@
-const random = require('./random');
-const range = require('./range');
+const random = require('./_random');
+const range = require('./_range');
 
 const SWNumber = require('../../interpreter/types/number');
 const RTResult = require('../../interpreter/runtimeResult');

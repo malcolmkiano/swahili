@@ -1,4 +1,4 @@
-const bitStringGenerator = require('./bitStringGenerator');
+const bitStringGenerator = require('./_bitStringGenerator');
 
 let bitCount = 48; // total number of bits to be generated.
 // NOTE: More bits means a larger period for the random numbers generated.
