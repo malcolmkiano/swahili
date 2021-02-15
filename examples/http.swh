@@ -1,8 +1,17 @@
-wacha watu = []
+wacha seva = impoti("@swahili/http")
+wacha watu = ["Juma", "Ali", "Chandni"]
 
-sihi("https://swapi-sws.herokuapp.com/people", shughuli (data) {
-  watu = data.results
-  kwa mtu katika watu {
-    andika(mtu.name)
-  }
+// routing
+seva.taka("/", shughuli (swali, jibu) {
+  andika("Karibu nyumbani!", "\n")
+})
+
+seva.taka("/watu", shughuli (swali, jibu) {
+  andika(watu, "\n")
+})
+
+// start listening
+seva.sikiza(seva.POTI_ASILI, shughuli (hosti, poti) {
+  wacha anwani = "http://" + hosti + ":" + Jina(poti)
+  andika("Seva imeanzishwa katika " + anwani)
 })

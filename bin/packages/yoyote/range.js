@@ -1,20 +1,17 @@
-const bit_string_generator = require('./bit_string_generator');
+const bitStringGenerator = require('./bitStringGenerator');
 
-let total_no_of_bits = 42;
-//total number of bits to be generated.
-//More bits means a larger period for the random numbers generated.
+let bitCount = 42; // total number of bits to be generated.
+// More bits means a larger period for the random numbers generated.
 
-const range = function rand_in_range(min, max) {
-  let bit_string = bit_string_generator(6, 3, total_no_of_bits);
-  bit_string = bit_string.join('');
-  this.max = max;
-  this.min = min;
-  let l = total_no_of_bits + 1;
-  let numerator = parseInt(bit_string, 2);
-  let random_number = numerator / Math.pow(2, l);
-  random_number = min + random_number * (max - min); //Genrates a random number in the specified range
+function range(min, max) {
+  let bitArray = bitStringGenerator(6, 3, bitCount);
+  let bitString = bitArray.join('');
+  let l = bitCount + 1;
+  let numerator = parseInt(bitString, 2);
+  let randomNumber = numerator / Math.pow(2, l);
+  randomNumber = min + randomNumber * (max - min); // Generates a random number in the specified range
 
-  return Math.floor(random_number);
-};
+  return Math.floor(randomNumber);
+}
 
 module.exports = range;
