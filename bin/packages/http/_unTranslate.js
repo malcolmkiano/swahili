@@ -30,8 +30,6 @@ function unTranslate(data) {
     output = new SWString(data);
   } else if (typeof data === 'number') {
     output = new SWNumber(data);
-  } else {
-    output = SWNull.NULL;
   }
 
   return output;

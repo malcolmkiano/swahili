@@ -3,7 +3,7 @@
  * @param {*} data Swahili data value to be "translated"
  */
 function translate(data) {
-  let output;
+  let output = '';
 
   if (data.elements) {
     // data is an array
