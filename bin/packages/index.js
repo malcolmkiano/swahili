@@ -1,7 +1,7 @@
-const test = require('./test');
+const http = require('./http');
 const yoyote = require('./yoyote');
 
 module.exports = {
-  test,
+  http,
   yoyote,
 };

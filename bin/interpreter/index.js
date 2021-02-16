@@ -9,7 +9,8 @@ const SWBaseFunction = require('./types/base-function');
 const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
-const SWPackage = require('./types/package');
+const SWPackage = require('./types/_package');
+const SWExecutable = require('./types/_executable');
 
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
@@ -802,7 +803,12 @@ class Interpreter {
       valueToCall = valueToCall[0];
     }
 
-    if (!(valueToCall instanceof SWBaseFunction))
+    if (
+      !(
+        valueToCall instanceof SWBaseFunction ||
+        valueToCall instanceof SWExecutable
+      )
+    )
       return res.failure(
         new RTError(
           node.posStart,

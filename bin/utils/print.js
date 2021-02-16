@@ -4,7 +4,7 @@
  * @param {Boolean} newLine whether to print an additional line after text
  */
 function print(text, newLine = false) {
-  console.log(text, newLine ? '\n' : '');
+  console.log(text + (newLine ? '\n' : ''));
 }
 
 module.exports = print;

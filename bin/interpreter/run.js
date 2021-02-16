@@ -4,7 +4,7 @@ const Context = require('./context');
 const Interpreter = require('.');
 const SymbolTable = require('./symbolTable');
 
-const SWPackage = require('./types/package');
+const SWPackage = require('./types/_package');
 const SWBuiltInFunction = require('./types/built-in-function');
 const { functions, constants } = require('./lib');
 const packages = require('../packages');
