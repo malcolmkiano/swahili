@@ -4,7 +4,7 @@ const Context = require('./context');
 const Interpreter = require('.');
 const SymbolTable = require('./symbolTable');
 
-const SWPackage = require('./types/package');
+const SWPackage = require('./types/_package');
 const SWBuiltInFunction = require('./types/built-in-function');
 const { functions, constants } = require('./lib');
 const packages = require('../packages');
@@ -27,15 +27,23 @@ for (let fn of functions) {
 }
 
 // package injection
-for (let [name, members] of Object.entries(packages)) {
+for (let [name, { constants, methods }] of Object.entries(packages)) {
   const package = new SWPackage();
   package.name = name;
-  for (let { method, args } of members) {
+
+  // add constants
+  for (let [constant, value] of Object.entries(constants)) {
+    package.symbolTable.setConstant(constant, value);
+  }
+
+  // add methods
+  for (let { method, args } of methods) {
     const fn = new SWBuiltInFunction(method.name);
     fn[method.name] = method;
     fn.args = args;
     package.symbolTable.setConstant(method.name, fn);
   }
+
   globalSymbolTable.setConstant(`*${name}`, package);
 }
 

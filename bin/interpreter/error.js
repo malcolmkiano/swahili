@@ -91,9 +91,9 @@ class RTError extends Error {
 
     while (ctx) {
       result =
-        `File "${pos.fileName}:${pos.lineNumber + 1}:${
-          pos.colNumber + 1
-        }", in ${ctx.displayName}\n` + result;
+        `File "${pos.fileName}:${pos.lineNumber}:${pos.colNumber + 1}", in ${
+          ctx.displayName || '<anonymous>'
+        }\n` + result;
       pos = ctx.parentEntryPos;
       ctx = ctx.parent;
     }

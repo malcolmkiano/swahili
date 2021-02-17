@@ -1,15 +1,12 @@
-const random = require('./random');
-const range = require('./range');
-
-const print = require('../../utils/print');
+const random = require('./_random');
+const range = require('./_range');
 
 const SWNumber = require('../../interpreter/types/number');
-const SWNull = require('../../interpreter/types/null');
 const RTResult = require('../../interpreter/runtimeResult');
 const { RTError } = require('../../interpreter/error');
 
 /**
- * Print a value to the screen
+ * Generates a random number using the Tausworthe PRNG algo
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */

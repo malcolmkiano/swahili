@@ -1,8 +1,89 @@
-wacha watu = []
+wacha seva = impoti("@swahili/http")
+wacha watu = [
+  { id: 1, jina: "Juma", umri: 24, kazi: "Mwandishi", niMsimamizi: kweli },
+  { id: 2, jina: "Maria", umri: 21, kazi: "Mwalimu", niMsimamizi: uwongo },
+  { id: 3, jina: "Talib", umri: 32, kazi: "Rubani", niMsimamizi: uwongo }
+]
 
-sihi("https://swapi-sws.herokuapp.com/people", shughuli (data) {
-  watu = data.results
-  kwa mtu katika watu {
-    andika(mtu.name)
+// routing
+seva.taka("/", shughuli (swali, jibu) {
+  jibu.hali(200)
+  jibu.tuma("Karibu nyumbani!")
+})
+
+seva.taka("/watu", shughuli (swali, jibu) {
+  kama (swali.kitenzi == "GET") {
+    jibu.hali(200)
+    jibu.wekaKichwa("Content-Type", "application/json")
+    jibu.tuma(watu)
+
+  } au (swali.kitenzi == "POST") {
+    wacha mwili = swali.mwili
+    wacha mtu = {}
+
+    mtu.id = watu.idadi() + 1
+
+    // njia ya kutuma mwelezo wa shida zilizotokea
+    wacha tumaShida = shughuli (shida) {
+      jibu.hali(400)
+      jibu.tuma(shida)
+    }
+    
+    // validation
+    kama (niTupu(mwili) || !niKamusi(mwili)) {
+      rudisha tumaShida("Data ifuatayo inahitajika: 'jina', 'umri', 'kazi', 'niMsimamizi'")
+    }
+
+    kama (!mwili.jina || !niJina(mwili.jina)) {
+      rudisha tumaShida("Data 'jina' lazima iwe jina")
+    }
+
+    kama (!mwili.umri || !niNambari(mwili.umri)) {
+      rudisha tumaShida("Data 'umri' lazima iwe nambari")
+    }
+
+    kama (!mwili.kazi || !niJina(mwili.kazi)) {
+      rudisha tumaShida("Data 'kazi' lazima iwe jina")
+    }
+
+    kama (niTupu(mwili.niMsimamizi)) {
+      rudisha tumaShida("Data 'niMsimamizi' inahitajika")
+    }
+
+    // all checks passed
+    mtu.jina = mwili.jina
+    mtu.umri = mwili.umri
+    mtu.kazi = mwili.kazi
+    mtu.niMsimamizi = mwili.niMsimamizi
+
+    // add the new person to our list
+    watu = watu + mtu
+
+    // send a response
+    jibu.hali(201)
+    jibu.wekaKichwa("Content-Type", "application/json")
+    jibu.tuma(mtu)
+
   }
+})
+
+seva.taka("/watu/:id", shughuli (swali, jibu) {
+  wacha id = Nambari(swali.vyaguo.id)
+  kwa mtu katika watu {
+    kama (mtu.id == id) {
+      jibu.hali(200)
+      jibu.wekaKichwa("Content-Type", "application/json")
+      rudisha jibu.tuma(mtu)
+    }
+  }
+  
+  // mtu hakupatikana
+  jibu.hali(404)
+  jibu.tuma("Mtu hapatikani")
+})
+
+// start listening
+seva.sikiza(seva.POTI_ASILI, shughuli (hosti, poti) {
+  wacha anwani = "http://" + hosti + ":" + Jina(poti)
+  andika("Seva imeanzishwa katika " + anwani)
 })

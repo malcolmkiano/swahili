@@ -49,11 +49,19 @@ function getInput() {
   });
 }
 
+// server status
+let serverRunnning = false;
+let serverCallback = null;
+
 // exit event handler
 rl.on('SIGINT', () => {
   print(''); // empty line before output
-  print('Kwaheri Mwanaprogramu!', true);
-  process.exit(0);
+  if (serverRunnning) {
+    serverCallback.serverRef.close();
+  } else {
+    print('Kwaheri Mwanaprogramu!', true);
+    process.exit(0);
+  }
 });
 
 // help info
@@ -85,6 +93,10 @@ const printHelp = () => {
 function startEventLoop(queue, preRepl = false, loadIn = false) {
   let interval = setInterval(() => {
     let q = queue ? queue.filter((tm) => !tm._destroyed) : [];
+
+    serverCallback = q.find((i) => i.isServer === true);
+    serverRunnning = !!serverCallback;
+
     if (!q.length) {
       clearInterval(interval);
       if (preRepl && !loadIn) {

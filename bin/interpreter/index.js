@@ -9,7 +9,8 @@ const SWBaseFunction = require('./types/base-function');
 const SWBuiltInFunction = require('./types/built-in-function');
 const SWFunction = require('./types/function');
 const SWObject = require('./types/object');
-const SWPackage = require('./types/package');
+const SWPackage = require('./types/_package');
+const SWExecutable = require('./types/_executable');
 
 const Context = require('./context');
 const SymbolTable = require('./symbolTable');
@@ -215,15 +216,33 @@ class Interpreter {
       if (
         (value instanceof SWObject || value instanceof SWPackage) &&
         !(value instanceof SWFunction)
-      )
+      ) {
         obj = value;
+      } else {
+        if (props.indexOf(propName) !== props.length - 1) {
+          return res.failure(
+            new RTError(
+              node.posStart,
+              node.posEnd,
+              `Cannot get property '${
+                propChain[props.indexOf(propName) + 1]
+              }' on type ${value.typeName}`,
+              context
+            )
+          );
+        }
+      }
     }
 
     if (chainLength) {
       try {
         let methodName = propChain[chainLength] || propChain[chainLength - 1];
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
-        if (!typeMethod) throw 0;
+        if (!typeMethod) {
+          if (!(obj instanceof SWPackage)) throw 0;
+          return res.success(SWNull.NULL);
+        }
+
         if (!value) value = obj;
 
         let supportedTypes = typeMethod.types;
@@ -784,7 +803,12 @@ class Interpreter {
       valueToCall = valueToCall[0];
     }
 
-    if (!(valueToCall instanceof SWBaseFunction))
+    if (
+      !(
+        valueToCall instanceof SWBaseFunction ||
+        valueToCall instanceof SWExecutable
+      )
+    )
       return res.failure(
         new RTError(
           node.posStart,

@@ -48,8 +48,8 @@ class SymbolTable {
     } else {
       // Traverse up the scope chain and assign the variable
       // in the first scope where it already existed
-      if (!this.symbols[name]) {
-        if (this.parent) this.parent.set(name, value, deep);
+      if (!this.symbols[name] && this.parent) {
+        this.parent.set(name, value, deep);
       } else {
         this.symbols[name] = value;
       }
