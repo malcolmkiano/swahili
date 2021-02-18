@@ -23,7 +23,7 @@ shughuli halalisha(mwili) {
     rudisha "Data 'kazi' lazima iwe jina"
   }
 
-  kama (mwili.niMsimamizi != kweli && mwili.niMsimamizi != uwongo) {
+  kama (niTupu(mwili.niMsimamizi)) {
     rudisha "Data 'niMsimamizi' inahitajika"
   }
 
