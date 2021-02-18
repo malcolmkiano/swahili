@@ -1,0 +1,138 @@
+wacha seva = impoti("@swahili/http")
+wacha watu = [
+  { id: 1, jina: "Juma", umri: 24, kazi: "Mwandishi", niMsimamizi: kweli },
+  { id: 2, jina: "Maria", umri: 21, kazi: "Mwalimu", niMsimamizi: uwongo },
+  { id: 3, jina: "Talib", umri: 32, kazi: "Rubani", niMsimamizi: uwongo }
+]
+
+// validation method
+shughuli halalisha(mwili) {
+  kama (niTupu(mwili) || !niKamusi(mwili)) {
+    rudisha "Data ifuatayo inahitajika: 'jina', 'umri', 'kazi', 'niMsimamizi'"
+  }
+
+  kama (!mwili.jina || !niJina(mwili.jina)) {
+    rudisha "Data 'jina' lazima iwe jina"
+  }
+
+  kama (!mwili.umri || !niNambari(mwili.umri)) {
+    rudisha "Data 'umri' lazima iwe nambari"
+  }
+
+  kama (!mwili.kazi || !niJina(mwili.kazi)) {
+    rudisha "Data 'kazi' lazima iwe jina"
+  }
+
+  kama (mwili.niMsimamizi != kweli && mwili.niMsimamizi != uwongo) {
+    rudisha "Data 'niMsimamizi' inahitajika"
+  }
+
+  // data is valid
+  rudisha uwongo
+}
+
+// routing
+seva.taka("/", shughuli (swali, jibu) {
+  wacha ujumbe = "<h1>Karibu kwa Watu API!</h1>"
+  ujumbe = ujumbe + "<div>Tuma agizo kwa anwani zifuatazo kuendela:</div>"
+  ujumbe = ujumbe + "<ul>"
+  ujumbe = ujumbe + "<li><strong>GET /watu</strong><br/>Ona orodha ya watu walio katika data</li>"
+  ujumbe = ujumbe + "<li><strong>POST /watu</strong><br/>Ongeza mtu mpywa kwenye data</li>"
+  ujumbe = ujumbe + "<li><strong>GET /watu/:id</strong><br/>Ona data ya mtu mwenye 'id' iliyopewa</li>"
+  ujumbe = ujumbe + "<li><strong>PATCH /watu/:id</strong><br/>Badili data ya mtu mwenye 'id' iliyopewa</li>"
+  ujumbe = ujumbe + "<li><strong>DELETE /watu/:id</strong><br/>Ondoa data ya mtu mwenye 'id' iliyopewa</li>"
+  ujumbe = ujumbe + "</ul>"
+  ujumbe = ujumbe + "<style>li { margin-bottom: 1rem; }</style>"
+
+  jibu.hali(200)
+  jibu.wekaKichwa("Content-Type", "text/html")
+  jibu.tuma(ujumbe)
+})
+
+seva.taka("/watu", shughuli (swali, jibu) {
+  kama (swali.kitenzi == "GET") {
+    jibu.hali(200)
+    jibu.wekaKichwa("Content-Type", "application/json")
+    jibu.tuma(watu)
+
+  } au (swali.kitenzi == "POST") {
+    wacha mwili = swali.mwili
+    wacha mtu = {}
+    mtu.id = watu.idadi() + 1
+
+    // validate the data
+    wacha shida = halalisha(mwili)
+
+    // data is valid
+    kama (!shida) {
+      // all checks passed
+      mtu.jina = mwili.jina
+      mtu.umri = mwili.umri
+      mtu.kazi = mwili.kazi
+      mtu.niMsimamizi = mwili.niMsimamizi
+
+      // add the new person to our list
+      watu = watu + mtu
+
+      // send a response
+      jibu.hali(201)
+      jibu.wekaKichwa("Content-Type", "application/json")
+      jibu.tuma(mtu)
+    } sivyo {
+      jibu.hali(400)
+      jibu.tuma(shida)
+    }
+  }
+})
+
+seva.taka("/watu/:id", shughuli (swali, jibu) {
+  wacha id = Nambari(swali.vyaguo.id)
+
+  // find matching person
+  wacha tokeo = tupu
+  kwa mtu katika watu {
+    kama (mtu.id == id) {
+      // person was found
+      tokeo = mtu
+    }
+  }
+
+  // if not found, send 404
+  kama (niTupu(tokeo)) {
+    jibu.hali(404)
+    jibu.tuma("Mtu hapatikani")
+  } sivyo {
+    jibu.hali(200)
+    jibu.wekaKichwa("Content-Type", "application/json")
+    wacha pahala = watu.pahala(tokeo)
+
+    kama (swali.kitenzi == "GET") {
+      jibu.tuma(tokeo)
+    } au (swali.kitenzi == "PATCH") {
+      // validate the body
+      wacha mwili = swali.mwili
+      wacha shida = halalisha(mwili)
+
+      kama (!shida) {
+        mwili.id = tokeo.id
+        watu.weka(pahala, mwili)
+        jibu.tuma(mwili)
+      } sivyo {
+        jibu.hali(400)
+        jibu.tuma(shida)
+      }
+    } au (swali.kitenzi == "DELETE") {
+      watu = watu - pahala
+      andika(watu)
+      jibu.hali(204)
+      jibu.tuma(tupu)
+    }
+
+  }
+})
+
+// start listening
+seva.sikiza(seva.POTI_ASILI, shughuli (hosti, poti) {
+  wacha anwani = "http://" + hosti + ":" + Jina(poti)
+  andika("Seva imeanzishwa katika " + anwani)
+})
