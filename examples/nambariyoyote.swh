@@ -1,0 +1,46 @@
+// Random number generator
+//Get the range from user input
+wacha msafa = somaNambari("Ingiza nambari yoyote unayotaka:")
+
+// Get and set the required variables
+wacha leo = Tarehe()
+wacha saa = leo.unda("sa")
+wacha dakika = leo.unda("d")
+wacha sekunde = leo.unda("se")
+
+// Convert the string values to numbers
+saa = Nambari(saa)
+dakika = Nambari(dakika)
+sekunde = Nambari(sekunde)
+
+// Create a seed using these numbers
+wacha nambari = (saa+dakika+sekunde)*11
+
+//This implementation makes use of the Linear Congruential Generator
+//The parameters are to the Numerical Recipes
+wacha mbegu = nambari
+wacha m = 2^32
+wacha a = 1664525
+wacha c = 1013904223
+
+// Run the seed through multiple iterations to further randomize the variable
+// The loop is tied to the second variable to further randomize
+wacha y = 0
+ambapo (y != sekunde) {
+  mbegu = (a*mbegu+c)%m
+  y = y + 1
+}
+
+// mbegu = (a*mbegu+c)%m
+
+//convert the result into a fraction
+mbegu = mbegu/10^10
+// Find a random variable within the user given list range
+// randomNumber * (max - min) + min
+mbegu = mbegu*(msafa - 1) + 1
+
+// Remove the decimal values from the result
+mbegu = mbegu - (mbegu%2)
+
+//return the random number
+andika(mbegu)
