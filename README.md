@@ -65,6 +65,11 @@ To enable syntax highlighting for your Swahili programs in VS Code (more coming 
 6. [Expressions and operators](./docs/guide/06-expressions.md)
 7. [Numbers and dates](./docs/guide/07-numbers-and-dates.md)
 
+### Packages ![NEW](https://img.shields.io/badge/-NEW-green)
+
+- [HTTP](./docs/packages/http.md)
+- [Random (Yoyote)](./docs/packages/yoyote.md)
+
 ### References
 
 - [Grammar](./docs/ref/grammar.md)
@@ -83,3 +88,6 @@ To enable syntax highlighting for your Swahili programs in VS Code (more coming 
 - [Mfuatano wa Fibonacci (Fibonacci Sequence)](./examples/fibonacci.swh)
 - [Tarihi (To-do List)](./examples/tarihi.swh)
 - [Mchezo wa Dadu (Dice Rolls)](./examples/mchezo_wa_dadu.swh)
+- [Watu API (People API)](./examples/watu_api.swh)
+
+[See all examples &raquo;](./examples/)

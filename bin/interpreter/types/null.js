@@ -52,6 +52,14 @@ class SWNull extends SWValue {
   }
 
   /**
+   * returns true
+   * @returns {SWBoolean}
+   */
+  notted() {
+    return [new SWBoolean(true).setContext(this.context), null];
+  }
+
+  /**
    * creates a new instance of the null
    * @returns {SWNull}
    */

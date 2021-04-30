@@ -219,7 +219,7 @@ class Interpreter {
       ) {
         obj = value;
       } else {
-        if (props.indexOf(propName) !== props.length - 1) {
+        if (props.indexOf(propName) !== props.length - 1 && value) {
           return res.failure(
             new RTError(
               node.posStart,
@@ -230,6 +230,19 @@ class Interpreter {
               context
             )
           );
+        } else if (props.indexOf(propName) !== props.length - 1 && !value) {
+          return res.failure(
+            new RTError(
+              node.posStart,
+              node.posEnd,
+              `Cannot get property '${
+                propChain[chainLength - 1]
+              }' of undefined`,
+              context
+            )
+          );
+        } else {
+          return res.success(SWNull.NULL);
         }
       }
     }
