@@ -242,7 +242,7 @@ class Interpreter {
             )
           );
         } else {
-          return res.success(SWNull.NULL);
+          return res.success(value || SWNull.NULL);
         }
       }
     }
