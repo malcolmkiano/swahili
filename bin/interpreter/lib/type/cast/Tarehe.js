@@ -4,7 +4,7 @@ const RTResult = require('../../../runtimeResult');
 const { RTError } = require('../../../error');
 
 /**
- * Creates a new SWDateTime value, or formats one as a SWString
+ * Creates a new SWDateTime value
  * @param {SWBuiltInFunction} inst the instance of the built in function
  * @param {Context} executionContext the calling context
  */
