@@ -28,7 +28,7 @@ const {
 } = require('../interpreter/nodes');
 
 // abstraction to make code shorter
-const lc = (str) => str.replace('\\', '').toLowerCase();
+const lc = (str) => str.replace(/\\/g, '').toLowerCase();
 
 class Parser {
   /**

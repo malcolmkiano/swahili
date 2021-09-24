@@ -122,7 +122,7 @@ function handleRequest(request, response, routes, logging = true) {
       ).split(';')[0];
       const parse = PARSERS[mimeType];
       if (parse) {
-        request.body = body ? parse(body) : null;
+        request.body = body ? PARSERS[mimeType](body) : null;
       }
 
       executeRequest();
