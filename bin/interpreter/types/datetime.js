@@ -102,7 +102,7 @@ class SWDateTime extends SWValue {
         mk: val.getFullYear().toString().substring(2),
 
         /** Mwaka (Year: 1930-2029) */
-        MK: val.getFullYear(),
+        MK: val.getFullYear().toString(),
       };
     } else {
       return {};
