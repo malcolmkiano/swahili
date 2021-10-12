@@ -209,7 +209,7 @@ class Interpreter {
     }
 
     let chainLength = propChain.length;
-    let props = propChain.reverse();
+    let props = [...propChain].reverse();
     for (let propName of props) {
       value = obj.symbolTable.get(propName) || value;
       if (obj.symbolTable.get(propName)) chainLength--;
@@ -218,38 +218,12 @@ class Interpreter {
         !(value instanceof SWFunction)
       ) {
         obj = value;
-      } else {
-        if (props.indexOf(propName) !== props.length - 1 && value) {
-          return res.failure(
-            new RTError(
-              node.posStart,
-              node.posEnd,
-              `Cannot get property '${
-                propChain[props.indexOf(propName) + 1]
-              }' on type ${value.typeName}`,
-              context
-            )
-          );
-        } else if (props.indexOf(propName) !== props.length - 1 && !value) {
-          return res.failure(
-            new RTError(
-              node.posStart,
-              node.posEnd,
-              `Cannot get property '${
-                propChain[chainLength - 1]
-              }' of undefined`,
-              context
-            )
-          );
-        } else {
-          return res.success(value || SWNull.NULL);
-        }
       }
     }
 
     if (chainLength) {
       try {
-        let methodName = propChain[chainLength] || propChain[chainLength - 1];
+        let methodName = propChain[chainLength - 1];
         let typeMethod = context.symbolTable.get('$' + methodName); // type methods are hidden with a $ in the global context
         if (!typeMethod) {
           if (!(obj instanceof SWPackage)) throw 0;
@@ -279,7 +253,9 @@ class Interpreter {
           new RTError(
             node.posStart,
             node.posEnd,
-            `Cannot get property '${propChain[chainLength - 1]}' of undefined`,
+            `Cannot get property '${propChain[0]}' ${
+              value ? `of type ${value.typeName}` : 'of undefined'
+            }`,
             context
           )
         );

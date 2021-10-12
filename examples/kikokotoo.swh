@@ -4,7 +4,7 @@ wacha idadi = somaNambari("Nambari ngapi? ")
 wacha nambari = []
 
 kwa i = 0 mpaka idadi {
-  nambari = nambari + somaNambari("Nambari: ")
+  nambari = nambari + somaNambari("Nambari " + Jina(i + 1) + ": ")
 }
 
 andika(hesabu.ongeza(nambari))
