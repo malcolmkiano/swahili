@@ -12,7 +12,7 @@ wacha hesabu = rudia(shughuli () {
 subiri(shughuli () {
   komesha(hesabu)
   andika("Kwaheri!")
-}, 5000)
+}, 1000 * a)
 
 // 0ms deferrence means that the interpreter won't wait for this to resolve
 // before moving on, best for deferring slow method calls
