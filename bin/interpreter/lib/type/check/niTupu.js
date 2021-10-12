@@ -20,7 +20,7 @@ function niTupu(inst, executionContext) {
       )
     );
 
-  let isEmpty = !kitu.isTrue();
+  let isEmpty = kitu.value === null ? true : !kitu.isTrue();
   return res.success(isEmpty ? SWBoolean.TRUE : SWBoolean.FALSE);
 }
 

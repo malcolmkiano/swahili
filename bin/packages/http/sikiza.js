@@ -31,8 +31,8 @@ function sikiza(inst, executionContext) {
   if (shug && (!(poti instanceof SWNumber) || !Number.isInteger(poti.value)))
     return res.failure(
       new RTError(
-        poti.posStart,
-        poti.posEnd,
+        poti.posStart || shug.posStart,
+        poti.posEnd || shug.posEnd,
         `'poti' must be an int`,
         executionContext
       )

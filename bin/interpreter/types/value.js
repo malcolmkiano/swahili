@@ -159,7 +159,7 @@ class SWValue {
   }
 
   /**
-   * not supported on this data type
+   * value data type will typically have no value
    */
   isTrue() {
     return false;

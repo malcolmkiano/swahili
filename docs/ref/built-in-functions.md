@@ -217,7 +217,7 @@
     rudisha el * idx
   }
 
-  andika(list.fanya(double)) // => [0,2,6,12]
+  andika(list.fanya(multByIndex)) // => [0,2,6,12]
 ```
 
 - _list_.**unga(`kiungo: SWString`): `SWString`**<br/>
