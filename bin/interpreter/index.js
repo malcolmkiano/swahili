@@ -211,13 +211,26 @@ class Interpreter {
     let chainLength = propChain.length;
     let props = [...propChain].reverse();
     for (let propName of props) {
-      value = obj.symbolTable.get(propName) || value;
-      if (obj.symbolTable.get(propName)) chainLength--;
+      const newValue = obj.symbolTable.get(propName);
+      value = newValue || value;
+      if (newValue) chainLength--;
       if (
-        (value instanceof SWObject || value instanceof SWPackage) &&
-        !(value instanceof SWFunction)
+        (newValue instanceof SWObject || newValue instanceof SWPackage) &&
+        !(newValue instanceof SWFunction)
       ) {
-        obj = value;
+        obj = newValue;
+      } else {
+        const propIndex = props.indexOf(propName);
+        if (!newValue && propIndex !== props.length - 1) {
+          return res.failure(
+            new RTError(
+              node.posStart,
+              node.posEnd,
+              `Cannot get property '${propChain[0]}' of undefined`,
+              context
+            )
+          );
+        }
       }
     }
 
@@ -249,12 +262,15 @@ class Interpreter {
           )
         );
       } catch (err) {
+        if (value ? value instanceof SWObject : obj instanceof SWObject)
+          return res.success(SWNull.NULL);
+
         return res.failure(
           new RTError(
             node.posStart,
             node.posEnd,
             `Cannot get property '${propChain[0]}' ${
-              value ? `of type ${value.typeName}` : 'of undefined'
+              value ? `on type ${value.typeName}` : `of undefined`
             }`,
             context
           )
