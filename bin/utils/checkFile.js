@@ -9,9 +9,9 @@ const path = require('path');
 function checkFile(fileName, updateDir = false) {
   if (fs.lstatSync(fileName).isDirectory()) {
     fileName = fileName.replace(/\/|\\/g, '/');
-    fileName = fileName.split('/').filter(Boolean); // remove all falsy values
-    fileName.push('index.swh'); // default to index
-    fileName = fileName.join('/');
+    const parts = fileName.split('/').filter(Boolean);
+    parts.push('index.swh');
+    fileName = parts.join('/');
   }
 
   if (fs.existsSync(fileName)) {

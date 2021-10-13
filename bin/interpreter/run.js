@@ -6,11 +6,16 @@ const SymbolTable = require('./symbolTable');
 
 const SWPackage = require('./types/_package');
 const SWBuiltInFunction = require('./types/built-in-function');
+
 const { functions, constants } = require('./lib');
 const packages = require('../packages');
+const injectEnv = require('../utils/env');
 
 /** holds all variables and their values in the global scope */
 const globalSymbolTable = new SymbolTable();
+
+// environment injection
+injectEnv(globalSymbolTable);
 
 // library injection
 for (let [libConst, value] of Object.entries(constants)) {
