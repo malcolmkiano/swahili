@@ -86,11 +86,16 @@ function handleRequest(request, response, routes, logging = true) {
           })
         );
       }
+    } else {
+      // 404
+      response.statusCode = 404;
+      response.end('Ombi halikupatikana');
     }
 
+    // if something happened but no response sent
     if (!response.headersSent) {
       response.statusCode = 501;
-      response.end('Jibu haikutumwa');
+      response.end('Jibu halikutumwa');
     }
 
     if (logging) {
