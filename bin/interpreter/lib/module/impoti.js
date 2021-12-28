@@ -53,8 +53,8 @@ function impoti(inst, executionContext) {
       );
 
     // get and return the package
-    const package = executionContext.symbolTable.get(`*${name}`); // packages are hidden with an asterisk
-    return res.success(package);
+    const packageData = executionContext.symbolTable.get(`*${name}`); // packages are hidden with an asterisk
+    return res.success(packageData);
   }
 
   let fileName = faili.value;
