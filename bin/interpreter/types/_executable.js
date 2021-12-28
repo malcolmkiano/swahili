@@ -46,15 +46,14 @@ class SWExecutable extends SWValue {
     let allArgs = [];
     argNames = argNames || [];
     args = args || [];
-    for (let i = 0; i < argNames.length; i++) {
-      let argName = argNames[i];
+    for (let argName of argNames) {
       let argValue = i < args.length ? args[i] : nullValue;
-      if (argValue) {
-        argValue.setContext(executionContext);
-        executionContext.symbolTable.set(argName, argValue);
-        this.symbolTable.set(argName, argValue);
-        if (args[i]) allArgs.push(argValue);
-      }
+      if (!argValue) continue;
+
+      argValue.setContext(executionContext);
+      executionContext.symbolTable.set(argName, argValue);
+      this.symbolTable.set(argName, argValue);
+      if (args[i]) allArgs.push(argValue);
     }
 
     // add all given args to the allArgs list
