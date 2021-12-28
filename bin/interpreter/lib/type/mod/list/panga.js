@@ -15,8 +15,7 @@ function panga(inst, executionContext) {
   let list = orodha.elements;
 
   // Ensure the list contains numerical values
-  for (let i = 0; i < list.length; i++) {
-    let element = list[i];
+  for (let element of list) {
     if (!(element instanceof SWNumber))
       return res.failure(
         new RTError(

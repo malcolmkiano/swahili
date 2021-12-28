@@ -27,8 +27,7 @@ function kubwa(inst, executionContext) {
   // check that all elements are numbers
   // and find the one with highest value
   let maxElement = list[0];
-  for (let i = 0; i < list.length; i++) {
-    let element = list[i];
+  for (let element of list) {
     if (!(element instanceof SWNumber))
       return res.failure(
         new RTError(
