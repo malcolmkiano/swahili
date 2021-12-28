@@ -47,8 +47,7 @@ function RegEx(inst, executionContext) {
   let flags = bendera ? bendera.value : '';
 
   const validFlags = 'igmsuy';
-  for (let i = 0; i < flags.length; i++) {
-    let char = flags[i];
+  for (let char of flags) {
     if (!validFlags.includes(char)) {
       return res.failure(
         new RTError(
