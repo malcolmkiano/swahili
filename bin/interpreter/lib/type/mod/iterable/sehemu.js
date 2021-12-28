@@ -50,13 +50,10 @@ function sehemu(inst, executionContext) {
 
   let startIndex = mwanzo.value;
   let endIndex = mwisho ? mwisho.value : null;
-  let output = kitu.elements
-    ? endIndex
-      ? kitu.elements.slice(startIndex, endIndex)
-      : kitu.elements.slice(startIndex)
-    : endIndex
-    ? kitu.value.slice(startIndex, endIndex)
-    : kitu.value.slice(startIndex);
+  let source = kitu.elements || kitu.value;
+  let output = endIndex
+    ? source.slice(startIndex, endIndex)
+    : source.slice(startIndex);
 
   let outputValue;
   if (kitu instanceof SWString) {
