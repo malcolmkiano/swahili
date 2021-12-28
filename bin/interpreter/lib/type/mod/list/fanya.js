@@ -41,9 +41,9 @@ function fanya(inst, executionContext) {
   for (let i = 0; i < orodha.elements.length; i++) {
     let el = orodha.elements[i];
     let idx = new SWNumber(i);
-    let res = shug.execute([el, idx]);
-    if (res.error) return res;
-    els.push(res.value || SWNull.NULL);
+    let innerRes = shug.execute([el, idx]);
+    if (innerRes.error) return innerRes;
+    els.push(innerRes.value || SWNull.NULL);
   }
 
   let result = new SWList(els);
