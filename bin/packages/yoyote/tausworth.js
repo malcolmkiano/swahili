@@ -31,7 +31,7 @@ function tausworth(inst, executionContext) {
       new RTError(
         mwanzo.posStart,
         mwanzo.posEnd,
-        `Parameter 'miwsho' is required since 'mwanzo' is provided`,
+        `Parameter 'mwisho' is required since 'mwanzo' is provided`,
         executionContext
       )
     );
