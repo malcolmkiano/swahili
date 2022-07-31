@@ -2,7 +2,7 @@
 
 A new programming language with semantics borrowed from the Swahili language to help teach programming concepts to native Swahili-speaking students.
 
-![Version 0.9.91](https://img.shields.io/badge/version-0.9.91-blue)
+![Version 0.10.2](https://img.shields.io/badge/version-0.10.2-blue)
 [![Run on Repl.it](https://repl.it/badge/github/malcolmkiano/swahili)](https://repl.it/@moredigital/swahili-1)
 
 ## Get Started
